@@ -1,7 +1,8 @@
 package com.gf.biz.config;
 
-import com.gf.biz.dingSync.task.SyncDingdingToGenMasterDataJob;
 
+
+import com.gf.biz.dingSync.task.SyncDingdingToGenMasterDataJob;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.slf4j.Logger;

@@ -1,6 +1,7 @@
 package com.gf.biz.dingSync.service.impl;
 
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gf.biz.dingSync.mapper.UserInfoMapper;
 import com.gf.biz.dingSync.po.UserInfo;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@DS("biz_1")
 public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
 
 }
