@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gf.biz.dingSync.mapper.UserDepartmentMapper">
+
+    <resultMap id="userDeptMap" type="com.gf.biz.dingSync.dto.UserDepartmentDto">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="department_id" jdbcType="BIGINT" property="departmentId"/>
+        <result column="unit_id" jdbcType="BIGINT" property="unitId"/>
+        <result column="group_id" jdbcType="BIGINT" property="groupId"/>
+        <result column="deleted_flag" jdbcType="CHAR" property="deletedFlag"/>
+        <result column="if_department_id" jdbcType="VARCHAR" property="ifDepartmentId"/>
+
+    </resultMap>
+
+    <select id="selectAdditionalInfo" resultMap="userDeptMap" parameterType="map">
+        select a.*,b.if_id as if_department_id from user_department a join md_department b
+        on a.deleted_flag='0' and b.deleted_flag='0' and a.department_id = b.id
+        and a.user_id=#{userId,jdbcType=BIGINT}
+    </select>
+</mapper>

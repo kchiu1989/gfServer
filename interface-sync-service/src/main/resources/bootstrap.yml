@@ -1,0 +1,129 @@
+server:
+  port: 9901
+
+spring:
+  application:
+    name: interface-sync-service
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/lvshimain?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: Woailvshi2024.
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #type: com.alibaba.druid.pool.DruidDataSource
+    #initialSize: 5
+    #minIdle: 5
+    #maxActive: 20
+    # 配置获取连接等待超时的时间
+    #maxWait: 60000
+    druid:
+      # 初始化连接数量
+      initial-size: 5
+      # 最小线连接数量
+      min-idle: 5
+      # 最大连接数量
+      max-active: 20
+      # 获取连接时最大等待时间，单位毫秒
+      max-wait: 60000
+      #销毁线程时检测当前连接的最后活动时间和当前时间差大于该值时，关闭当前连接
+      min-evictable-idle-time-millis: 30000
+      #用来检测连接是否有效的sql 必须是一个查询语句
+      #mysql中为 select 'x'
+      #oracle中为 select 1 from dual
+      validation-query: select 'x'
+      #申请连接时会执行validationQuery检测连接是否有效,开启会降低性能,默认为true
+      test-on-borrow: false
+      #归还连接时会执行validationQuery检测连接是否有效,开启会降低性能,默认为tru
+      test-on-return: false
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      # 配置监拉统计挡成的filters. stat: 监控统计、Log4j:日志记录、waLL: 防御sqL注入
+      filters: stat,wall,log4j2
+      # 配置后台监控
+      stat-view-servlet:
+        # 允许访问的地址，这里因为时本地所以配置当前机器
+        allow: 127.0.0.1
+        # 是否开启访问
+        enabled: true
+        # 是否能够重置数据
+        reset-enable: false
+        # 管理页面登陆的用户名
+        login-username: admin
+        # 管理页面登陆的密码
+        login-password: admin
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    lettuce:
+      pool:
+        max-idle: 16
+        max-active: 32
+        min-idle: 8
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: lvshiProd
+        group: LVSHI_GROUP
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: lvshiProd
+        group: LVSHI_GROUP
+      #  file-extension: yaml
+
+
+      #seata:
+  #enabled: true
+  #tx-service-group: default_tx_group
+  #service:
+    #vgroup-mapping:
+      #default_tx_group: default_tx_group
+    #grouplist:
+      #default_tx_group: 127.0.0.1:8091
+  #client:
+    #undo:
+      #dataValidation: false
+      #logTable: zc_seata_undo_log
+
+
+# seata配置
+seata:
+  enabled: true
+  tx-service-group: interface-sync-service-group #事务组名称 必须一定和你服务端配置的一样 必须 必须 必须
+  service:
+    vgroup-mapping:
+      interface-sync-service-group: default #事务组内容 须一定和你服务端配置的一样
+      # 配置中心按照这个要求配置和服务端类似
+  config:
+    type: nacos
+    nacos:
+      namespace: lvshiProd
+      group: LVSHI_GROUP
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      # 注册中心按照这个要求配置和服务端类似
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: localhost:8848
+      username: nacos
+      password: nacos
+      namespace: lvshiProd
+      group: LVSHI_GROUP
+    #  cluster: GZ
+
+#feign:
+#  httpclient:
+#    connection-timeout: 2000  #单位ms,默认2000
+#    max-connections: 200 #线程池最大连接数
+#  okhttp:
+#    enabled: true
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
+  #mapper-locations: classpath:mapper/**/*.xml
