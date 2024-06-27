@@ -1,6 +1,6 @@
 package com.gf.common.config;
 
-import com.gf.biz.ifsSync.job.meituanwm.SyncMtwmShopRatingJobHandler;
+
 import com.gf.biz.ifsSync.job.shenfang.IfScoreMvJob;
 import com.gf.biz.kpiRuleEngine.job.TestExecuteExpressionJob;
 import com.xxl.job.core.executor.XxlJobExecutor;
@@ -67,11 +67,7 @@ public class JobConfig {
     @PostConstruct
     public void initJobs() {
         // 手动注册IJobHandler
-
         XxlJobExecutor.registJobHandler("syncIfScoreMvJobHandler", new IfScoreMvJob());
-        XxlJobExecutor.registJobHandler("syncMtwmShopRatingJobHandler", new SyncMtwmShopRatingJobHandler());
-        XxlJobExecutor.registJobHandler("testExecuteExpressionJob", new TestExecuteExpressionJob());
-
 
     }
 

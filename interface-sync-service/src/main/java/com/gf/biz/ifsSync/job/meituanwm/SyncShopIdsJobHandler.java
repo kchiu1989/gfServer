@@ -16,17 +16,6 @@ public class SyncShopIdsJobHandler extends IJobHandler {
     private static final String appSecret="ae0e087857354177105fa5da6d3769db";
     private static final String jobUrl="https://waimaiopen.meituan.com/api/v1/poi/getids";
 
-    public static void main(String[] args){
-        SyncShopIdsJobHandler shhh = new SyncShopIdsJobHandler();
-        try{
-            shhh.execute();
-        }catch(Exception e){
-            logger.error("shhh.execute error",e);
-        }
-
-    }
-
-
     @Override
     public void execute() throws Exception {
 
@@ -73,6 +62,6 @@ public class SyncShopIdsJobHandler extends IJobHandler {
 
         finalUrl=finalUrl.substring(0,finalUrl.length()-1);
 
-        HttpClientUtil.get(finalUrl);
+        HttpClientUtil.doGet(finalUrl);
     }
 }
