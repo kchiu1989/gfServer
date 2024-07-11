@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-@TableName("budget_m")
+@TableName("budget_month")
 public class BudgetM implements Serializable {
 
     private static final long serialVersionUID = -116613276239480033L;
