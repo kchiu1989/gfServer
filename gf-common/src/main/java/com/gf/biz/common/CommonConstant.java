@@ -86,7 +86,9 @@ public interface CommonConstant {
     /**
      * 删除标记
      */
-    String DEL_FLAG = "deleted_flag";
+    String COLUMN_DEL_FLAG = "deleted_flag";
+
+    String COLUMN_ID = "id";
 
     /**
      * 是否删除标记（0否 1是）
