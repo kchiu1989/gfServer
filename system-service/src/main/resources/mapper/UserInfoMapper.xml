@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gf.biz.dingSync.mapper.UserInfoMapper">
-
+    <update id="batchUpdateDirectLeaderId" >
+        UPDATE user_info aa
+        SET aa.direct_leader_id = (
+            SELECT
+                c.id
+            FROM
+                (
+                    SELECT
+                        b.*
+                    FROM
+                        user_info b
+                    WHERE
+                        DATE_FORMAT(b.created_time, '%Y-%m-%d') = DATE_FORMAT(SYSDATE(), '%Y-%m-%d')
+                or DATE_FORMAT(b.updated_time, '%Y-%m-%d') = DATE_FORMAT(SYSDATE(), '%Y-%m-%d') ) c
+            WHERE
+                c.if_id = aa.if_direct_leader_id)
+    </update>
 </mapper>

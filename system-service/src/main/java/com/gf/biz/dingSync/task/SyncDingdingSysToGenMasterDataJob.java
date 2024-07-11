@@ -10,53 +10,42 @@ import com.gf.biz.common.util.SpringBeanUtil;
 import com.gf.biz.dingSync.dto.UserDepartmentDto;
 import com.gf.biz.dingSync.mapper.MdDepartmentMapper;
 import com.gf.biz.dingSync.mapper.UserDepartmentMapper;
-
-
 import com.gf.biz.dingSync.mapper.UserInfoMapper;
 import com.gf.biz.dingSync.po.MdDepartment;
 import com.gf.biz.dingSync.po.UserDepartment;
 import com.gf.biz.dingSync.po.UserInfo;
-
-
 import com.gf.biz.dingSync.service.UserDepartmentService;
-
 import com.gf.biz.dingSync.util.DingSyncUtil;
+import com.gf.biz.dingSync.util.PinyinUtil;
 import com.xxl.job.core.handler.IJobHandler;
-
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class SyncDingdingToGenMasterDataJob extends IJobHandler {
+/**
+ * @author Gf
+ *删除的历史数据保留
+ *增加通用的userAccount生成(唯一)
+ *增加通用的deptIdentity生成(唯一)
+ *如果是更新的话、或者删除的话，需要更新更新时间
+ *
+ * 钉钉的部门主管可以多个
+ * 钉钉的人员直属主管只可以有一个
+ */
+public class SyncDingdingSysToGenMasterDataJob extends IJobHandler {
 
-    private final static Logger log = LoggerFactory.getLogger(SyncDingdingToGenMasterDataJob.class);
+    private final static Logger log = LoggerFactory.getLogger(SyncDingdingSysToGenMasterDataJob.class);
     private final static String rootDeptId = "1";
     private final static Long unitId = 1L;
     private final static Long groupId = 1L;
     private final static String AppKey = "dingziwaoroobolpqb0m";
     private final static String AppSecret = "MXk0icwCtMYXtzTwgEPKA0GNtCG4AwgNWMcxyijC1vtVM2EdsXgHGNy4rM0WNMzD";
 
-//	private final static String AppKey =  "ding51bq1zdwmpbshv3b";
-    // AppContext.getSystemProperty("dingSync.appKey");
-//	private final static String AppSecret = "moePmcZ6cz5jes5ZSYX2QSEuw0CjGMlni-mJ7RuM3a-dalMJBnDpaS3g1zQxtP61";
-    // AppContext.getSystemProperty("dingSync.appSecret");
-
-   /* private static List<MidOrgPersonBaseEntity> createPersonBases = new ArrayList<>();
-    private static List<MidOrgPersonBaseEntity> updatePersonBases = new ArrayList<>();
-    private static List<MidOrgJobEntity> createJobBases = new ArrayList<>();
-    private static List<MidOrgJobEntity> updateJobBases = new ArrayList<>();
-    private static List<MidOrgPostEntity> createPostBases = new ArrayList<>();
-    private static List<MidOrgPostEntity> updatePostBases = new ArrayList<>();
-
-    private DingSyncDao dingSyncDao;
-
-    public void setDingSyncDao (DingSyncDao dingSyncDao){
-        this.dingSyncDao = dingSyncDao;
-
-
-    }*/
-
+    private static MdDepartmentMapper mdDepartmentMapper;
+    private static UserInfoMapper userInfoMapper;
+    private static UserDepartmentMapper userDepartmentMapper;
 
     @Override
     public void execute() throws Exception {
@@ -67,29 +56,26 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
         Map<String,MdDepartment> deptCache = new HashMap<>();
 
         Set<String> hasSyncDeptIds = new HashSet<>();
-        //同步所有部门信息
+        //1、同步所有部门信息
         syncDepts(hasSyncDeptIds,deptCache);
-
 
         //本次已经同步过的用户
         Set<String> hasSyncDingUserIds = new HashSet<>();
 
-        //根据本次成功同步到的部门Id全量，对人员进行处理
+        //2、根据本次成功同步到的部门Id全量，对人员进行处理
         Iterator<String> deptItr = hasSyncDeptIds.iterator();
         while (deptItr.hasNext()) {
             //处理人员相关数据
             dealWithPersonInfo(deptItr.next(), deptCache,hasSyncDingUserIds);
         }
 
-        //需要当前数据库中存在的部门去查询接口是否存在来判断
+        //3、需要当前数据库中存在的部门去查询接口是否存在来判断
         //先根据数据库中的和本次同步接口的差集，再和接口重新进行一次一一匹配，本次同步接口可能出现部分部门同步失败的情况
-
-        MdDepartmentMapper mdDepartmentMapper = SpringBeanUtil.getBean(MdDepartmentMapper.class);
 
         QueryWrapper<MdDepartment> queryWrapper =new QueryWrapper<>();
         queryWrapper.select("if_id").eq(CommonConstant.COLUMN_DEL_FLAG,CommonConstant.STATUS_UN_DEL);
 
-        List<Object> allExistsDbDeptIdObjList = mdDepartmentMapper.selectObjs(queryWrapper);
+        List<Object> allExistsDbDeptIdObjList = mdDepartmentMapper().selectObjs(queryWrapper);
         List<String> allExistsDbDeptIdList = new ArrayList<>();
 
         for(Object dbIfDeptIdObj:allExistsDbDeptIdObjList){
@@ -121,19 +107,40 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
             }
 
             if(!toDeleteIfDeptIds.isEmpty()){
-
+                //删除部门
                 MdDepartment toUpd = new MdDepartment();
                 toUpd.setDeletedFlag(CommonConstant.STATUS_DEL);
                 toUpd.setUpdatedTime(new Date());
                 toUpd.setUpdatedBy(CommonConstant.DEFAULT_OPT_USER);
                 UpdateWrapper<MdDepartment> updWrapper = new UpdateWrapper<>();
                 updWrapper.in("if_id", toDeleteIfDeptIds);
-                mdDepartmentMapper.update(toUpd,updWrapper);
+                mdDepartmentMapper().update(toUpd,updWrapper);
+
+                //删除用户部门关系
+                QueryWrapper<MdDepartment> deptQueryWrapper = new QueryWrapper<>();
+                deptQueryWrapper.eq(CommonConstant.COLUMN_DEL_FLAG, CommonConstant.STATUS_DEL);
+                deptQueryWrapper.in("if_id",toDeleteIfDeptIds);
+                deptQueryWrapper.select("id");
+                List<Object> toDeleteDeptIdObjs = mdDepartmentMapper().selectObjs(deptQueryWrapper);
+                List<Long> toDeleteDeptIds = new ArrayList<>();
+
+                for(Object dbDeptIdObj:toDeleteDeptIdObjs){
+                    toDeleteDeptIds.add(Long.valueOf(String.valueOf(dbDeptIdObj)));
+                }
+
+                UserDepartment toUpdUserDept = new UserDepartment();
+                toUpdUserDept.setUpdatedTime(new Date());
+                toUpdUserDept.setDeletedFlag(CommonConstant.STATUS_DEL);
+                UpdateWrapper<UserDepartment> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.eq(CommonConstant.COLUMN_DEL_FLAG,CommonConstant.STATUS_UN_DEL);
+                updateWrapper.in("department_id",toDeleteDeptIds);
+                int updUserDeptCnt = userDepartmentMapper().update(toUpdUserDept,updateWrapper);
+
             }
 
         }
 
-        //调用接口 职能人事 离职员工列表
+        //4、调用接口 职能人事 离职员工列表
         List<String> resignUserList =DingSyncUtil.getResignUserList(null);
 
         if(!resignUserList.isEmpty()) {
@@ -152,18 +159,59 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
 
                 if(user!=null){
                     user.setDeletedFlag(CommonConstant.STATUS_DEL);
+                    user.setUpdatedTime(new Date());
                     int updUserCnt = userInfoMapper.updateById(user);
 
                     UserDepartment toUpdUserDept = new UserDepartment();
+                    toUpdUserDept.setUpdatedTime(new Date());
                     toUpdUserDept.setDeletedFlag(CommonConstant.STATUS_DEL);
                     UpdateWrapper<UserDepartment> updateWrapper = new UpdateWrapper<>();
                     updateWrapper.eq("user_id",user.getId());
+                    updateWrapper.eq(CommonConstant.COLUMN_DEL_FLAG,CommonConstant.STATUS_UN_DEL);
                     int updUserDeptCnt = userDepartmentMapper.update(toUpdUserDept,updateWrapper);
                 }
             }
         }
+
+        //5、更新人员表的直属主管字段 当天
+        userInfoMapper().batchUpdateDirectLeaderId();
+
+        //6、更新部门人员表的部门主管标识 当天的
+       List<MdDepartment> toOptDepts =  mdDepartmentMapper().getDepartmentListOfChange();
+       if(toOptDepts.size()>0){
+
+           UserDepartmentService userDepartmentService = SpringBeanUtil.getBean(UserDepartmentService.class);
+
+            for(MdDepartment toOptDept:toOptDepts){
+                String managerListJsonArray =toOptDept.getManageUserList();
+                if(StringUtils.isNotBlank(managerListJsonArray)){
+                    JSONArray jsonArray = JSONArray.parseArray(managerListJsonArray);
+
+                    try{
+                        //先更新user_department 该部门的dept_leader_flag为0
+                        //再更新部门主管
+                        userDepartmentService.updateManageUser(toOptDept,jsonArray.toJavaList(String.class));
+                    }catch(Exception e){
+                        log.error("更新部门主管失败");
+                    }
+
+                }
+            }
+       }
     }
 
+    public static void main(String[] args) {
+        String aa = "[\"lsbgs003\",\"01104737404346\"]";
+        JSONArray jj = JSONArray.parseArray(aa);
+        List<String> javaList = jj.toJavaList(String.class);
+        for(String aaa:javaList){
+            System.out.println(aaa);
+        }
+
+        for(Object aaaa:jj){
+            System.out.println(aaaa.toString());
+        }
+    }
 
     /**
      * 同步部门信息
@@ -337,9 +385,9 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
         //List<MidOrgDepartmentEntity> updateMidDepts = new ArrayList<>();
         //List<MidOrgDepartmentEntity> createMidDepts = new ArrayList<>();
 
-        MdDepartmentMapper mdDepartmentMapper = SpringBeanUtil.getBean(MdDepartmentMapper.class);
+        //MdDepartmentMapper mdDepartmentMapper = SpringBeanUtil.getBean(MdDepartmentMapper.class);
 
-        MdDepartment rootDeptInfo = mdDepartmentMapper.selectById(Long.valueOf(rootDeptId));
+        MdDepartment rootDeptInfo = mdDepartmentMapper().selectById(Long.valueOf(rootDeptId));
         deptCache.put(rootDeptInfo.getIfId(),rootDeptInfo);
 
         dingDeptIds.add(rootDeptId);
@@ -392,7 +440,7 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
                 return;
             }
 
-            MdDepartmentMapper mdDepartmentMapper = SpringBeanUtil.getBean(MdDepartmentMapper.class);
+            //MdDepartmentMapper mdDepartmentMapper = SpringBeanUtil.getBean(MdDepartmentMapper.class);
             MdDepartment toOpt;
             Long recursionParentId;
             String dingDeptId;
@@ -421,7 +469,7 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
                     QueryWrapper<MdDepartment> qw1 = new QueryWrapper<>();
                     qw1.eq(CommonConstant.COLUMN_DEL_FLAG, CommonConstant.STATUS_UN_DEL);
                     qw1.eq("if_id", dingDeptId);
-                    List<MdDepartment> deptList = mdDepartmentMapper.selectList(qw1);
+                    List<MdDepartment> deptList = mdDepartmentMapper().selectList(qw1);
 
 
                     if (deptList.size() == 0) {
@@ -437,16 +485,63 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
                         toOpt.setGroupId(groupId);//客开修改
                         toOpt.setUnitId(unitId);
                         toOpt.setParentId(parentId);
+                        //对于新增数据,需要设置deptIdentity，deptIdentity为拼音,若重复后面01..02递增，若三次内始终有重复，则使用uuid
 
-                        mdDepartmentMapper.insert(toOpt);
+                        String deptIdentity = getDeptIdentity(toOpt.getName());
+                        toOpt.setDeptIdentity(deptIdentity);
+
+                        mdDepartmentMapper().insert(toOpt);
                     } else {
                         toOpt = deptList.get(0);
-                        toOpt.setParentId(parentId);
-                        toOpt.setName(String.valueOf(ifDingDept.get("name")));
-                        toOpt.setManageUserList(deptInfoMap.get("dept_manager_userid_list")==null?null:deptInfoMap.get("dept_manager_userid_list").toString());
-                        toOpt.setUpdatedBy(CommonConstant.DEFAULT_OPT_USER);
-                        toOpt.setUpdatedTime(new Date());
-                        mdDepartmentMapper.updateById(toOpt);
+
+                        //如果1、parentId 2、名称  3、部门主管列表改变，更新部门信息，否则不做更新
+                        boolean updFlag=false;
+                        boolean updColumnNullFlag=false;
+                        if(toOpt.getParentId()!=null && toOpt.getParentId().compareTo(parentId)!=0){
+                            toOpt.setParentId(parentId);
+                            updFlag=true;
+                        }
+
+                        if(toOpt.getName()!=null && !toOpt.getName().equals(String.valueOf(ifDingDept.get("name")))){
+                            toOpt.setName(String.valueOf(ifDingDept.get("name")));
+
+                            String deptIdentity = getDeptIdentity(toOpt.getName());
+                            toOpt.setDeptIdentity(deptIdentity);
+
+                            updFlag=true;
+                        }
+
+                        if(toOpt.getManageUserList()==null && deptInfoMap.get("dept_manager_userid_list")!=null
+                                || toOpt.getManageUserList()!=null && !toOpt.getManageUserList().equals(String.valueOf(deptInfoMap.get("dept_manager_userid_list")))){
+                            toOpt.setManageUserList(deptInfoMap.get("dept_manager_userid_list")==null?null:deptInfoMap.get("dept_manager_userid_list").toString());
+                            updFlag=true;
+                            updColumnNullFlag=true;
+                        }
+
+                        if(updFlag){
+                            log.info("更新部门信息,部门id：{}",toOpt.getId());
+                            toOpt.setUpdatedBy(CommonConstant.DEFAULT_OPT_USER);
+                            toOpt.setUpdatedTime(new Date());
+                            if(updColumnNullFlag){
+                                UpdateWrapper<MdDepartment> updWrapper = new UpdateWrapper<>();
+                                updWrapper.set("parent_id",toOpt.getParentId());
+                                updWrapper.set("name",toOpt.getName());
+                                updWrapper.set("dept_identity",toOpt.getDeptIdentity());
+                                updWrapper.set("manage_user_list",toOpt.getManageUserList());
+
+                                updWrapper.set("updated_time",toOpt.getUpdatedTime());
+                                updWrapper.set("updated_by",toOpt.getUpdatedBy());
+
+                                updWrapper.eq(CommonConstant.COLUMN_ID,toOpt.getId()); //需要将字段更新为null
+                                mdDepartmentMapper().update(null,updWrapper);
+                            }else{
+
+                                mdDepartmentMapper().updateById(toOpt);
+                            }
+                        }else{
+                            log.info("不更新部门信息,部门id：{}",toOpt.getId());
+                        }
+
                     }
 
                     recursionParentId = toOpt.getId();
@@ -463,6 +558,109 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
 
             }
         }
+    }
+
+    private String getDeptIdentity(String deptName){
+        String pinyinName = PinyinUtil.pinyinChange(deptName);
+
+        if(StringUtils.isBlank(pinyinName)){
+            pinyinName=UUID.randomUUID().toString().replace("-","");
+            return pinyinName;
+        }
+
+
+        QueryWrapper<MdDepartment> toQuery = new QueryWrapper<>();
+        toQuery.likeRight("dept_identity",pinyinName);
+        toQuery.orderByDesc("dept_identity");
+        toQuery.select("dept_identity");
+        List<MdDepartment> dbDepts = mdDepartmentMapper().selectList(toQuery);
+
+        if(dbDepts==null || dbDepts.size()==0){
+            return pinyinName;
+        }else if(dbDepts.size()==1){
+            pinyinName +="01";
+        }else if(dbDepts.size()>1){
+            String dbDeptIdentity =null;
+            String dbDeptIdentityCnt = null;
+
+            //目前默认倒数两位，只要有一位不为数字，默认直接加01
+            boolean needIncreaseCnt = false;
+            for(MdDepartment dbDept:dbDepts) {
+                dbDeptIdentity= dbDept.getDeptIdentity();
+                dbDeptIdentityCnt = dbDeptIdentity.substring(dbDeptIdentity.length()-2,dbDeptIdentity.length());
+                if (Character.isDigit(dbDeptIdentityCnt.charAt(0)) && Character.isDigit(dbDeptIdentityCnt.charAt(1))) {
+                    needIncreaseCnt = true;
+                    break;
+                }
+
+            }
+
+            if(needIncreaseCnt) {
+                Integer currentCnt = new Integer(dbDeptIdentityCnt);
+                currentCnt++;
+                if (currentCnt < 10) {
+                    pinyinName += StringUtils.leftPad(currentCnt.toString(), 2, "0");
+                }else{
+                    pinyinName +=currentCnt;
+                }
+            }else{
+                pinyinName +="01";
+            }
+
+        }
+
+        return pinyinName;
+    }
+
+    private String getUserAccount(String userName) {
+        String pinyinName = PinyinUtil.pinyinChange(userName);
+
+        if (StringUtils.isBlank(pinyinName)) {
+            pinyinName = UUID.randomUUID().toString().replace("-", "");
+            return pinyinName;
+        }
+
+
+        QueryWrapper<UserInfo> toQuery = new QueryWrapper<>();
+        toQuery.likeRight("user_account", pinyinName);
+        toQuery.orderByDesc("user_account");
+        toQuery.select("user_account");
+        List<UserInfo> dbUsers = userInfoMapper().selectList(toQuery);
+
+        if(dbUsers==null || dbUsers.size()==0){
+            return pinyinName;
+        }else if(dbUsers.size()==1){
+            pinyinName += "01";
+        }else if(dbUsers.size()>1){
+            String userAccount =null;
+            String userAccountCnt = null;
+
+            //目前默认倒数两位，只要有一位不为数字，默认直接加01
+            boolean needIncreaseCnt = false;
+            for(UserInfo dbUser:dbUsers) {
+                userAccount= dbUser.getUserAccount();
+                userAccountCnt = userAccount.substring(userAccount.length()-2,userAccount.length());
+                if (Character.isDigit(userAccountCnt.charAt(0)) && Character.isDigit(userAccountCnt.charAt(1))) {
+                    needIncreaseCnt = true;
+                    break;
+                }
+
+            }
+
+            if(needIncreaseCnt) {
+                Integer currentCnt = new Integer(userAccountCnt);
+                currentCnt++;
+                if (currentCnt < 10) {
+                    pinyinName += StringUtils.leftPad(currentCnt.toString(), 2, "0");
+                }else{
+                    pinyinName +=currentCnt;
+                }
+            }else{
+                pinyinName+="01";
+            }
+
+        }
+        return pinyinName;
     }
 
     private void dealWithPersonInfo(String dingDeptId,Map<String,MdDepartment> deptCache,
@@ -495,8 +693,8 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
                         log.info("已处理过该用户数据，ifUserId:{}，跳过", ifUserId);
                         continue;
                     }
-                    hasSyncDingUserIds.add(ifUserId);
 
+                    hasSyncDingUserIds.add(ifUserId);
 
                     Map ifUserInfoMap = DingSyncUtil.getUserInfo(ifUserId);
                     if (ifUserInfoMap.isEmpty() || ifUserInfoMap == null) {
@@ -511,6 +709,8 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
                         List<UserInfo> userList = userInfoMapper.selectList(qw1);
 
 
+                        boolean updFlag = false;
+                        boolean updColumnNullFlag = false;
                         if (userList.size() == 0) {
                             toOpt = new UserInfo();
                             toOpt.setCreatedBy(CommonConstant.DEFAULT_OPT_USER);
@@ -520,29 +720,88 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
                             toOpt.setIfId(ifUserId);
 
 
+                            if (ifUserInfoMap.get("position") != null) {
+                                toOpt.setPosition(String.valueOf(ifUserInfoMap.get("position")));
+                            }
+
+                            toOpt.setUserName(String.valueOf(ifUserInfoMap.get("name")));
+
+                            List roles = (List) ifUserInfoMap.get("roles");
+                            log.info("userName:{}.roles:{}", toOpt.getUserName(), roles);
+
+                            if (ifUserInfoMap.get("mobile") != null) {
+                                toOpt.setTelephone(String.valueOf(ifUserInfoMap.get("mobile").toString()));
+                            }
+
+                            if (ifUserInfoMap.get("managerUserid") != null) {
+                                toOpt.setIfDirectLeaderId(String.valueOf(ifUserInfoMap.get("managerUserid").toString()));
+                            }
+
+                            //初始化userAccount
+                            String userAccount = getUserAccount(toOpt.getUserName());
+                            toOpt.setUserAccount(userAccount);
+
                         } else {
                             toOpt=userList.get(0);
-                            toOpt.setUpdatedTime(new Date());
-                            toOpt.setUpdatedBy(CommonConstant.DEFAULT_OPT_USER);
+
+                            if (toOpt.getPosition()==null && ifUserInfoMap.get("position")!=null
+                                    || toOpt.getPosition()!=null && !toOpt.getPosition().equals(String.valueOf(ifUserInfoMap.get("position")))) {
+                                toOpt.setPosition(ifUserInfoMap.get("position")==null?null:String.valueOf(ifUserInfoMap.get("position")));
+                                updFlag=true;
+                                updColumnNullFlag=true;
+                            }
+
+                            if (toOpt.getIfDirectLeaderId()==null && ifUserInfoMap.get("managerUserid")!=null
+                                    || toOpt.getIfDirectLeaderId()!=null && !toOpt.getIfDirectLeaderId().equals(String.valueOf(ifUserInfoMap.get("managerUserid")))) {
+                                toOpt.setIfDirectLeaderId(ifUserInfoMap.get("managerUserid")==null?null:String.valueOf(ifUserInfoMap.get("managerUserid")));
+                                toOpt.setDirectLeaderId(-1L);
+                                updFlag=true;
+                                updColumnNullFlag=true;
+                            }
+
+                            if (!toOpt.getUserName().equals(String.valueOf(ifUserInfoMap.get("name")))) {
+                                toOpt.setUserName(String.valueOf(ifUserInfoMap.get("name")));
+                                String userAccount = getUserAccount(toOpt.getUserName());
+                                toOpt.setUserAccount(userAccount);
+                                updFlag=true;
+                            }
+
+                            if (!toOpt.getTelephone().equals(String.valueOf(ifUserInfoMap.get("mobile")))) {
+                                toOpt.setTelephone(String.valueOf(ifUserInfoMap.get("mobile").toString()));
+                                updFlag=true;
+                            }
+
+                            List roles = (List) ifUserInfoMap.get("roles");
+                            log.info("userName:{}.roles:{}", toOpt.getUserName(), roles);
+
                         }
-
-                        if (ifUserInfoMap.get("position") != null) {
-                            toOpt.setPosition(String.valueOf(ifUserInfoMap.get("position")));
-                        }
-
-                        toOpt.setUserName(String.valueOf(ifUserInfoMap.get("name")));
-
-                        List roles = (List) ifUserInfoMap.get("roles");
-                        log.info("userName:{}.roles:{}", toOpt.getUserName(), roles);
-
-                        if (ifUserInfoMap.get("mobile") != null) {
-                            toOpt.setTelephone(String.valueOf(ifUserInfoMap.get("mobile").toString()));
-                        }
-
 
                         try{
                             if(toOpt.getId()!=null){
-                                userInfoMapper.updateById(toOpt);
+                                if(updFlag){
+                                    log.info("更新用户信息,userId:{}",toOpt.getId());
+                                    toOpt.setUpdatedTime(new Date());
+                                    toOpt.setUpdatedBy(CommonConstant.DEFAULT_OPT_USER);
+
+                                    if(updColumnNullFlag){
+                                        UpdateWrapper<UserInfo> updWrapper = new UpdateWrapper<>();
+                                        updWrapper.set("position",toOpt.getPosition());
+                                        updWrapper.set("if_direct_leader_id",toOpt.getIfDirectLeaderId());
+                                        updWrapper.set("direct_leader_id",toOpt.getDirectLeaderId());
+                                        updWrapper.set("user_name",toOpt.getUserName());
+                                        updWrapper.set("user_account",toOpt.getUserAccount());
+                                        updWrapper.set("telephone",toOpt.getTelephone());
+                                        updWrapper.set("updated_time",toOpt.getUpdatedTime());
+                                        updWrapper.set("updated_by",toOpt.getUpdatedBy());
+                                        updWrapper.eq(CommonConstant.COLUMN_ID,toOpt.getId()); //需要将字段更新为null
+                                        userInfoMapper().update(null,updWrapper);
+                                    }else{
+                                        userInfoMapper.updateById(toOpt);
+                                    }
+                                }else{
+                                    log.info("不更新用户信息,userId:{}",toOpt.getId());
+                                }
+
                             }else{
                                 userInfoMapper.insert(toOpt);
                             }
@@ -552,14 +811,11 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
                         }
 
 
-
                         //人员部门关系信息处理
                         dealWithPersonDeptInfo(toOpt.getId(), ifUserInfoMap,deptCache);
                     }catch(Exception e){
                         log.error("dealWithPersonInfo error", e);
                     }
-
-
                 }
 
             } else {
@@ -568,9 +824,6 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
         }else{
             log.error("同步部门没有成功同步，不对该部门关联用户进行处理");
         }
-
-
-        
     }
 
     /**
@@ -634,7 +887,13 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
             }
 
             if (!toDeleteList.isEmpty()) {
-                userDepartmentMapper.deleteBatchIds(toDeleteList);
+                //userDepartmentMapper.deleteBatchIds(toDeleteList);
+                UserDepartment toUpd = new UserDepartment();
+                toUpd.setDeletedFlag(CommonConstant.STATUS_DEL);
+                toUpd.setUpdatedTime(new Date());
+                UpdateWrapper<UserDepartment> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.in("id", toDeleteList);
+                userDepartmentMapper.update(toUpd,updateWrapper);
             }
 
 
@@ -676,6 +935,27 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
             // dingSyncDao.saveAllMidOrgPersonParties(createParts);
             // dingSyncDao.updateAllMidOrgPersonPart(updateParts);
         }
+    }
+
+    private static MdDepartmentMapper mdDepartmentMapper(){
+        if(mdDepartmentMapper==null) {
+            mdDepartmentMapper = SpringBeanUtil.getBean(MdDepartmentMapper.class);
+        }
+        return mdDepartmentMapper;
+    }
+
+    private static UserInfoMapper userInfoMapper(){
+        if(userInfoMapper==null) {
+            userInfoMapper = SpringBeanUtil.getBean(UserInfoMapper.class);
+        }
+        return userInfoMapper;
+    }
+
+    private static UserDepartmentMapper userDepartmentMapper(){
+        if(userDepartmentMapper==null) {
+            userDepartmentMapper = SpringBeanUtil.getBean(UserDepartmentMapper.class);
+        }
+        return userDepartmentMapper;
     }
 
 }

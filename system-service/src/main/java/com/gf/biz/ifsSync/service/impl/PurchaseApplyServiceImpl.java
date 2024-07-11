@@ -1,6 +1,7 @@
 package com.gf.biz.ifsSync.service.impl;
 
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.gf.biz.ifsSync.entity.BudgetM;
 import com.gf.biz.ifsSync.mapper.BudgetMapper;
 import com.gf.biz.ifsSync.mapper.PurchaseApplyMapper;
@@ -14,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service("purchaseApplyService")
+@DS("biz_1")
 public class PurchaseApplyServiceImpl implements PurchaseApplyService {
 
     @Autowired

@@ -13,7 +13,6 @@ import com.gf.biz.dingSync.po.UserInfoExt;
  * @author Gf
  * @since 2024-05-24 17:00:48
  */
-@DS("biz_1")
 public interface UserInfoExtMapper extends BaseMapper<UserInfoExt> {
 
 }

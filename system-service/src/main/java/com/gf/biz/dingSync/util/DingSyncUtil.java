@@ -19,7 +19,9 @@ import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+/**
+ * @author Gf
+ */
 public class DingSyncUtil {
 
     private final static Logger log = LoggerFactory.getLogger(DingSyncUtil.class);

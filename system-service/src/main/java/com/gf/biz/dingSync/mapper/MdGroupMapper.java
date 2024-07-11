@@ -13,7 +13,6 @@ import com.gf.biz.dingSync.po.MdGroup;
  * @author Gf
  * @since 2024-05-24 17:01:58
  */
-@DS("biz_1")
 public interface MdGroupMapper extends BaseMapper<MdGroup> {
 
 }

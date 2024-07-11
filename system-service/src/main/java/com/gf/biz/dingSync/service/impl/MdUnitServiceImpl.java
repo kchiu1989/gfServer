@@ -17,9 +17,8 @@ import org.springframework.stereotype.Service;
  * @author Gf
  * @since 2024-05-24 17:02:17
  */
-@Slf4j
+
 @Service
-@DS("biz_1")
 public class MdUnitServiceImpl extends ServiceImpl<MdUnitMapper, MdUnit> implements MdUnitService {
 
 }

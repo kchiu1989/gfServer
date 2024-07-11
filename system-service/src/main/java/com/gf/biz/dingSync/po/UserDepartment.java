@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,7 +13,7 @@ import lombok.Data;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Gf
@@ -20,29 +21,32 @@ import lombok.Data;
  */
 
 @TableName("user_department")
-    public class UserDepartment extends BaseBizEntity implements Serializable {
+public class UserDepartment extends BaseBizEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
 
-
-        /**
-         * '0'正常 '1'删除
-         */
+    /**
+     * '0'正常 '1'删除
+     */
     @TableField("status")
-        private String status;
+    private String status;
 
     @TableField("user_id")
-        private Long userId;
+    private Long userId;
 
     @TableField("department_id")
-        private Long departmentId;
+    private Long departmentId;
 
     @TableField("unit_id")
-        private Long unitId;
+    private Long unitId;
 
     @TableField("group_id")
-        private Long groupId;
+    private Long groupId;
+
+    @TableField("dept_leader_flag")
+    private String deptLeaderFlag;
+
 
     public String getStatus() {
         return status;
@@ -82,5 +86,13 @@ import lombok.Data;
 
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
+    }
+
+    public String getDeptLeaderFlag() {
+        return deptLeaderFlag;
+    }
+
+    public void setDeptLeaderFlag(String deptLeaderFlag) {
+        this.deptLeaderFlag = deptLeaderFlag;
     }
 }

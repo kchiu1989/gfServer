@@ -45,6 +45,10 @@ public class UserDepartmentDto implements Serializable {
 
     private String ifDepartmentId;
 
+    private String ifUserId;
+
+    private String deptLeaderFlag;
+
     public Long getId() {
         return id;
     }
@@ -139,5 +143,21 @@ public class UserDepartmentDto implements Serializable {
 
     public void setIfDepartmentId(String ifDepartmentId) {
         this.ifDepartmentId = ifDepartmentId;
+    }
+
+    public String getDeptLeaderFlag() {
+        return deptLeaderFlag;
+    }
+
+    public void setDeptLeaderFlag(String deptLeaderFlag) {
+        this.deptLeaderFlag = deptLeaderFlag;
+    }
+
+    public String getIfUserId() {
+        return ifUserId;
+    }
+
+    public void setIfUserId(String ifUserId) {
+        this.ifUserId = ifUserId;
     }
 }

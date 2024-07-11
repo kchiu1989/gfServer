@@ -13,7 +13,6 @@ import com.gf.biz.dingSync.po.UserInfo;
  * @author Gf
  * @since 2024-05-24 17:00:11
  */
-@DS("biz_1")
 public interface UserInfoMapper extends BaseMapper<UserInfo> {
-
+    int batchUpdateDirectLeaderId();
 }

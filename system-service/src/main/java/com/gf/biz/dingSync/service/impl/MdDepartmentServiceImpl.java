@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
  * @author Gf
  * @since 2024-05-24 17:02:35
  */
-@Slf4j
 @Service
-@DS("biz_1")
 public class MdDepartmentServiceImpl extends ServiceImpl<MdDepartmentMapper, MdDepartment> implements MdDepartmentService {
 
 }

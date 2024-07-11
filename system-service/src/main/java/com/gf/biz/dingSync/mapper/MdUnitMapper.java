@@ -13,7 +13,6 @@ import com.gf.biz.dingSync.po.MdUnit;
  * @author Gf
  * @since 2024-05-24 17:02:17
  */
-@DS("biz_1")
 public interface MdUnitMapper extends BaseMapper<MdUnit> {
 
 }

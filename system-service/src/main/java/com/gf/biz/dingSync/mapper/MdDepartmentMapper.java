@@ -5,6 +5,8 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.gf.biz.dingSync.po.MdDepartment;
 
+import java.util.List;
+
 /**
  * <p>
  * Mapper 接口
@@ -13,7 +15,6 @@ import com.gf.biz.dingSync.po.MdDepartment;
  * @author Gf
  * @since 2024-05-24 17:02:35
  */
-@DS("biz_1")
 public interface MdDepartmentMapper extends BaseMapper<MdDepartment> {
-
+    List<MdDepartment> getDepartmentListOfChange();
 }

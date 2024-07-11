@@ -48,6 +48,9 @@ public class MdDepartment extends BaseBizEntity implements Serializable {
     @TableField("if_id")
     private String ifId;
 
+    @TableField("dept_identity")
+    private String deptIdentity;
+
     @TableField("manage_user_list")
     private String manageUserList;
 
@@ -113,5 +116,13 @@ public class MdDepartment extends BaseBizEntity implements Serializable {
 
     public void setIfId(String ifId) {
         this.ifId = ifId;
+    }
+
+    public String getDeptIdentity() {
+        return deptIdentity;
+    }
+
+    public void setDeptIdentity(String deptIdentity) {
+        this.deptIdentity = deptIdentity;
     }
 }

@@ -11,6 +11,8 @@
         <result column="group_id" jdbcType="BIGINT" property="groupId"/>
         <result column="deleted_flag" jdbcType="CHAR" property="deletedFlag"/>
         <result column="if_department_id" jdbcType="VARCHAR" property="ifDepartmentId"/>
+        <result column="if_user_id" jdbcType="VARCHAR" property="ifUserId"/>
+        <result column="dept_leader_flag" jdbcType="CHAR" property="deptLeaderFlag"/>
 
     </resultMap>
 
@@ -18,5 +20,10 @@
         select a.*,b.if_id as if_department_id from user_department a join md_department b
         on a.deleted_flag='0' and b.deleted_flag='0' and a.department_id = b.id
         and a.user_id=#{userId,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectLeaderListByDeptId" resultMap="userDeptMap" parameterType="map">
+        select a.*,b.if_id as if_user_id from user_department a join user_info b on a.user_id = b.id and  a.deleted_flag='0' and b.deleted_flag='0'
+        and a.department_id=#{deptId} and dept_leader_flag='1'
     </select>
 </mapper>

@@ -19,9 +19,9 @@ import java.util.List;
  * @author Gf
  * @since 2024-05-24 17:01:30
  */
-@DS("biz_1")
 public interface UserDepartmentMapper extends BaseMapper<UserDepartment> {
 
     List<UserDepartmentDto> selectAdditionalInfo(@Param("userId") Long userId);
+    List<UserDepartmentDto> selectLeaderListByDeptId(@Param("deptId") Long deptId);
 
 }

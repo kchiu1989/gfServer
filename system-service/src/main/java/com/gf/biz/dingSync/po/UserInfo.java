@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,7 +13,7 @@ import lombok.Data;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Gf
@@ -20,59 +21,66 @@ import lombok.Data;
  */
 
 @TableName("user_info")
-    public class UserInfo extends BaseBizEntity implements Serializable {
+public class UserInfo extends BaseBizEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
 
     @TableField("position")
     private String position;
-        /**
-         * '1'正常 '0'         */
+    /**
+     * '1'正常 '0'
+     */
     @TableField("status")
-        private String status;
+    private String status;
 
     @TableField("user_name")
-        private String userName;
+    private String userName;
 
     @TableField("user_account")
-        private String userAccount;
+    private String userAccount;
 
     @TableField("age")
-        private Integer age;
+    private Integer age;
 
     @TableField("gender")
-        private Integer gender;
+    private Integer gender;
 
     @TableField("birthday")
-        private Date birthday;
+    private Date birthday;
 
     @TableField("nation")
-        private String nation;
+    private String nation;
 
     @TableField("birth_place")
-        private String birthPlace;
+    private String birthPlace;
 
     @TableField("id_card")
-        private String idCard;
+    private String idCard;
 
     @TableField("marriage")
-        private Integer marriage;
+    private Integer marriage;
 
     @TableField("work_start_date")
-        private Date workStartDate;
+    private Date workStartDate;
 
     @TableField("working_time")
-        private Integer workingTime;
+    private Integer workingTime;
 
     @TableField("email")
-        private String email;
+    private String email;
 
     @TableField("telephone")
-        private String telephone;
+    private String telephone;
 
     @TableField("if_id")
-        private String ifId;
+    private String ifId;
+
+    @TableField("if_direct_leader_id")
+    private String ifDirectLeaderId;
+
+    @TableField("direct_leader_id")
+    private Long directLeaderId;
 
     public String getStatus() {
         return status;
@@ -200,5 +208,21 @@ import lombok.Data;
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getIfDirectLeaderId() {
+        return ifDirectLeaderId;
+    }
+
+    public void setIfDirectLeaderId(String ifDirectLeaderId) {
+        this.ifDirectLeaderId = ifDirectLeaderId;
+    }
+
+    public Long getDirectLeaderId() {
+        return directLeaderId;
+    }
+
+    public void setDirectLeaderId(Long directLeaderId) {
+        this.directLeaderId = directLeaderId;
     }
 }
