@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gf.biz.codewave.mapper.LcapUserMapper;
 import com.gf.biz.codewave.po.LcapUser;
 import com.gf.biz.codewave.service.LcapUserService;
+import com.gf.biz.common.CommonConstant;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
  * @since 2024-07-11 22:12:16
  */
 @Service
-@DS("biz_1")
+@DS(CommonConstant.DATASOURCE_BIZ_1)
 public class LcapUserServiceImpl extends ServiceImpl<LcapUserMapper, LcapUser> implements LcapUserService {
 
 }

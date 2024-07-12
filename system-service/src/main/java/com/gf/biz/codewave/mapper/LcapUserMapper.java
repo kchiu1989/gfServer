@@ -4,6 +4,7 @@ package com.gf.biz.codewave.mapper;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.gf.biz.codewave.po.LcapUser;
+import com.gf.biz.common.CommonConstant;
 
 /**
  * <p>
@@ -16,7 +17,7 @@ import com.gf.biz.codewave.po.LcapUser;
  * @author Gf
  * @since 2024-07-11 22:12:16
  */
-@DS("biz_1")
+@DS(CommonConstant.DATASOURCE_BIZ_1)
 public interface LcapUserMapper extends BaseMapper<LcapUser> {
 
 }

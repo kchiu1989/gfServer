@@ -6,6 +6,7 @@ import com.gf.biz.codewave.po.LcapUserDeptMapping;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.gf.biz.codewave.service.LcapUserDeptMappingService;
+import com.gf.biz.common.CommonConstant;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @since 2024-07-11 22:41:38
  */
 @Service
-@DS("biz_1")
+@DS(CommonConstant.DATASOURCE_BIZ_1)
 public class LcapUserDeptMappingServiceImpl extends ServiceImpl<LcapUserDeptMappingMapper, LcapUserDeptMapping> implements LcapUserDeptMappingService {
 
 }
