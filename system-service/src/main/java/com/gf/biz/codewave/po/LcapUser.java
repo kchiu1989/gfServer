@@ -1,14 +1,9 @@
 package com.gf.biz.codewave.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import lombok.Data;
 
 /**
  * <p>
@@ -21,11 +16,14 @@ import lombok.Data;
  * @author Gf
  * @since 2024-07-09 15:45:56
  */
-@Data
+
 @TableName("lcap_user_4a79f3")
-public class LcapUser4a79f3 implements Serializable {
+public class LcapUser extends BaseCodewaveBizEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @TableField("if_id")
+    private Long ifId;
 
     /**
      * 第三方登录方式唯一id；普通登录使用userName+source作为userId
@@ -81,8 +79,13 @@ public class LcapUser4a79f3 implements Serializable {
     @TableField("direct_leader_id")
     private String directLeaderId;
 
-    @TableField("if_id")
-    private String ifId;
+    public void setIfId(Long ifId) {
+        this.ifId = ifId;
+    }
+
+    public Long getIfId() {
+        return ifId;
+    }
 
     public String getUserId() {
         return userId;
@@ -154,13 +157,5 @@ public class LcapUser4a79f3 implements Serializable {
 
     public void setDirectLeaderId(String directLeaderId) {
         this.directLeaderId = directLeaderId;
-    }
-
-    public String getIfId() {
-        return ifId;
-    }
-
-    public void setIfId(String ifId) {
-        this.ifId = ifId;
     }
 }
