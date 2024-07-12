@@ -12,6 +12,6 @@ public class SyncMasterDataToCodewaveJob extends IJobHandler {
     public void execute() throws Exception {
         //获取当天新增或者更新的数据
         UserInfoMapper userInfoMapper = SpringBeanUtil.getBean(UserInfoMapper.class);
-        userInfoMapper.
+        //userInfoMapper.
     }
 }
