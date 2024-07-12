@@ -76,7 +76,7 @@ public class UserDepartmentServiceImpl extends ServiceImpl<UserDepartmentMapper,
             //更新为非主管标识
             UpdateWrapper<UserDepartment> updateWrapper=new UpdateWrapper<>();
             updateWrapper.in("id",idList);
-            UserDepartment toUpd = new  UserDepartment();
+            UserDepartment toUpd = new UserDepartment();
             toUpd.setUpdatedTime(new Date());
             toUpd.setUpdatedBy("SYS");
             toUpd.setDeptLeaderFlag("0");

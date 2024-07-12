@@ -3,11 +3,15 @@ package com.gf.biz.codewave.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gf.biz.codewave.mapper.LcapUserDeleteMapper;
 import com.gf.biz.codewave.mapper.LcapUserMapper;
 import com.gf.biz.codewave.po.LcapUser;
+import com.gf.biz.codewave.po.LcapUserDelete;
 import com.gf.biz.codewave.service.LcapUserService;
 import com.gf.biz.common.CommonConstant;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -24,4 +28,24 @@ import org.springframework.stereotype.Service;
 @DS(CommonConstant.DATASOURCE_BIZ_1)
 public class LcapUserServiceImpl extends ServiceImpl<LcapUserMapper, LcapUser> implements LcapUserService {
 
+    private LcapUserDeleteMapper lcapUserDeleteMapper;
+    private LcapUserMapper lcapUserMapper;
+
+    public void setLcapUserDeleteMapper(LcapUserDeleteMapper lcapUserDeleteMapper) {
+        this.lcapUserDeleteMapper = lcapUserDeleteMapper;
+    }
+
+    public void setLcapUserMapper(LcapUserMapper lcapUserMapper) {
+        this.lcapUserMapper = lcapUserMapper;
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteAndSaveHistory(LcapUser dbUser) {
+        LcapUserDelete history = new LcapUserDelete();
+        BeanUtils.copyProperties(dbUser,history);
+        lcapUserDeleteMapper.insert(history);
+        lcapUserMapper.deleteById(dbUser.getId());
+    }
 }

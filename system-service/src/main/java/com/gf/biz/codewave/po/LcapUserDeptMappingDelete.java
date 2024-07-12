@@ -6,9 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import lombok.Data;
 
 /**
  * <p>
@@ -18,12 +15,12 @@ import lombok.Data;
  * @author Gf
  * @since 2024-07-11 22:41:38
  */
-@TableName("lcap_user_dept_mapping_4a79f3")
-public class LcapUserDeptMapping extends BaseCodewaveBizEntity implements Serializable {
+@TableName("lcap_user_dept_mapping_4a79f3_delete")
+public class LcapUserDeptMappingDelete extends BaseCodewaveBizEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.NONE)
     private Long id;
 
     /**

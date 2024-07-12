@@ -23,5 +23,6 @@ public interface UserDepartmentMapper extends BaseMapper<UserDepartment> {
 
     List<UserDepartmentDto> selectAdditionalInfo(@Param("userId") Long userId);
     List<UserDepartmentDto> selectLeaderListByDeptId(@Param("deptId") Long deptId);
+    List<UserDepartmentDto> selectUserDeptInfoToSyncCodewave();
 
 }

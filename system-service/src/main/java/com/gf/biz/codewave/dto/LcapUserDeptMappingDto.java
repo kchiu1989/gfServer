@@ -1,14 +1,13 @@
-package com.gf.biz.codewave.po;
+package com.gf.biz.codewave.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.gf.biz.codewave.po.BaseCodewaveBizEntity;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import lombok.Data;
 
 /**
  * <p>
@@ -18,30 +17,39 @@ import lombok.Data;
  * @author Gf
  * @since 2024-07-11 22:41:38
  */
-@TableName("lcap_user_dept_mapping_4a79f3")
-public class LcapUserDeptMapping extends BaseCodewaveBizEntity implements Serializable {
+
+public class LcapUserDeptMappingDto extends BaseCodewaveBizEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
+
     private Long id;
+
+
+    private String createdBy;
+
+    private String updatedBy;
+
+    private Date createdTime;
+
+    private Date updatedTime;
 
     /**
      * 用户ID
      */
-    @TableField("user_id")
+
     private String userId;
 
     /**
      * 部门标识
      */
-    @TableField("dept_id")
+
     private String deptId;
 
     /**
      * 是否是部门主管
      */
-    @TableField("is_dept_leader")
+
     private Long isDeptLeader;
 
     @Override
@@ -76,5 +84,45 @@ public class LcapUserDeptMapping extends BaseCodewaveBizEntity implements Serial
 
     public void setIsDeptLeader(Long isDeptLeader) {
         this.isDeptLeader = isDeptLeader;
+    }
+
+    @Override
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    @Override
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    @Override
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    @Override
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    @Override
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    @Override
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    @Override
+    public Date getUpdatedTime() {
+        return updatedTime;
+    }
+
+    @Override
+    public void setUpdatedTime(Date updatedTime) {
+        this.updatedTime = updatedTime;
     }
 }

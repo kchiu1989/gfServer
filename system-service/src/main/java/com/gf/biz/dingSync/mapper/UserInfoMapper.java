@@ -5,6 +5,8 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.gf.biz.dingSync.po.UserInfo;
 
+import java.util.List;
+
 /**
  * <p>
  * Mapper 接口
@@ -15,4 +17,5 @@ import com.gf.biz.dingSync.po.UserInfo;
  */
 public interface UserInfoMapper extends BaseMapper<UserInfo> {
     int batchUpdateDirectLeaderId();
+    List<UserInfo> selectUserInfoToSyncCodewave();
 }

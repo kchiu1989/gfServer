@@ -1,6 +1,7 @@
 package com.gf.biz.codewave.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gf.biz.codewave.dto.LcapUserDeptMappingDto;
 import com.gf.biz.codewave.po.LcapUserDeptMapping;
 
 /**
@@ -12,5 +13,5 @@ import com.gf.biz.codewave.po.LcapUserDeptMapping;
  * @since 2024-07-11 22:41:38
  */
 public interface LcapUserDeptMappingService extends IService<LcapUserDeptMapping> {
-
+    void deleteAndSaveHistory(LcapUserDeptMapping lcapUserDeptMapping);
 }

@@ -1,12 +1,17 @@
 package com.gf.biz.codewave.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.gf.biz.codewave.mapper.LcapDepartmentDeleteMapper;
 import com.gf.biz.codewave.mapper.LcapDepartmentMapper;
 import com.gf.biz.codewave.po.LcapDepartment;
+import com.gf.biz.codewave.po.LcapDepartmentDelete;
+import com.gf.biz.codewave.po.LcapUserDelete;
 import com.gf.biz.codewave.service.LcapDepartmentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gf.biz.common.CommonConstant;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -19,5 +24,26 @@ import org.springframework.stereotype.Service;
 @Service
 @DS(CommonConstant.DATASOURCE_BIZ_1)
 public class LcapDepartmentServiceImpl extends ServiceImpl<LcapDepartmentMapper, LcapDepartment> implements LcapDepartmentService {
+    private LcapDepartmentMapper lcapDepartmentMapper;
+    private LcapDepartmentDeleteMapper lcapDepartmentDeleteMapper;
+
+    public void setLcapDepartmentMapper(LcapDepartmentMapper lcapDepartmentMapper) {
+        this.lcapDepartmentMapper = lcapDepartmentMapper;
+    }
+
+    public void setLcapDepartmentDeleteMapper(LcapDepartmentDeleteMapper lcapDepartmentDeleteMapper) {
+        this.lcapDepartmentDeleteMapper = lcapDepartmentDeleteMapper;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteAndSaveHistory(LcapDepartment dbDept) {
+        LcapDepartmentDelete history = new LcapDepartmentDelete();
+        BeanUtils.copyProperties(dbDept,history);
+        lcapDepartmentDeleteMapper.insert(history);
+        lcapDepartmentMapper.deleteById(dbDept.getId());
+    }
+
+
 
 }

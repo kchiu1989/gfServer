@@ -16,5 +16,5 @@ import com.gf.biz.codewave.po.LcapUser;
  * @since 2024-07-11 22:12:16
  */
 public interface LcapUserService extends IService<LcapUser> {
-
+    public void deleteAndSaveHistory(LcapUser dbUser);
 }

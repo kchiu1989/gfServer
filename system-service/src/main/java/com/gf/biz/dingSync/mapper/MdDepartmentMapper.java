@@ -17,4 +17,5 @@ import java.util.List;
  */
 public interface MdDepartmentMapper extends BaseMapper<MdDepartment> {
     List<MdDepartment> getDepartmentListOfChange();
+    List<MdDepartment> selectDeptInfoToSyncCodewave();
 }

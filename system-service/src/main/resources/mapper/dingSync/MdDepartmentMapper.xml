@@ -29,4 +29,9 @@
             )-->
         DATE_FORMAT(IFNULL(a.updated_time,a.created_time), '%Y-%m-%d')= DATE_FORMAT(SYSDATE(), '%Y-%m-%d')
     </select>
+
+    <select id="selectDeptInfoToSyncCodewave" resultMap="mdDepartmentMap">
+        select a.* from md_department a WHERE
+            DATE_FORMAT(IFNULL(a.updated_time,a.created_time), '%Y-%m-%d')= DATE_FORMAT(SYSDATE(), '%Y-%m-%d')
+    </select>
 </mapper>

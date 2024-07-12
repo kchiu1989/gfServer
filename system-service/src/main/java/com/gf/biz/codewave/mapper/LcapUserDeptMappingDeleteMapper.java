@@ -2,12 +2,9 @@ package com.gf.biz.codewave.mapper;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.gf.biz.codewave.dto.LcapUserDeptMappingDto;
 import com.gf.biz.codewave.po.LcapUserDeptMapping;
+import com.gf.biz.codewave.po.LcapUserDeptMappingDelete;
 import com.gf.biz.common.CommonConstant;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
  * <p>
@@ -18,6 +15,6 @@ import java.util.List;
  * @since 2024-07-11 22:41:38
  */
 @DS(CommonConstant.DATASOURCE_BIZ_1)
-public interface LcapUserDeptMappingMapper extends BaseMapper<LcapUserDeptMapping> {
-    List<LcapUserDeptMapping> selectByIfUserIdAndIfDeptId(@Param("ifUserId") Long ifUserId, @Param("ifDeptId") Long ifDeptId);
+    public interface LcapUserDeptMappingDeleteMapper extends BaseMapper<LcapUserDeptMappingDelete> {
+
 }

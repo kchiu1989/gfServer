@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gf.biz.codewave.mapper.LcapDepartmentMapper">
-
+    <update id="updateParentDept">
+        UPDATE lcap_department_4a79f3 a
+        SET a.parent_dept_id = (
+            SELECT
+                c.dept_id
+            FROM
+                (
+                    SELECT
+                        b.*
+                    FROM
+                        lcap_department_4a79f3 b
+                    WHERE
+                        b.if_id is not null and DATE_FORMAT( IFNULL( b.updated_time, b.created_time ), '%Y-%m-%d' )= DATE_FORMAT( SYSDATE(), '%Y-%m-%d' )
+                ) c
+            WHERE
+                a.if_parent_dept_id is not null and c.if_id = a.if_parent_dept_id
+        )
+    </update>
 </mapper>

@@ -3,6 +3,7 @@ package com.gf.biz.codewave.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gf.biz.codewave.po.LcapDepartment;
+import com.gf.biz.codewave.po.LcapUser;
 
 /**
  * <p>
@@ -13,5 +14,5 @@ import com.gf.biz.codewave.po.LcapDepartment;
  * @since 2024-07-11 22:24:20
  */
 public interface LcapDepartmentService extends IService<LcapDepartment> {
-
+    public void deleteAndSaveHistory(LcapDepartment dbDept);
 }

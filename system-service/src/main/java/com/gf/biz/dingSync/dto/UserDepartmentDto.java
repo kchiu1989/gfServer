@@ -16,17 +16,17 @@ public class UserDepartmentDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    protected Long id;
+    private Long id;
 
-    protected String createdBy;
+    private String createdBy;
 
-    protected String updatedBy;
+    private String updatedBy;
 
-    protected String deletedFlag;
+    private String deletedFlag;
 
-    protected Date createdTime;
+    private Date createdTime;
 
-    protected Date updatedTime;
+    private Date updatedTime;
 
 
     private String status;

@@ -16,12 +16,12 @@ import java.io.Serializable;
  * @author Gf
  * @since 2024-07-11 22:24:20
  */
-@TableName("lcap_department_4a79f3")
-public class LcapDepartment extends BaseCodewaveBizEntity implements Serializable {
+@TableName("lcap_department_4a79f3_delete")
+public class LcapDepartmentDelete extends BaseCodewaveBizEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.NONE)
     private Long id;
 
     @TableField("if_id")

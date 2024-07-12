@@ -12,9 +12,6 @@ import java.util.Date;
  * @Author Gf
  */
 public abstract class BaseCodewaveBizEntity extends BaseEntity<Long,String> implements Serializable {
-
-    @TableId(value = "id", type = IdType.AUTO)
-    protected Long id;
     @TableField(value = "created_by")
     protected String createdBy;
     @TableField(value = "updated_by")
@@ -24,15 +21,6 @@ public abstract class BaseCodewaveBizEntity extends BaseEntity<Long,String> impl
     @TableField("updated_time")
     protected Date updatedTime;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     @Override
     public String getCreatedBy() {
