@@ -121,4 +121,8 @@ public interface CommonConstant {
     String ARRAY_SYMBOL = "[]";
 
     String DEFAULT_OPT_USER="SYS";
+
+    String DATASOURCE_BIZ_1= "biz_1";
+
+    String DATASOURCE_MASTER= "master";
 }
