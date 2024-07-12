@@ -13,8 +13,9 @@
                     FROM
                         user_info b
                     WHERE
-                        DATE_FORMAT(b.created_time, '%Y-%m-%d') = DATE_FORMAT(SYSDATE(), '%Y-%m-%d')
-                or DATE_FORMAT(b.updated_time, '%Y-%m-%d') = DATE_FORMAT(SYSDATE(), '%Y-%m-%d') ) c
+                        DATE_FORMAT(IFNULL(b.updated_time,b.created_time), '%Y-%m-%d')= DATE_FORMAT(SYSDATE(), '%Y-%m-%d')
+                        <!--DATE_FORMAT(b.created_time, '%Y-%m-%d') = DATE_FORMAT(SYSDATE(), '%Y-%m-%d')
+                or DATE_FORMAT(b.updated_time, '%Y-%m-%d') = DATE_FORMAT(SYSDATE(), '%Y-%m-%d') -->) c
             WHERE
                 c.if_id = aa.if_direct_leader_id)
     </update>

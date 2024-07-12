@@ -22,9 +22,11 @@
 
 
     <select id="getDepartmentListOfChange" resultMap="mdDepartmentMap">
-        select a.* from md_department a where a.manage_user_list is not null and (
+        select a.* from md_department a where a.manage_user_list is not null and
+            <!--(
             DATE_FORMAT(a.created_time, '%Y-%m-%d') = DATE_FORMAT(SYSDATE(), '%Y-%m-%d')
                 or DATE_FORMAT(a.updated_time, '%Y-%m-%d') = DATE_FORMAT(SYSDATE(), '%Y-%m-%d')
-            )
+            )-->
+        DATE_FORMAT(IFNULL(a.updated_time,a.created_time), '%Y-%m-%d')= DATE_FORMAT(SYSDATE(), '%Y-%m-%d')
     </select>
 </mapper>
