@@ -1,8 +1,8 @@
 package com.gf.biz.config;
 
 
-
-import com.gf.biz.dingSync.task.SyncDingdingToGenMasterDataJob;
+import com.gf.biz.codewave.task.SyncMasterDataToCodewaveJob;
+import com.gf.biz.dingSync.task.SyncDingdingSysToGenMasterDataJob;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.slf4j.Logger;
@@ -68,8 +68,8 @@ public class JobConfig {
     public void initJobs() {
         // 手动注册IJobHandler
 
-        XxlJobExecutor.registJobHandler("syncDingdingToGenMasterDataJob", new SyncDingdingToGenMasterDataJob());
-
+        XxlJobExecutor.registJobHandler("syncDingdingSysToGenMasterDataJob", new SyncDingdingSysToGenMasterDataJob());
+        XxlJobExecutor.registJobHandler("syncMasterDataToCodewaveJob", new SyncMasterDataToCodewaveJob());
 
     }
 
