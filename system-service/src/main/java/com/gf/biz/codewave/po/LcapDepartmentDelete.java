@@ -42,6 +42,12 @@ public class LcapDepartmentDelete extends BaseCodewaveBizEntity implements Seria
     @TableField("dept_id")
     private String deptId;
 
+    @TableField("dept_classify")
+    private String deptClassify;
+
+    @TableField("dept_code")
+    private String deptCode;
+
     public Long getIfId() {
         return ifId;
     }
@@ -96,5 +102,21 @@ public class LcapDepartmentDelete extends BaseCodewaveBizEntity implements Seria
     @Override
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDeptClassify() {
+        return deptClassify;
+    }
+
+    public void setDeptClassify(String deptClassify) {
+        this.deptClassify = deptClassify;
+    }
+
+    public String getDeptCode() {
+        return deptCode;
+    }
+
+    public void setDeptCode(String deptCode) {
+        this.deptCode = deptCode;
     }
 }

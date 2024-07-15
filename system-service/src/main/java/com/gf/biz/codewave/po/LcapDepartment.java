@@ -36,6 +36,12 @@ public class LcapDepartment extends BaseCodewaveBizEntity implements Serializabl
     @TableField("name")
     private String name;
 
+    @TableField("dept_classify")
+    private String deptClassify;
+
+    @TableField("dept_code")
+    private String deptCode;
+
     /**
      * 部门标识
      */
@@ -80,6 +86,22 @@ public class LcapDepartment extends BaseCodewaveBizEntity implements Serializabl
 
     public void setIfParentId(Long ifParentId) {
         this.ifParentId = ifParentId;
+    }
+
+    public String getDeptClassify() {
+        return deptClassify;
+    }
+
+    public void setDeptClassify(String deptClassify) {
+        this.deptClassify = deptClassify;
+    }
+
+    public String getDeptCode() {
+        return deptCode;
+    }
+
+    public void setDeptCode(String deptCode) {
+        this.deptCode = deptCode;
     }
 
     /**

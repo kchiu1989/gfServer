@@ -17,7 +17,7 @@
         <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
         <result column="if_id" jdbcType="VARCHAR" property="ifId"/>
         <result column="manage_user_list" jdbcType="VARCHAR" property="manageUserList"/>
-
+        <result column="dept_classify" jdbcType="CHAR" property="deptClassify"/>
     </resultMap>
 
 

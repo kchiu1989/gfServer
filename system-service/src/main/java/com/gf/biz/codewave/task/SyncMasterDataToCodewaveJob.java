@@ -193,6 +193,30 @@ public class SyncMasterDataToCodewaveJob extends IJobHandler {
                             lcapDepartmentMapper.update(null, updateLcapDeptWrapper);
                         }
 
+                        //更改部门编码
+                        if (dbLcapDept.getDeptCode()==null && deptInfo.getDeptCode()!=null
+                                || dbLcapDept.getDeptCode()!=null && !dbLcapDept.getDeptCode().equals(deptInfo.getDeptCode())) {
+                            XxlJobHelper.log("deptId:{},deptIdentity:{},更改部门编码", deptInfo.getId(), deptInfo.getDeptIdentity());
+                            updateLcapDeptWrapper = new UpdateWrapper<>();
+                            updateLcapDeptWrapper.set("dept_code", deptInfo.getDeptCode());
+                            updateLcapDeptWrapper.set("updated_time", currentDate);
+                            updateLcapDeptWrapper.set("updated_by", CommonConstant.DEFAULT_OPT_USER);
+                            updateLcapDeptWrapper.eq(CommonConstant.COLUMN_ID, dbLcapDept.getId());
+                            lcapDepartmentMapper.update(null, updateLcapDeptWrapper);
+                        }
+
+                        //更改部门分类
+                        if (dbLcapDept.getDeptClassify()==null && deptInfo.getDeptClassify()!=null
+                                || dbLcapDept.getDeptClassify()!=null && !dbLcapDept.getDeptClassify().equals(deptInfo.getDeptClassify())) {
+                            XxlJobHelper.log("deptId:{},deptIdentity:{},更改部门编码", deptInfo.getId(), deptInfo.getDeptIdentity());
+                            updateLcapDeptWrapper = new UpdateWrapper<>();
+                            updateLcapDeptWrapper.set("dept_classify", deptInfo.getDeptClassify());
+                            updateLcapDeptWrapper.set("updated_time", currentDate);
+                            updateLcapDeptWrapper.set("updated_by", CommonConstant.DEFAULT_OPT_USER);
+                            updateLcapDeptWrapper.eq(CommonConstant.COLUMN_ID, dbLcapDept.getId());
+                            lcapDepartmentMapper.update(null, updateLcapDeptWrapper);
+                        }
+
                     } else {
                         //新增用户
                         XxlJobHelper.log("deptId:{},deptIdentity:{},新增用户", deptInfo.getId(), deptInfo.getDeptIdentity());
@@ -211,6 +235,9 @@ public class SyncMasterDataToCodewaveJob extends IJobHandler {
 
                         lcapDeptToAdd.setDeptId(deptInfo.getDeptIdentity());
                         lcapDeptToAdd.setIfParentId(deptInfo.getParentId());
+
+                        lcapDeptToAdd.setDeptClassify(deptInfo.getDeptClassify());
+                        lcapDeptToAdd.setDeptCode(deptInfo.getDeptCode());
 
                         lcapDepartmentMapper.insert(lcapDeptToAdd);
 

@@ -46,6 +46,9 @@ public class MdDepartment extends BaseBizEntity implements Serializable {
     @TableField("dept_identity")
     private String deptIdentity;
 
+    @TableField("dept_classify")
+    private String deptClassify;
+
     @TableField("manage_user_list")
     private String manageUserList;
 
@@ -119,5 +122,13 @@ public class MdDepartment extends BaseBizEntity implements Serializable {
 
     public void setDeptIdentity(String deptIdentity) {
         this.deptIdentity = deptIdentity;
+    }
+
+    public String getDeptClassify() {
+        return deptClassify;
+    }
+
+    public void setDeptClassify(String deptClassify) {
+        this.deptClassify = deptClassify;
     }
 }
