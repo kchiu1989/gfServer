@@ -432,7 +432,7 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
                         toOpt.setCreatedBy(CommonConstant.DEFAULT_OPT_USER);
                         toOpt.setCreatedTime(new Date());
                         toOpt.setIfId(dingDeptId);
-                        toOpt.setName(String.valueOf(ifDingDept.get("name")));
+                        toOpt.setDeptName(String.valueOf(ifDingDept.get("name")));
                         toOpt.setManageUserList(deptInfoMap.get("dept_manager_userid_list")==null?null:deptInfoMap.get("dept_manager_userid_list").toString());
                         toOpt.setGroupId(groupId);//客开修改
                         toOpt.setUnitId(unitId);
@@ -442,7 +442,7 @@ public class SyncDingdingToGenMasterDataJob extends IJobHandler {
                     } else {
                         toOpt = deptList.get(0);
                         toOpt.setParentId(parentId);
-                        toOpt.setName(String.valueOf(ifDingDept.get("name")));
+                        toOpt.setDeptName(String.valueOf(ifDingDept.get("name")));
                         toOpt.setManageUserList(deptInfoMap.get("dept_manager_userid_list")==null?null:deptInfoMap.get("dept_manager_userid_list").toString());
                         toOpt.setUpdatedBy(CommonConstant.DEFAULT_OPT_USER);
                         toOpt.setUpdatedTime(new Date());

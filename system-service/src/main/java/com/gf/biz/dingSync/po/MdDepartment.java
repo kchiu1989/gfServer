@@ -1,15 +1,10 @@
 package com.gf.biz.dingSync.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.gf.biz.common.entity.BaseBizEntity;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import com.gf.biz.common.entity.BaseBizEntity;
-import lombok.Data;
 
 /**
  * <p>
@@ -30,11 +25,11 @@ public class MdDepartment extends BaseBizEntity implements Serializable {
     @TableField("status")
     private String status;
 
-    @TableField("name")
-    private String name;
+    @TableField("dept_name")
+    private String deptName;
 
-    @TableField("code")
-    private String code;
+    @TableField("dept_code")
+    private String deptCode;
 
     @TableField("unit_id")
     private Long unitId;
@@ -70,20 +65,20 @@ public class MdDepartment extends BaseBizEntity implements Serializable {
         this.status = status;
     }
 
-    public String getName() {
-        return name;
+    public String getDeptName() {
+        return deptName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 
-    public String getCode() {
-        return code;
+    public String getDeptCode() {
+        return deptCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setDeptCode(String deptCode) {
+        this.deptCode = deptCode;
     }
 
     public Long getUnitId() {

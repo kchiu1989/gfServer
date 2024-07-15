@@ -1,14 +1,10 @@
 package com.gf.biz.dingSync.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
-
 import com.gf.biz.common.entity.BaseBizEntity;
-import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -32,11 +28,11 @@ import lombok.Data;
     @TableField("status")
         private String status;
 
-    @TableField("name")
-        private String name;
+    @TableField("unit_name")
+        private String unitName;
 
-    @TableField("code")
-        private String code;
+    @TableField("unit_code")
+        private String unitCode;
 
     @TableField("short_name")
         private String shortName;
@@ -55,20 +51,20 @@ import lombok.Data;
         this.status = status;
     }
 
-    public String getName() {
-        return name;
+    public String getUnitName() {
+        return unitName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
 
-    public String getCode() {
-        return code;
+    public String getUnitCode() {
+        return unitCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setUnitCode(String unitCode) {
+        this.unitCode = unitCode;
     }
 
     public String getShortName() {

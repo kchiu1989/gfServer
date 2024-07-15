@@ -10,8 +10,8 @@
         <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
         <result column="deleted_flag" jdbcType="CHAR" property="deletedFlag"/>
         <result column="status" jdbcType="CHAR" property="status"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
+        <result column="dept_code" jdbcType="VARCHAR" property="deptCode"/>
         <result column="unit_id" jdbcType="VARCHAR" property="unitId"/>
         <result column="group_id" jdbcType="BIGINT" property="groupId"/>
         <result column="parent_id" jdbcType="BIGINT" property="parentId"/>

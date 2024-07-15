@@ -468,14 +468,14 @@ public class SyncDingdingSysToGenMasterDataJob extends IJobHandler {
                         toOpt.setCreatedBy(CommonConstant.DEFAULT_OPT_USER);
                         toOpt.setCreatedTime(new Date());
                         toOpt.setIfId(dingDeptId);
-                        toOpt.setName(String.valueOf(ifDingDept.get("name")));
+                        toOpt.setDeptName(String.valueOf(ifDingDept.get("name")));
                         toOpt.setManageUserList(deptInfoMap.get("dept_manager_userid_list")==null?null:deptInfoMap.get("dept_manager_userid_list").toString());
                         toOpt.setGroupId(groupId);//客开修改
                         toOpt.setUnitId(unitId);
                         toOpt.setParentId(parentId);
                         //对于新增数据,需要设置deptIdentity，deptIdentity为拼音,若重复后面01..02递增，若三次内始终有重复，则使用uuid
 
-                        String deptIdentity = getDeptIdentity(toOpt.getName());
+                        String deptIdentity = getDeptIdentity(toOpt.getDeptName());
                         toOpt.setDeptIdentity(deptIdentity);
 
                         mdDepartmentMapper().insert(toOpt);
@@ -490,10 +490,10 @@ public class SyncDingdingSysToGenMasterDataJob extends IJobHandler {
                             updFlag=true;
                         }
 
-                        if(toOpt.getName()!=null && !toOpt.getName().equals(String.valueOf(ifDingDept.get("name")))){
-                            toOpt.setName(String.valueOf(ifDingDept.get("name")));
+                        if(toOpt.getDeptName()!=null && !toOpt.getDeptName().equals(String.valueOf(ifDingDept.get("name")))){
+                            toOpt.setDeptName(String.valueOf(ifDingDept.get("name")));
 
-                            String deptIdentity = getDeptIdentity(toOpt.getName());
+                            String deptIdentity = getDeptIdentity(toOpt.getDeptName());
                             toOpt.setDeptIdentity(deptIdentity);
 
                             updFlag=true;
@@ -513,7 +513,7 @@ public class SyncDingdingSysToGenMasterDataJob extends IJobHandler {
                             if(updColumnNullFlag){
                                 UpdateWrapper<MdDepartment> updWrapper = new UpdateWrapper<>();
                                 updWrapper.set("parent_id",toOpt.getParentId());
-                                updWrapper.set("name",toOpt.getName());
+                                updWrapper.set("dept_name",toOpt.getDeptName());
                                 updWrapper.set("dept_identity",toOpt.getDeptIdentity());
                                 updWrapper.set("manage_user_list",toOpt.getManageUserList());
 

@@ -182,11 +182,11 @@ public class SyncMasterDataToCodewaveJob extends IJobHandler {
                         }
 
                         //更改部门的名称
-                        if (dbLcapDept.getName() != null && deptInfo.getName() != null
-                                && !dbLcapDept.getName().equals(deptInfo.getName())) {
+                        if (dbLcapDept.getName() != null && deptInfo.getDeptName() != null
+                                && !dbLcapDept.getName().equals(deptInfo.getDeptName())) {
                             XxlJobHelper.log("deptId:{},deptIdentity:{},更改部门名称，标识不改变", deptInfo.getId(), deptInfo.getDeptIdentity());
                             updateLcapDeptWrapper = new UpdateWrapper<>();
-                            updateLcapDeptWrapper.set("name", deptInfo.getName());
+                            updateLcapDeptWrapper.set("name", deptInfo.getDeptName());
                             updateLcapDeptWrapper.set("updated_time", currentDate);
                             updateLcapDeptWrapper.set("updated_by", CommonConstant.DEFAULT_OPT_USER);
                             updateLcapDeptWrapper.eq(CommonConstant.COLUMN_ID, dbLcapDept.getId());
@@ -207,7 +207,7 @@ public class SyncMasterDataToCodewaveJob extends IJobHandler {
                         lcapDeptToAdd.setCreatedTime(currentDate);
                         lcapDeptToAdd.setCreatedBy(CommonConstant.DEFAULT_OPT_USER);
                         lcapDeptToAdd.setIfId(deptInfo.getId());
-                        lcapDeptToAdd.setName(deptInfo.getName());
+                        lcapDeptToAdd.setName(deptInfo.getDeptName());
 
                         lcapDeptToAdd.setDeptId(deptInfo.getDeptIdentity());
                         lcapDeptToAdd.setIfParentId(deptInfo.getParentId());
