@@ -93,7 +93,7 @@ public class SyncMasterDataToCodewaveJob extends IJobHandler {
 
                     } else {
                         if (CommonConstant.STATUS_DEL.equals(userInfo.getDeletedFlag())) {
-                            XxlJobHelper.log("userId:{},userAccount:{},无需新增", userInfo.getId(), userInfo.getUserAccount());
+                            XxlJobHelper.log("userId:{},userAccount:{},主数据已删除，无需新增", userInfo.getId(), userInfo.getUserAccount());
                             continue;
                         }
 
@@ -198,7 +198,7 @@ public class SyncMasterDataToCodewaveJob extends IJobHandler {
                         XxlJobHelper.log("deptId:{},deptIdentity:{},新增用户", deptInfo.getId(), deptInfo.getDeptIdentity());
 
                         if (CommonConstant.STATUS_DEL.equals(deptInfo.getDeletedFlag())) {
-                            XxlJobHelper.log("deptId:{},deptIdentity:{},无需新增", deptInfo.getId(), deptInfo.getDeptIdentity());
+                            XxlJobHelper.log("deptId:{},deptIdentity:{},主数据已删除，无需新增", deptInfo.getId(), deptInfo.getDeptIdentity());
                             continue;
                         }
 
@@ -254,11 +254,12 @@ public class SyncMasterDataToCodewaveJob extends IJobHandler {
                         if (CommonConstant.STATUS_DEL.equals(userDeptInfo.getDeletedFlag())) {
                             XxlJobHelper.log("deptId:{},userId:{},物理删除", userDeptInfo.getDepartmentId(), userDeptInfo.getUserId());
                             lcapUserDeptMappingService.deleteAndSaveHistory(dbLcapUserDept);
+                            continue;
                         }
 
                         if (userDeptInfo.getDeptLeaderFlag() == null && dbLcapUserDept.getIsDeptLeader() != null ||
                                 userDeptInfo.getDeptLeaderFlag() != null && dbLcapUserDept.getIsDeptLeader() != null
-                                        && userDeptInfo.getDeptLeaderFlag().equals(dbLcapUserDept.getIsDeptLeader().toString())
+                                        && !userDeptInfo.getDeptLeaderFlag().equals(dbLcapUserDept.getIsDeptLeader().toString())
                                 || userDeptInfo.getDeptLeaderFlag() != null && dbLcapUserDept.getIsDeptLeader() == null) {
                             UpdateWrapper<LcapUserDeptMapping> updateWrapper = new UpdateWrapper<>();
                             updateWrapper.set("is_dept_leader", userDeptInfo.getDeptLeaderFlag() == null ? null : Long.valueOf(userDeptInfo.getDeptLeaderFlag()));
@@ -266,13 +267,14 @@ public class SyncMasterDataToCodewaveJob extends IJobHandler {
                             updateWrapper.set("updated_by", CommonConstant.DEFAULT_OPT_USER);
                             updateWrapper.eq(CommonConstant.COLUMN_ID, dbLcapUserDept.getId());
                             lcapUserDeptMappingMapper.update(null, updateWrapper);
+                            continue;
                         }
 
-
+                        XxlJobHelper.log("deptId:{},userId:{},不做更新", userDeptInfo.getDepartmentId(), userDeptInfo.getUserId());
                     } else {
 
                         if (CommonConstant.STATUS_DEL.equals(userDeptInfo.getDeletedFlag())) {
-                            XxlJobHelper.log("deptId:{},userId:{},物理删除，不做新增", userDeptInfo.getDepartmentId(), userDeptInfo.getUserId());
+                            XxlJobHelper.log("deptId:{},userId:{},主数据已删除，不做新增", userDeptInfo.getDepartmentId(), userDeptInfo.getUserId());
                             continue;
                         }
 
