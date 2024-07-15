@@ -39,6 +39,7 @@ public class UserDepartmentServiceImpl extends ServiceImpl<UserDepartmentMapper,
 
     private UserInfoMapper userInfoMapper;
 
+    @Autowired
     public void setUserInfoMapper(UserInfoMapper userInfoMapper) {
         this.userInfoMapper = userInfoMapper;
     }

@@ -1,8 +1,6 @@
 package com.gf.biz.codewave.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.gf.biz.common.entity.BaseEntity;
 
 import java.io.Serializable;

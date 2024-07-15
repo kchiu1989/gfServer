@@ -52,6 +52,7 @@ public class SyncDingdingSysToGenMasterDataJob extends IJobHandler {
 
         log.info("开始同步钉钉部门和人员...");
 
+
         //key为ifId value为部门信息
         Map<String,MdDepartment> deptCache = new HashMap<>();
 
@@ -192,25 +193,12 @@ public class SyncDingdingSysToGenMasterDataJob extends IJobHandler {
                         //再更新部门主管
                         userDepartmentService.updateManageUser(toOptDept,jsonArray.toJavaList(String.class));
                     }catch(Exception e){
-                        log.error("更新部门主管失败");
+                        log.error("更新部门主管失败",e);
                     }
 
                 }
             }
        }
-    }
-
-    public static void main(String[] args) {
-        String aa = "[\"lsbgs003\",\"01104737404346\"]";
-        JSONArray jj = JSONArray.parseArray(aa);
-        List<String> javaList = jj.toJavaList(String.class);
-        for(String aaa:javaList){
-            System.out.println(aaa);
-        }
-
-        for(Object aaaa:jj){
-            System.out.println(aaaa.toString());
-        }
     }
 
     /**
@@ -746,6 +734,7 @@ public class SyncDingdingSysToGenMasterDataJob extends IJobHandler {
 
                             if (toOpt.getPosition()==null && ifUserInfoMap.get("position")!=null
                                     || toOpt.getPosition()!=null && !toOpt.getPosition().equals(String.valueOf(ifUserInfoMap.get("position")))) {
+                                log.info("userName:{},职位产生变化", toOpt.getUserName());
                                 toOpt.setPosition(ifUserInfoMap.get("position")==null?null:String.valueOf(ifUserInfoMap.get("position")));
                                 updFlag=true;
                                 updColumnNullFlag=true;
@@ -753,6 +742,7 @@ public class SyncDingdingSysToGenMasterDataJob extends IJobHandler {
 
                             if (toOpt.getIfDirectLeaderId()==null && ifUserInfoMap.get("managerUserid")!=null
                                     || toOpt.getIfDirectLeaderId()!=null && !toOpt.getIfDirectLeaderId().equals(String.valueOf(ifUserInfoMap.get("managerUserid")))) {
+                                log.info("userName:{},直属领导产生变化", toOpt.getUserName());
                                 toOpt.setIfDirectLeaderId(ifUserInfoMap.get("managerUserid")==null?null:String.valueOf(ifUserInfoMap.get("managerUserid")));
                                 toOpt.setDirectLeaderId(-1L);
                                 updFlag=true;
@@ -760,16 +750,18 @@ public class SyncDingdingSysToGenMasterDataJob extends IJobHandler {
                             }
 
                             if (!toOpt.getUserName().equals(String.valueOf(ifUserInfoMap.get("name")))) {
+                                log.info("userName:{},用户名产生变化", toOpt.getUserName());
                                 toOpt.setUserName(String.valueOf(ifUserInfoMap.get("name")));
                                 String userAccount = getUserAccount(toOpt.getUserName());
                                 toOpt.setUserAccount(userAccount);
                                 updFlag=true;
                             }
 
-                            if (!toOpt.getTelephone().equals(String.valueOf(ifUserInfoMap.get("mobile")))) {
+                            //手机号不会变
+                            /*if (!toOpt.getTelephone().equals(String.valueOf(ifUserInfoMap.get("mobile")))) {
                                 toOpt.setTelephone(String.valueOf(ifUserInfoMap.get("mobile").toString()));
                                 updFlag=true;
-                            }
+                            }*/
 
                             List roles = (List) ifUserInfoMap.get("roles");
                             log.info("userName:{}.roles:{}", toOpt.getUserName(), roles);

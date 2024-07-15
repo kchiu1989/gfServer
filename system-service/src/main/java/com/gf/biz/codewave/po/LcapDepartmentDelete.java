@@ -21,7 +21,7 @@ public class LcapDepartmentDelete extends BaseCodewaveBizEntity implements Seria
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.NONE)
+    @TableId(value = "id", type = IdType.INPUT)
     private Long id;
 
     @TableField("if_id")

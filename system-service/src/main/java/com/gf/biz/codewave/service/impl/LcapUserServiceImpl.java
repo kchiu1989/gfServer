@@ -10,6 +10,7 @@ import com.gf.biz.codewave.po.LcapUserDelete;
 import com.gf.biz.codewave.service.LcapUserService;
 import com.gf.biz.common.CommonConstant;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +31,11 @@ public class LcapUserServiceImpl extends ServiceImpl<LcapUserMapper, LcapUser> i
 
     private LcapUserDeleteMapper lcapUserDeleteMapper;
     private LcapUserMapper lcapUserMapper;
-
+    @Autowired
     public void setLcapUserDeleteMapper(LcapUserDeleteMapper lcapUserDeleteMapper) {
         this.lcapUserDeleteMapper = lcapUserDeleteMapper;
     }
-
+    @Autowired
     public void setLcapUserMapper(LcapUserMapper lcapUserMapper) {
         this.lcapUserMapper = lcapUserMapper;
     }

@@ -19,12 +19,12 @@ import java.io.Serializable;
  * @since 2024-07-09 15:45:56
  */
 
-@TableName("lcap_user_4a79f3")
+@TableName("lcap_user_4a79f3_delete")
 public class LcapUserDelete extends BaseCodewaveBizEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.NONE)
+    @TableId(value = "id", type = IdType.INPUT)
     private Long id;
 
     @TableField("if_id")

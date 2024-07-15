@@ -18,4 +18,12 @@
         where a.user_id = (select b.user_id from lcap_user_4a79f3 b where b.if_id is not null and b.if_id=#{ifUserId})
           and a.dept_id = (select c.dept_id from lcap_department_4a79f3 c where c.if_id is not null and c.if_id=#{ifDeptId})
     </select>
+    
+    <insert id="insertLcapUserDeptNative" parameterType="map">
+        insert into lcap_user_dept_mapping_4a79f3 (created_time,created_by,user_id,dept_id,is_dept_leader)
+            values (SYSDATE(), 'SYS'
+                   ,#{insertParams.userId,jdbcType=VARCHAR}
+                   ,#{insertParams.deptId,jdbcType=VARCHAR}
+                   ,#{insertParams.isDeptLeader,jdbcType=BIGINT})
+    </insert>
 </mapper>

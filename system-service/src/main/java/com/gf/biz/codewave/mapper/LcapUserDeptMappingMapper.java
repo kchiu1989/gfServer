@@ -8,6 +8,7 @@ import com.gf.biz.common.CommonConstant;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -20,4 +21,5 @@ import java.util.List;
 @DS(CommonConstant.DATASOURCE_BIZ_1)
 public interface LcapUserDeptMappingMapper extends BaseMapper<LcapUserDeptMapping> {
     List<LcapUserDeptMapping> selectByIfUserIdAndIfDeptId(@Param("ifUserId") Long ifUserId, @Param("ifDeptId") Long ifDeptId);
+    int insertLcapUserDeptNative(@Param("insertParams") Map<String,Object> insertParams);
 }

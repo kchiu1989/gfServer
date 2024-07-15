@@ -20,7 +20,7 @@ public class LcapUserDeptMappingDelete extends BaseCodewaveBizEntity implements 
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.NONE)
+    @TableId(value = "id", type = IdType.INPUT)
     private Long id;
 
     /**
