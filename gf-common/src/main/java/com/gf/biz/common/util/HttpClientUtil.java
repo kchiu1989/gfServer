@@ -575,6 +575,71 @@ public class HttpClientUtil {
 
     }
 
+    /**
+     * 使用post方式提交http请求
+     *
+     * @param url     请求地址
+     * @param params  请求参数
+     * @param charsetName 请求参数编码
+     * @return Object
+     * @throws IOException
+     */
+    public static String postJsonUrlWithHeader(String url, Map<String,String> headerMap,String params, String charsetName) throws Exception {
+
+
+        if (params == null || params.isEmpty()) {
+            return null;
+        }
+
+        if(StringUtils.isBlank(charsetName)){
+            charsetName="UTF-8";
+        }
+
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        // 创建HttpPost实例
+        HttpPost httpPost = new HttpPost(url);
+        //httpPost.setHeader("key", value);  // 这里放请求头参数
+
+        // 请求参数配置
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(600000).setConnectTimeout(60000)
+                .setConnectionRequestTimeout(10000).build();
+        httpPost.setConfig(requestConfig);
+        try {
+
+            httpPost.setEntity(new StringEntity(params,charsetName));
+
+            httpPost.setHeader("Content-Type", "application/json");
+            if(headerMap != null) {
+                for (Map.Entry<String, String> headerEntry : headerMap.entrySet()) {
+
+                    httpPost.setHeader(headerEntry.getKey(), headerEntry.getValue());
+                }
+            }
+
+            httpClient = HttpClients.createDefault();
+            HttpResponse response = httpClient.execute(httpPost);
+
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                // 返回
+                String res = EntityUtils.toString(response.getEntity(), Charset.forName(charsetName));
+                logger.info("post result:{}",res);
+                return res;
+            }
+        } catch (Exception e) {
+            logger.error("postJsonUrl error", e);
+        } finally {
+            if (httpClient != null) {
+                try {
+                    httpClient.close();
+                } catch (IOException e) {
+                    logger.error("关闭HttpPost连接失败！", e);
+                }
+            }
+        }
+        return null;
+
+    }
+
     public static byte[] downloadPdfIO(String pdfUrl) throws IOException {
         URL url;
         InputStream is = null;
