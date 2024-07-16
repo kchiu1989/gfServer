@@ -79,7 +79,9 @@ public class SyncMasterDataToCodewaveJob extends IJobHandler {
                         }
                         //直属领导变更，账号、手机号不做调整
                         if (dbLcapUser.getIfDirectLeaderId() != null && userInfo.getDirectLeaderId() != null
-                                && dbLcapUser.getIfDirectLeaderId().compareTo(userInfo.getDirectLeaderId()) != 0) {
+                                && dbLcapUser.getIfDirectLeaderId().compareTo(userInfo.getDirectLeaderId()) != 0
+                        ||dbLcapUser.getIfDirectLeaderId()==null && userInfo.getIfDirectLeaderId()!=null
+                        || dbLcapUser.getIfDirectLeaderId()!=null && userInfo.getIfDirectLeaderId()==null) {
                             XxlJobHelper.log("userId:{},userAccount:{},更改直属领导", userInfo.getId(), userInfo.getUserAccount());
                             updateLcapUserWrapper = new UpdateWrapper<>();
                             updateLcapUserWrapper.set("if_direct_leader_id", userInfo.getDirectLeaderId());
@@ -90,6 +92,21 @@ public class SyncMasterDataToCodewaveJob extends IJobHandler {
                             lcapUserMapper.update(null, updateLcapUserWrapper);
 
                         }
+
+                        //变更了显示姓名，先不做更新
+                        /*if (dbLcapUser.getDisplayName() != null && userInfo.getUserName() != null
+                                && !dbLcapUser.getDisplayName().equals(userInfo.getUserName())
+                                ) {
+                            XxlJobHelper.log("userId:{},userAccount:{},只更改名称和账号", userInfo.getId(), userInfo.getUserAccount());
+                            updateLcapUserWrapper = new UpdateWrapper<>();
+                            updateLcapUserWrapper.set("display_name", userInfo.getUserName());
+                            updateLcapUserWrapper.set("user_name", userInfo.getUserAccount());
+                            updateLcapUserWrapper.set("updated_time", currentDate);
+                            updateLcapUserWrapper.set("updated_by", CommonConstant.DEFAULT_OPT_USER);
+                            updateLcapUserWrapper.eq(CommonConstant.COLUMN_ID, dbLcapUser.getId());
+                            lcapUserMapper.update(null, updateLcapUserWrapper);
+
+                        }*/
 
                     } else {
                         if (CommonConstant.STATUS_DEL.equals(userInfo.getDeletedFlag())) {
