@@ -3,7 +3,17 @@ package com.gf.biz.LecaiSync.dto;
 public class Lecai_gangwei_requestData {
     private String corpId;
     private String organId;
+
+    private String lastDate;
     private String id;
+
+    public String getLastDate() {
+        return lastDate;
+    }
+
+    public void setLastDate(String lastDate) {
+        this.lastDate = lastDate;
+    }
 
     public String getCorpId() {
         return corpId;

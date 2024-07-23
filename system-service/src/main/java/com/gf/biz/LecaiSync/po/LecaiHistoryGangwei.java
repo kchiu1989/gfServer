@@ -4,10 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.gf.biz.common.entity.BaseBizEntity;
 
-
-@TableName("if_lecai_gangwei_info")
-
-public class LecaiGangwei extends BaseBizEntity {
+@TableName("if_lecai_history_gangwei_info")
+public class LecaiHistoryGangwei extends BaseBizEntity {
     private static final long serialVersionUID = 1L;
 
     /**

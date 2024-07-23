@@ -21,6 +21,7 @@ public class lecaiSyncUtil {
 //    private static final Integer pageSize=100;
     public static final String lecai_GETTOKEN_KEY="https://oapi.xinlecai.cn/token";
     public static final String lecai_GangWeiInfo_KEY="https://oapi.xinlecai.cn/openapi/joyhr/web/xlcapi/post";
+    public static final String lecai_UserInfo_KEY="https://oapi.xinlecai.cn/openapi/joyhr/web/xlcapi/userList";
     /**
      * 获取lecaiAssessToken
      * @param lecai_corpId,lecai_agent,lecai_secret
@@ -63,6 +64,81 @@ public class lecaiSyncUtil {
      * @param corpId,pageNo,pageSize
      * @return
      */
+    public static Map getLecaiGangweiInfo1(String corpId,Integer pageNo,Integer pageSize,String startTime){
+        String url = lecai_GangWeiInfo_KEY;
+        String tokenStr = getLecaiAccessToken(lecai_corpId,lecai_agent,lecai_secret);
+        log.info("getLecaiGangweiInfo start:{}", tokenStr);
+        if(StringUtils.isBlank(tokenStr)){
+            log.info("获取乐才岗位信息失败，无法获取token");
+            return null;
+        }
+        Map tokenReturn = new HashMap<>();//角色信息
+        tokenReturn.put("access_token", tokenStr);
+        JSONObject postBody = new JSONObject();//封装参数
+        Lecai_gangwei_requestData data = new Lecai_gangwei_requestData();
+        data.setCorpId(corpId);
+        data.setLastDate(startTime);
+        postBody.put("data", data);
+        postBody.put("pageNo", pageNo);
+        postBody.put("pageSize", pageSize);
+        try {
+            log.info("getDeptInfoNewVersion start:{}", url);
+            String resultString = HttpClientUtil.postJsonUrlWithHeader(url,tokenReturn, postBody.toJSONString(), null);
+            log.info("getDeptInfoNewVersion end:{}", resultString);
+            Map result = JSONObject.parseObject(resultString).getInnerMap();//解析返回结果
+
+            if (!"0".equals(result.get("code").toString())) {
+                log.error("获取岗位信息失败:" + result.get("msg").toString());
+            } else {
+                log.info("获取岗位信息:"  + "MS ,同步返回结果：" + result);
+            }
+
+        return result;
+        } catch (Exception e) {
+            log.error("getGangWeiInfoNewVersion error", e);
+        }
+        return null;
+    }
+    /**
+     * 获取乐才人员信息
+     * @return
+     * @param
+     */
+    public static Map getLecaiUserInfo1(String corpId,Integer pageNo,Integer pageSize,String startTime){
+        String url = lecai_UserInfo_KEY;
+        String tokenStr = getLecaiAccessToken(lecai_corpId,lecai_agent,lecai_secret);
+        log.info("getLecaiUserInfo start:{}", tokenStr);
+        if(StringUtils.isBlank(tokenStr)){
+            log.info("获取乐才人员信息失败，无法获取token");
+            return null;
+        }
+        Map tokenReturn = new HashMap<>();//角色信息
+        tokenReturn.put("access_token", tokenStr);
+        JSONObject postBody = new JSONObject();//封装参数
+        Lecai_gangwei_requestData data = new Lecai_gangwei_requestData();
+        data.setCorpId(corpId);
+        data.setLastDate(startTime);
+        postBody.put("data", data);
+        postBody.put("pageNo", pageNo);
+        postBody.put("pageSize", pageSize);
+        try {
+            log.info("getLecaiUserInfo start:{}", url);
+            String resultString = HttpClientUtil.postJsonUrlWithHeader(url,tokenReturn, postBody.toJSONString(), null);
+            log.info("getLecaiUserInfo end:{}", resultString);
+            Map result = JSONObject.parseObject(resultString).getInnerMap();//解析返回结果
+            if (!"0".equals(result.get("code").toString())) {
+                log.error("获取人员信息失败:" + result.get("msg").toString());
+            } else {
+                log.info("获取岗位信息:"+ "MS ,同步返回结果：" + result);
+            }
+            return result;
+        }catch (Exception e){
+            log.error("getLecaiUserInfo error", e);
+        }
+        return null;
+
+    }
+
     public static Map getLecaiGangweiInfo(String corpId,Integer pageNo,Integer pageSize){
         String url = lecai_GangWeiInfo_KEY;
         String tokenStr = getLecaiAccessToken(lecai_corpId,lecai_agent,lecai_secret);
@@ -91,11 +167,43 @@ public class lecaiSyncUtil {
                 log.info("获取岗位信息:"  + "MS ,同步返回结果：" + result);
             }
 
-        return result;
+            return result;
         } catch (Exception e) {
             log.error("getGangWeiInfoNewVersion error", e);
         }
         return null;
     }
+    public static Map getLecaiUserInfo(String corpId,Integer pageNo,Integer pageSize){
+        String url = lecai_UserInfo_KEY;
+        String tokenStr = getLecaiAccessToken(lecai_corpId,lecai_agent,lecai_secret);
+        log.info("getLecaiUserInfo start:{}", tokenStr);
+        if(StringUtils.isBlank(tokenStr)){
+            log.info("获取乐才人员信息失败，无法获取token");
+            return null;
+        }
+        Map tokenReturn = new HashMap<>();//角色信息
+        tokenReturn.put("access_token", tokenStr);
+        JSONObject postBody = new JSONObject();//封装参数
+        Lecai_gangwei_requestData data = new Lecai_gangwei_requestData();
+        data.setCorpId(corpId);
+        postBody.put("data", data);
+        postBody.put("pageNo", pageNo);
+        postBody.put("pageSize", pageSize);
+        try {
+            log.info("getLecaiUserInfo start:{}", url);
+            String resultString = HttpClientUtil.postJsonUrlWithHeader(url,tokenReturn, postBody.toJSONString(), null);
+            log.info("getLecaiUserInfo end:{}", resultString);
+            Map result = JSONObject.parseObject(resultString).getInnerMap();//解析返回结果
+            if (!"0".equals(result.get("code").toString())) {
+                log.error("获取人员信息失败:" + result.get("msg").toString());
+            } else {
+                log.info("获取岗位信息:"+ "MS ,同步返回结果：" + result);
+            }
+            return result;
+        }catch (Exception e){
+            log.error("getLecaiUserInfo error", e);
+        }
+        return null;
 
+    }
 }

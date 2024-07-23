@@ -85,8 +85,14 @@ public class DingSyncUtil {
     public static final String DING_USER_DELETE = "https://oapi.dingtalk.com/user/delete?access_token=ACCESS_TOKEN&userid=MEMBERID";
     //批量删除人员
     public static final String DING_USER_BATCHDELETE = "https://oapi.dingtalk.com/user/batchdelete?access_token=ACCESS_TOKEN";
-
-
+    //根据手机号查userId
+    public static final String DING_USER_GETBYMOBILE = "https://oapi.dingtalk.com/topapi/v2/user/getbymobile?access_token=ACCESS_TOKEN";
+    //批量增加员工角色
+    public static final String DING_USER_BATCHADDROLE = "https://oapi.dingtalk.com/topapi/role/addrolesforemps?access_token=ACCESS_TOKEN";
+    //批量删除员工角色
+    public static final String DING_USER_BATCHDELETEROLE = "https://oapi.dingtalk.com/topapi/role/removerolesforemps?access_token=ACCESS_TOKEN";
+    //开始创建角色
+    public static final String DING_USER_CREATE_ROLE = "https://oapi.dingtalk.com/role/add_role?access_token=ACCESS_TOKEN";
     /**
      * 获取员工离职记录列表
      * 时间默认获取当月1号到当前时间的 时间格式：YYYY-MM-DDTHH:mm:ssZ
@@ -379,7 +385,7 @@ public class DingSyncUtil {
         RedisUtil redisUtils = (RedisUtil) SpringBeanUtil.getBean("redisUtil");
 
         try{
-            accessTokenRtn = (String) redisUtils.get("TOKEN_" + AppId);
+            accessTokenRtn = (String) redisUtils.get("DING_TOKEN_" + AppId);
         }catch(Exception e){
             log.error("redisUtils.get error",e);
             return null;
@@ -398,7 +404,7 @@ public class DingSyncUtil {
                 return null;
             }
             long expireTime = accessToken.getExpires_in();
-            redisUtils.set("TOKEN_" + AppId, accessToken.getAccess_token(), expireTime - 5 * 60);
+            redisUtils.set("DING_TOKEN_" + AppId, accessToken.getAccess_token(), expireTime - 5 * 60);
             return accessToken.getAccess_token();
         }
 
