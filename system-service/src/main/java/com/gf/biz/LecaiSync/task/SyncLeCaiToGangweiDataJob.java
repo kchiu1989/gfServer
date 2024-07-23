@@ -38,7 +38,7 @@ public class SyncLeCaiToGangweiDataJob extends IJobHandler {
     private static final String lecai_agent = "joyhr";
     private static final Integer pageNo = 1;
     private static final Integer pageSize = 200;
-    private static final Number groupId = 4281908459L;
+    private static final Number groupId = 4282820033L;
     @Override
     public void execute() throws Exception {
         String jobParam= XxlJobHelper.getJobParam();
