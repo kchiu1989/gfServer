@@ -215,7 +215,7 @@ public class SyncLeCaiToUserDataJob extends IJobHandler {
         String accessToken = DingSyncUtil.getDingAccessToken(AppKey, AppSecret);
         QueryWrapper<LecaiUserInfo> wrapper = new QueryWrapper<>();
         wrapper.eq("sync_flag", "0");//查询未同步的人员
-        wrapper.eq("sync_flag", "2");//查询待变更的人员
+        //wrapper.eq("sync_flag", "2");//查询待变更的人员
         wrapper.ne("user_status", "40");//离职
         wrapper.ne("user_status", "50");//退休
         wrapper.orderByAsc("gangwei_name");//根据gangwei_name升序排列
@@ -306,7 +306,7 @@ public class SyncLeCaiToUserDataJob extends IJobHandler {
                                                         log.error(e.getMessage(), e);
                                                     }
                                                 } else {
-                                                    log.error("过去岗位名称为空，无需删除用户");
+                                                    log.info("过去岗位名称为空，无需删除用户");
                                                 }
                                             } else {
                                                 log.error("添加用户失败" + resultStringAddUser);
