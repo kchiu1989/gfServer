@@ -228,6 +228,7 @@ public class SyncLeCaiToUserDataJob extends IJobHandler {
                 JSONObject postBody = new JSONObject();
                 postBody.put("mobile", lecaiUserInfo.getPhone());
                 try {
+                    log.info("开始同步钉钉人员：" + lecaiUserInfo.getPhone());
                     String resultString = HttpClientUtil.postJsonUrl(url, postBody.toJSONString(), null);//根据手机号获取userID
                     if (resultString != null) {
                         JSONObject jsonObject = JSONObject.parseObject(resultString);//将一个JSON格式的字符串（即resultString）转换成一个JSONObject对象。
