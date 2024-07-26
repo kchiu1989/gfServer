@@ -154,8 +154,8 @@ public class SyncLeCaiToUserDataJob extends IJobHandler {
                         } else {
                             log.info("数据已存在");
                             LecaiUserInfo userInfo1 = dbUserList.get(0);
-                            if (single.getString("ganwgeiName") != null && !single.getString("ganwgeiName").isEmpty()) {
-                                if (single.getString("ganwgeiName").equals(userInfo1.getGangweiName()) && single.getString("phone").equals(userInfo1.getPhone())) {
+                            if (single.getString("gangweiName") != null && !single.getString("gangweiName").isEmpty()) {
+                                if (single.getString("gangweiName").equals(userInfo1.getGangweiName()) && single.getString("phone").equals(userInfo1.getPhone())) {
                                     log.info("岗位和手机号未变化，无需更新！");
                                 } else {
                                     if (!single.getString("phone").equals(userInfo1.getPhone())) {
@@ -165,7 +165,7 @@ public class SyncLeCaiToUserDataJob extends IJobHandler {
                                         toUpd.setPhone(single.getString("phone"));
                                         updateWrapper.eq("id", userInfo1.getId());
                                         lecaiUserInfoMapper.update(toUpd, updateWrapper);
-                                    } else if (!single.getString("ganwgeiName").equals(userInfo1.getGangweiName())) {
+                                    } else if (!single.getString("gangweiName").equals(userInfo1.getGangweiName())) {
                                         log.info("岗位发生变化，需要进行更新！");
                                         UpdateWrapper<LecaiUserInfo> updateWrapper = new UpdateWrapper<>();
                                         LecaiUserInfo toUpd = new LecaiUserInfo();
@@ -190,7 +190,7 @@ public class SyncLeCaiToUserDataJob extends IJobHandler {
                                     }
                                 }
                             } else {
-                                log.info("岗位名称为空，不做处理");
+                                log.info("岗位名称为空，不做处理："+single.getString("phone"));
                             }
                         }
                     } else {
