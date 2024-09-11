@@ -17,7 +17,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Gf
@@ -30,7 +29,7 @@ public class DingSyncUtil {
     private static final String AppKey = "dingziwaoroobolpqb0m";
     private static final String AppSecret = "MXk0icwCtMYXtzTwgEPKA0GNtCG4AwgNWMcxyijC1vtVM2EdsXgHGNy4rM0WNMzD";
 
-    public static Map<String, AccessToken> dingAccessTokens = new ConcurrentHashMap<>();
+    public static final String DING_TOKEN_PREFIX ="DING_TOKEN_";
 
     //获取子部门ID列表  本接口只支持获取下一级所有部门ID列表
     public static final String GET_DEPT_LISTSUB = "https://oapi.dingtalk.com/topapi/v2/department/listsub?access_token=ACCESS_TOKEN";
@@ -385,7 +384,7 @@ public class DingSyncUtil {
         RedisUtil redisUtils = (RedisUtil) SpringBeanUtil.getBean("redisUtil");
 
         try{
-            accessTokenRtn = (String) redisUtils.get("DING_TOKEN_" + AppId);
+            accessTokenRtn = (String) redisUtils.get(DING_TOKEN_PREFIX+ AppId);
         }catch(Exception e){
             log.error("redisUtils.get error",e);
             return null;
@@ -404,7 +403,7 @@ public class DingSyncUtil {
                 return null;
             }
             long expireTime = accessToken.getExpires_in();
-            redisUtils.set("DING_TOKEN_" + AppId, accessToken.getAccess_token(), expireTime - 5 * 60);
+            redisUtils.set(DING_TOKEN_PREFIX+ AppId, accessToken.getAccess_token(), expireTime - 5 * 60);
             return accessToken.getAccess_token();
         }
 
