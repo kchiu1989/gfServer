@@ -9,15 +9,18 @@ import org.springframework.util.DigestUtils;
 
 import java.util.*;
 
-public class SyncShopIdsJobHandler extends IJobHandler {
+/**
+ * 同步美团外卖门店评分作业
+ */
+public class SyncMtwmShopRatingJobHandler extends IJobHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(SyncShopIdsJobHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(SyncMtwmShopRatingJobHandler.class);
     private static final String appId="9690";
     private static final String appSecret="ae0e087857354177105fa5da6d3769db";
-    private static final String jobUrl="https://waimaiopen.meituan.com/api/v1/poi/getids";
+    private static final String jobUrl="https://waimaiopen.meituan.com/api/v1/comment/score";
 
     public static void main(String[] args){
-        SyncShopIdsJobHandler shhh = new SyncShopIdsJobHandler();
+        SyncMtwmShopRatingJobHandler shhh = new SyncMtwmShopRatingJobHandler();
         try{
             shhh.execute();
         }catch(Exception e){
@@ -30,6 +33,15 @@ public class SyncShopIdsJobHandler extends IJobHandler {
     @Override
     public void execute() throws Exception {
 
+        Map<String,Object> params = new HashMap<>();
+        params.put("app_poi_code","10000");
+        String finalUrl=getFinalUrl(params);
+
+        String rltStr=HttpClientUtil.doGet(finalUrl);
+        logger.info("rltStr:{}",rltStr);
+    }
+
+    private String getFinalUrl(Map<String,Object> appParams){
         JSONObject sysParams = new JSONObject();
 
 
@@ -39,6 +51,9 @@ public class SyncShopIdsJobHandler extends IJobHandler {
         sysParams.put("timestamp",timestamp);
 
         Map<String,Object> innerMap=sysParams.getInnerMap();
+
+        innerMap.putAll(appParams);
+
         Map<String,Object> sortMap = new TreeMap<>(innerMap);
         Iterator<Map.Entry<String,Object>> ist=sortMap.entrySet().iterator();
 
@@ -55,13 +70,11 @@ public class SyncShopIdsJobHandler extends IJobHandler {
         getStr=finalUrl+getStr;
 
 
-        logger.info("sign:{}",getStr);
+        logger.info("toGenSignStr:{}",getStr);
         String sig= DigestUtils.md5DigestAsHex(getStr.getBytes());
-        logger.info("sign:{}",sig);
+        logger.info("genSignStr end:{}",sig);
         Map<String, Object> formMap = new HashMap<>(sysParams.getInnerMap());
         formMap.put("sig",sig);
-
-
 
 
         ist=formMap.entrySet().iterator();
@@ -72,7 +85,7 @@ public class SyncShopIdsJobHandler extends IJobHandler {
         }
 
         finalUrl=finalUrl.substring(0,finalUrl.length()-1);
-
-        HttpClientUtil.doGet(finalUrl);
+        return finalUrl;
     }
+
 }
