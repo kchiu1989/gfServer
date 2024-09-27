@@ -12,18 +12,29 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+
 /**
  * 获取饿了么门店评分接口
  */
 public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
-    private static final String test_key = "JMpPzLxXxF";
+    /*private static final String test_key = "JMpPzLxXxF";
     private static final String test_secret = "7376a0368d893bd0bdceae2bf431eed1cfe63246";
     private static final String test_shopId1 = "516930903";
     private static final String test_token_url = "https://open-api-sandbox.shop.ele.me/token";
     private static final String test_url = "https://open-api-sandbox.shop.ele.me/api/v1/";
-
     private static final String test_token = "4d6dcf03d7862bc11b833db44577c35b";
-    private static final String action="eleme.user.getUser";
+    */
+
+
+
+
+    private static final String prod_key = "JMKi2sJbGu";
+    private static final String prod_secret = "509e6f1c3d74e809c38dd0a52f7a97b8df3729fa";
+    private static final String prod_token_url = "https://open-api.shop.ele.me/token";
+    private static final String prod_url = "https://open-api.shop.ele.me/api/v1/";
+
+
+    private static final String action="eleme.ugc.getShopFactorInfos";
     private static final Logger logger = LoggerFactory.getLogger(SyncElemeShopRatingInfoJobHandler.class);
 
 
@@ -53,8 +64,8 @@ public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
         logger.info("tokenInfo:{}",tokenInfo);*/
 
         final long timestamp = System.currentTimeMillis();
-        final String appKey = test_key;
-        String secret = test_secret;
+        final String appKey = prod_key;
+        String secret = prod_secret;
         String accessToken = "4d6dcf03d7862bc11b833db44577c35b";
         String requestId = getReqID();
 
@@ -78,7 +89,7 @@ public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
         requestPayload.put("signature", signature);
 
         String requestJson = JacksonUtils.obj2json(requestPayload);
-        String responseJson=HttpClientUtil.postJsonUrl(test_url,requestJson,null);
+        String responseJson=HttpClientUtil.postJsonUrl(prod_url,requestJson,null);
         ResponsePayload responsePayload=JacksonUtils.json2pojo(responseJson, ResponsePayload.class);
 
         JSONObject jo = new JSONObject((LinkedHashMap<String,Object>)responsePayload.getResult());
@@ -89,20 +100,20 @@ public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
         logger.info("result:{}",responsePayload.getResult());
     }
 
-    private static final String getTokenInfo() throws Exception {
+    private static String getTokenInfo() throws Exception {
         //先获取token
         Map<String, String> bodyParams = new HashMap<>();
         bodyParams.put("grant_type", "client_credentials");
         bodyParams.put("scope", "all");
 
 
-        String headerKey = test_key + ":" + test_secret;
+        String headerKey = prod_key + ":" + prod_secret;
         String encodeKey = new String(Base64.getEncoder().encode(headerKey.getBytes()));
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Authorization", "Basic " + encodeKey);
 
-        String tokenInfo = HttpClientUtil.postFormUrlEncoded(test_token_url, headerMap, bodyParams);
+        String tokenInfo = HttpClientUtil.postFormUrlEncoded(prod_token_url, headerMap, bodyParams);
         logger.info("tokenInfo:{}", tokenInfo);
         return tokenInfo;
     }
@@ -110,9 +121,9 @@ public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
     public static void main(String[] args) throws Exception {
 
         final long timestamp = System.currentTimeMillis();
-        final String appKey = test_key;
-        String secret = test_secret;
-        String accessToken = "4d6dcf03d7862bc11b833db44577c35b";
+        final String appKey = prod_key;
+        String secret = prod_secret;
+        String accessToken = JSONObject.parseObject(getTokenInfo()).getString("access_token");
         String requestId = getReqID();
 
         logger.info("requestId:{}" + requestId);
@@ -122,20 +133,28 @@ public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
         requestPayload.put("action", action);
         requestPayload.put("token", accessToken);
 
-        Map<String, Object> metasHashMap = new HashMap<String, Object>();
+        Map<String, Object> metasHashMap = new HashMap<>();
         metasHashMap.put("app_key", appKey);
         metasHashMap.put("timestamp", timestamp);
 
 
         requestPayload.put("metas", metasHashMap);
 
-        Map<String, Object> parameters =  new HashMap<String, Object>();
+        Map<String, Object> parameters =  new HashMap<>();
+        parameters.put("supplierId","94854117");
+        parameters.put("offset","1000");
+        parameters.put("limit","20");
+
+
         requestPayload.put("params", parameters);
+
+
+
         String signature = SignatureUtil.generateSignature(appKey, secret, timestamp, action, accessToken, parameters);
         requestPayload.put("signature", signature);
 
         String requestJson = JacksonUtils.obj2json(requestPayload);
-        String responseJson=HttpClientUtil.postJsonUrl(test_url,requestJson,null);
+        String responseJson=HttpClientUtil.postJsonUrl(prod_url,requestJson,null);
         ResponsePayload responsePayload=JacksonUtils.json2pojo(responseJson, ResponsePayload.class);
         logger.info("result:{}",responsePayload.getResult());
     }
