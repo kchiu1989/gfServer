@@ -2,7 +2,9 @@ package com.gf.common.config;
 
 
 import com.gf.biz.ifsSync.job.shenfang.IfScoreMvJob;
+
 import com.gf.biz.kpiRuleEngine.job.TestExecuteExpressionJob;
+import com.gf.biz.tiancaiIfsData.task.SyncTiancaiCeDataJobHandler;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.slf4j.Logger;
@@ -68,6 +70,7 @@ public class JobConfig {
     public void initJobs() {
         // 手动注册IJobHandler
         XxlJobExecutor.registJobHandler("syncIfScoreMvJobHandler", new IfScoreMvJob());
+        XxlJobExecutor.registJobHandler("syncTiancaiCeDataJobHandler", new SyncTiancaiCeDataJobHandler());
 
     }
 
