@@ -39,8 +39,8 @@ public class SyncTiancaiCeDataJobHandler extends IJobHandler {
     public void execute() throws Exception {
 
 
-//        log.info("开始同步天才评论数据");
-//        syncCreateCommentData();
+        log.info("开始同步天才评论数据");
+        syncCreateCommentData();
 //
         log.info("开始同步 genius 评论数据");
         syncSiftEmployeeData();
