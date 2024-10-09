@@ -155,8 +155,8 @@ public class SyncLeCaiToUserDataJob extends IJobHandler {
                             log.info("数据已存在");
                             LecaiUserInfo userInfo1 = dbUserList.get(0);
                             if (single.getString("gangweiName") != null && !single.getString("gangweiName").isEmpty()) {
-                                if (single.getString("gangweiName").equals(userInfo1.getGangweiName()) && single.getString("phone").equals(userInfo1.getPhone())) {
-                                    log.info("岗位和手机号未变化，无需更新！");
+                                if (single.getString("gangweiName").equals(userInfo1.getGangweiName()) && single.getString("phone").equals(userInfo1.getPhone())&& single.getString("userStatus").equals(userInfo1.getUserStatus())) {
+                                    log.info("岗位、员工状态和手机号未变化，无需更新！");
                                 } else {
                                     if (!single.getString("phone").equals(userInfo1.getPhone())) {
                                         log.info("手机号发生变化，需要进行更新！");//不需要再次推送
@@ -176,12 +176,23 @@ public class SyncLeCaiToUserDataJob extends IJobHandler {
                                         toUpd.setSyncFlag("0");//状态由已推送改为待变更推送
                                         updateWrapper.eq("id", userInfo1.getId());
                                         lecaiUserInfoMapper.update(toUpd, updateWrapper);
-                                    } else {
+                                    } else if (!single.getString("userStatus").equals(userInfo1.getUserStatus())) {
+                                        log.info("员工状态发生变化，需要进行更新！");
+                                        UpdateWrapper<LecaiUserInfo> updateWrapper = new UpdateWrapper<>();
+                                        LecaiUserInfo toUpd = new LecaiUserInfo();
+                                        toUpd.setGangweiId(single.getString("gangweiId"));
+                                        toUpd.setUserStatus(single.getString("userStatus"));
+                                        //todo 删除岗位再重新同步钉钉
+                                        toUpd.setSyncFlag("0");//状态由已推送改为待变更推送
+                                        updateWrapper.eq("id", userInfo1.getId());
+                                        lecaiUserInfoMapper.update(toUpd, updateWrapper);
+                                    }else {
                                         log.info("岗位和手机号都发生变化，需要进行更新！");
                                         UpdateWrapper<LecaiUserInfo> updateWrapper = new UpdateWrapper<>();
                                         LecaiUserInfo toUpd = new LecaiUserInfo();
                                         toUpd.setGangweiId(single.getString("gangweiId"));
                                         toUpd.setGangweiName(single.getString("gangweiName"));//更新岗位名称
+                                        toUpd.setUserStatus(single.getString("userStatus"));//更新岗位状态
                                         toUpd.setPastGangweiName(userInfo1.getGangweiName());
                                         toUpd.setPhone(single.getString("phone"));
                                         toUpd.setSyncFlag("0");//状态由已推送改为待变更推送
