@@ -8,11 +8,10 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.gf.biz.common.CommonConstant;
 import com.gf.biz.common.util.HttpClientUtil;
 import com.gf.biz.common.util.SpringBeanUtil;
-import com.gf.biz.ifsSync.entity.*;
-import com.gf.biz.ifsSync.mapper.*;
-import com.gf.biz.ifsSync.po.IfScoreEntity;
+
 import com.gf.biz.tiancaiIfsData.entity.*;
 import com.gf.biz.tiancaiIfsData.mapper.*;
+import com.gf.biz.tiancaiIfsData.po.IfScoreEntity;
 import com.xxl.job.core.handler.IJobHandler;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -35,7 +34,7 @@ public class SyncTiancaiCeDataJobHandler extends IJobHandler {
     private static final Logger logger = LoggerFactory.getLogger(SyncTiancaiCeDataJobHandler.class);
     private static final String secret="MQ0WINT60DXP7U7R09A70V6Z1SEDIGYH";
     private static final String systype="54547QDLVSCY485398";//商户标识
-    private static final String groupId="140386";
+    private static final String groupId="352532";
     private static final String InitString="Init886688";
     public void execute() throws Exception {
 
@@ -62,7 +61,7 @@ public class SyncTiancaiCeDataJobHandler extends IJobHandler {
         //lastid	否	string	上一次的最后订单ID
 
         JSONObject jo= new JSONObject();
-        //jo.put("mcid", groupId);
+        jo.put("mcid", groupId);
         jo.put("beginTime","2024-08-01 00:00:00");
         jo.put("endTime","2024-09-01 00:00:00");
         int pageNo=0;
@@ -187,49 +186,54 @@ public class SyncTiancaiCeDataJobHandler extends IJobHandler {
 //
 //        }
         QueryWrapper<IfScoreCe> wrapper = new QueryWrapper<>();
-        wrapper.orderByAsc("mc_name");//根据mc_name升序排列
+        wrapper.orderByAsc("mobile");//根据mobile升序排列
         List<IfScoreCe> ifScoreCeList = ifScoreCeMapper.selectList(wrapper);
         Set<String> hasSyncCache = new HashSet<>();
         for(int i=0 ;i<ifScoreCeList.size();){//可优化点，一次更新6条数据
             IfScoreCe ifScoreCe = ifScoreCeList.get(i);
-            QueryWrapper<LecaiUserInfo> wrapper1 = new QueryWrapper<>();
-            wrapper1.ne("user_status", "40");//离职
-            wrapper1.ne("user_status", "50");//退休
-            //wrapper1.like("dept_name", ifScoreCe.getMcName());
-            wrapper1.orderByAsc("dept_name");//根据dept_name升序排列
-            List<LecaiUserInfo> userInfoList = lecaiUserInfoMapper.selectList(wrapper1);
-            int l=0;
-            LecaiUserInfo userInfoFlag=null;
-            try {
-                if(!hasSyncCache.contains(ifScoreCe.getMobile())) {
-                    for (LecaiUserInfo userInfo : userInfoList) {
-                        //log.info("开始进行判断:{}", ifScoreCe.getMcName()+"-"+userInfo.getDeptName());
-                        if (userInfo.getDeptName().startsWith(ifScoreCe.getMcName())) {
-                            if (userInfo.getPhone().equals(ifScoreCe.getMobile())) {
-                                l++;
-                                userInfoFlag = userInfo;
-                                hasSyncCache.add(ifScoreCe.getMobile());
-                                log.info("本店员工:{}", userInfoFlag.getUsername() + "-" + userInfoFlag.getPhone());
+            if(ifScoreCe.getMobile()!=null) {
+                QueryWrapper<LecaiUserInfo> wrapper1 = new QueryWrapper<>();
+                wrapper1.ne("user_status", "40");//离职
+                wrapper1.ne("user_status", "50");//退休
+                //wrapper1.like("dept_name", ifScoreCe.getMcName());
+                wrapper1.orderByAsc("dept_name");//根据dept_name升序排列
+                List<LecaiUserInfo> userInfoList = lecaiUserInfoMapper.selectList(wrapper1);
+                int l = 0;
+                LecaiUserInfo userInfoFlag = null;
+                try {
+                    if (!hasSyncCache.contains(ifScoreCe.getMobile())) {
+                        for (LecaiUserInfo userInfo : userInfoList) {
+                            //log.info("开始进行判断:{}", ifScoreCe.getMcName()+"-"+userInfo.getDeptName());
+                            if (userInfo.getDeptName().startsWith(ifScoreCe.getMcName())) {
+                                if (userInfo.getPhone().equals(ifScoreCe.getMobile())) {
+                                    l++;
+                                    userInfoFlag = userInfo;
+                                    hasSyncCache.add(ifScoreCe.getMobile());
+                                    log.info("本店员工:{}", userInfoFlag.getUsername() + "-" + userInfoFlag.getPhone());
+                                }
+                                //log.info("顾客名字:{}", userInfo.getUsername()+"-"+userInfo.getPhone());
                             }
-                            //log.info("顾客名字:{}", userInfo.getUsername()+"-"+userInfo.getPhone());
                         }
                     }
-                } else if(l>0||hasSyncCache.contains(ifScoreCe.getMobile())){
-                    hasSyncCache.add(userInfoFlag.getPhone());
-                    UpdateWrapper<IfScoreCe> updateWrapper = new UpdateWrapper<>();
-                    IfScoreCe ifScoreCe1 = new IfScoreCe();
-                    ifScoreCe1.setValidFlag("1");
-                    updateWrapper.eq("id", ifScoreCe.getId());
-                    //to，因为如果更新为空的时候，不会 更新
-                    ifScoreCeMapper.update(ifScoreCe1, updateWrapper);
-                    i++;//如果是本店评论，i++
-                    //log.info("本店员工:{}", userInfoFlag.getUsername()+"-"+userInfoFlag.getPhone());
-                } else{
-                    i=i+6;//如果不是本店评论，i=i+6
-                    log.info("正常评论:{}",ifScoreCe.getSendNickName()+"-"+ifScoreCe.getMobile());
+                    if (l > 0 || hasSyncCache.contains(ifScoreCe.getMobile())) {
+                        //hasSyncCache.add(ifScoreCe.getMobile());
+                        UpdateWrapper<IfScoreCe> updateWrapper = new UpdateWrapper<>();
+                        IfScoreCe ifScoreCe1 = new IfScoreCe();
+                        ifScoreCe1.setValidFlag("1");
+                        updateWrapper.eq("id", ifScoreCe.getId());
+                        //to，因为如果更新为空的时候，不会 更新
+                        ifScoreCeMapper.update(ifScoreCe1, updateWrapper);
+                        i++;//如果是本店评论，i++
+                        log.info("本店员工:{}", userInfoFlag.getUsername()+"-"+userInfoFlag.getPhone());
+                    } else if (l == 0) {
+                        i = i + 6;//如果不是本店评论，i=i+6
+                        log.info("正常评论:{}", ifScoreCe.getSendNickName() + "-" + ifScoreCe.getMobile());
+                    }
+                } catch (Exception e) {
+                    logger.error("syncSiftEmployeeData error", e);
                 }
-            }catch (Exception e){
-                logger.error("syncSiftEmployeeData error",e);
+            }else{
+                i=i+6;
             }
         }
         log.info("盘查完毕");
