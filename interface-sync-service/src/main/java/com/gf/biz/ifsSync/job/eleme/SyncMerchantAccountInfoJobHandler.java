@@ -93,6 +93,9 @@ public class SyncMerchantAccountInfoJobHandler extends IJobHandler {
     }
 
     private static final String getTokenInfo() throws Exception {
+
+        //todo token存入redis
+
         //先获取token
         Map<String, String> bodyParams = new HashMap<>();
         bodyParams.put("grant_type", "client_credentials");
@@ -130,6 +133,7 @@ public class SyncMerchantAccountInfoJobHandler extends IJobHandler {
         requestPayload.put("id", requestId);
         requestPayload.put("action", action);
         requestPayload.put("token", accessToken);
+
 
         Map<String, Object> metasHashMap = new HashMap<String, Object>();
         metasHashMap.put("app_key", appKey);

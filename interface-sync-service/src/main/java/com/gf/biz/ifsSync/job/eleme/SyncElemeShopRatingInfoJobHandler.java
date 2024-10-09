@@ -101,6 +101,9 @@ public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
     }
 
     private static String getTokenInfo() throws Exception {
+
+        //todo token存入redis
+
         //先获取token
         Map<String, String> bodyParams = new HashMap<>();
         bodyParams.put("grant_type", "client_credentials");
@@ -127,7 +130,7 @@ public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
         String requestId = getReqID();
 
         logger.info("requestId:{}" + requestId);
-        Map<String, Object> requestPayload = new HashMap<String, Object>();
+        Map<String, Object> requestPayload = new HashMap<>();
         requestPayload.put("nop", "1.0.0");
         requestPayload.put("id", requestId);
         requestPayload.put("action", action);
@@ -140,9 +143,12 @@ public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
 
         requestPayload.put("metas", metasHashMap);
 
+        //实际业务参数 可以修改
         Map<String, Object> parameters =  new HashMap<>();
-        parameters.put("supplierId","94854117");
-        parameters.put("offset","1000");
+        //todo shopids
+        //parameters.put("supplierId","94854117");
+        parameters.put("shopIds","");
+        parameters.put("offset","0");
         parameters.put("limit","20");
 
 
