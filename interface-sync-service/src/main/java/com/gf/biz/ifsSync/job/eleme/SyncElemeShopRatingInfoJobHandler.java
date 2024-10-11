@@ -95,8 +95,6 @@ public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
         JSONObject jo = new JSONObject((LinkedHashMap<String,Object>)responsePayload.getResult());
 
 
-
-
         logger.info("result:{}",responsePayload.getResult());
     }
 
@@ -117,16 +115,19 @@ public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
         headerMap.put("Authorization", "Basic " + encodeKey);
 
         String tokenInfo = HttpClientUtil.postFormUrlEncoded(prod_token_url, headerMap, bodyParams);
+        Map resultMap = JSONObject.parseObject(tokenInfo).getInnerMap();
         logger.info("tokenInfo:{}", tokenInfo);
-        return tokenInfo;
+        logger.info("resultMap:{}", resultMap.get("access_token").toString());
+        return resultMap.get("access_token").toString();
     }
 
     public static void main(String[] args) throws Exception {
 
+
         final long timestamp = System.currentTimeMillis();
         final String appKey = prod_key;
         String secret = prod_secret;
-        String accessToken = JSONObject.parseObject(getTokenInfo()).getString("access_token");
+        String accessToken =getTokenInfo();
         String requestId = getReqID();
 
         logger.info("requestId:{}" + requestId);
@@ -143,14 +144,14 @@ public class SyncElemeShopRatingInfoJobHandler extends IJobHandler {
 
         requestPayload.put("metas", metasHashMap);
 
+
         //实际业务参数 可以修改
         Map<String, Object> parameters =  new HashMap<>();
         //todo shopids
-        //parameters.put("supplierId","94854117");
-        parameters.put("shopIds","");
+        parameters.put("supplierId","94854117");
+       // parameters.put("shopIds","");
         parameters.put("offset","0");
         parameters.put("limit","20");
-
 
         requestPayload.put("params", parameters);
 

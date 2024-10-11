@@ -75,4 +75,5 @@ public class SyncShopIdsJobHandler extends IJobHandler {
 
         HttpClientUtil.doGet(finalUrl);
     }
+
 }

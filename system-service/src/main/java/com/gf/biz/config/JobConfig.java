@@ -4,6 +4,7 @@ package com.gf.biz.config;
 import com.gf.biz.LecaiSync.task.SyncLeCaiToGangweiDataJob;
 import com.gf.biz.LecaiSync.task.SyncLeCaiToUserDataJob;
 import com.gf.biz.LecaiSync.task.SyncLeiCaiToGenMasterDataJob;
+
 import com.gf.biz.codewave.task.SyncMasterDataToCodewaveJob;
 import com.gf.biz.dingSync.task.SyncDingdingSysToGenMasterDataJob;
 import com.xxl.job.core.executor.XxlJobExecutor;
@@ -73,7 +74,7 @@ public class JobConfig {
 
         XxlJobExecutor.registJobHandler("syncDingdingSysToGenMasterDataJob", new SyncDingdingSysToGenMasterDataJob());
         XxlJobExecutor.registJobHandler("syncMasterDataToCodewaveJob", new SyncMasterDataToCodewaveJob());
-        //XxlJobExecutor.registJobHandler("syncLeiCaiToGenMasterDataJob", new SyncLeiCaiToGenMasterDataJob());
+        XxlJobExecutor.registJobHandler("syncLeiCaiToGenMasterDataJob", new SyncLeiCaiToGenMasterDataJob());
         XxlJobExecutor.registJobHandler("syncLeiCaiToGangweiDataJob", new SyncLeCaiToGangweiDataJob());
         XxlJobExecutor.registJobHandler("syncLeiCaiToUserDataJob", new SyncLeCaiToUserDataJob());
 

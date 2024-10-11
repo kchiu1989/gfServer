@@ -1,8 +1,13 @@
-package com.gf.common.config;
+package com.gf.biz.config;
 
 
+import com.gf.biz.elemeData.task.SyncElemeShopRatingInfoDtlJobHandler;
+import com.gf.biz.elemeData.task.SyncMerchantAccountInfoDtlJobHandler;
 import com.gf.biz.ifsSync.job.shenfang.IfScoreMvJob;
-import com.gf.biz.kpiRuleEngine.job.TestExecuteExpressionJob;
+
+import com.gf.biz.meituanwmData.task.SyncMtwmShopRatingInfoJobHandler;
+import com.gf.biz.tiancaiIfsData.task.SyncTiancaiCeDataJobHandler;
+import com.gf.biz.tiancaiIfsData.task.SyncTiancaiCeGetPointsJobHander;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.slf4j.Logger;
@@ -68,6 +73,14 @@ public class JobConfig {
     public void initJobs() {
         // 手动注册IJobHandler
         XxlJobExecutor.registJobHandler("syncIfScoreMvJobHandler", new IfScoreMvJob());
+        XxlJobExecutor.registJobHandler("syncTiancaiCeDataJobHandler", new SyncTiancaiCeDataJobHandler());
+        XxlJobExecutor.registJobHandler("syncTiancaiCeGetPointsJobHander", new SyncTiancaiCeGetPointsJobHander());
+        XxlJobExecutor.registJobHandler("syncMerchantAccountInfoDtlJobHandler", new SyncMerchantAccountInfoDtlJobHandler());
+        XxlJobExecutor.registJobHandler("syncElemeShopRatingInfoDtlJobHandler", new SyncElemeShopRatingInfoDtlJobHandler());
+
+        XxlJobExecutor.registJobHandler("syncMtwmShopRatingInfoJobHandler", new SyncMtwmShopRatingInfoJobHandler());
+
+
 
     }
 
