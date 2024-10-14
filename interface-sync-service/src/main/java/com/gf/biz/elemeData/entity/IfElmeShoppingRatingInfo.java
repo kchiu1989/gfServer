@@ -1,5 +1,6 @@
 package com.gf.biz.elemeData.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -21,8 +22,8 @@ import lombok.Data;
 
     private static final long serialVersionUID = 1L;
 
-                @TableId("id")
-                private Integer id;
+    @TableId(value = "id" ,type = IdType.AUTO)
+    private Integer id;
 
         /**
          * 创建时间

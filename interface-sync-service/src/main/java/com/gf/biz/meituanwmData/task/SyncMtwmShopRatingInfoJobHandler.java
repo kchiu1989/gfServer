@@ -9,6 +9,7 @@ import com.gf.biz.elemeData.mapper.IfElmeShoppingRatingInfoMapper;
 import com.gf.biz.meituanwmData.entity.IfMtwmShopRatingData;
 import com.gf.biz.meituanwmData.mapper.IfMtwmShopDataMapper;
 import com.gf.biz.meituanwmData.mapper.IfMtwmShopRatingDataMapper;
+import com.gf.biz.meituanwmData.po.IfMtwmshopEntity;
 import com.xxl.job.core.handler.IJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,15 +48,15 @@ public class SyncMtwmShopRatingInfoJobHandler extends IJobHandler {
         IfMtwmShopDataMapper ifMtwmShopDataMapper = SpringBeanUtil.getBean(IfMtwmShopDataMapper.class);
         IfMtwmShopRatingDataMapper ifMtwmShopRatingDataMapper = SpringBeanUtil.getBean(IfMtwmShopRatingDataMapper.class);
 
-        List<String> shopIdList=ifMtwmShopDataMapper.getAllShopTrdptyId();
+        List<IfMtwmshopEntity> shopIdList=ifMtwmShopDataMapper.getAllShopTrdptyId();
         logger.info("shopIdList:{}",shopIdList);
 
         IfMtwmShopRatingData ifMtwmShopRatingData =null;
 
-        for(String shopId:shopIdList) {
+        for(IfMtwmshopEntity ifMtwmshopEntity:shopIdList) {
             ifMtwmShopRatingData = new IfMtwmShopRatingData();
             Map<String, Object> params = new HashMap<>();
-            params.put("app_poi_code", shopId);
+            params.put("app_poi_code", ifMtwmshopEntity.getShopTrdptyId());
             String finalUrl = getFinalUrl(params);
 
             String rltStr = HttpClientUtil.doGet(finalUrl);
@@ -71,7 +72,8 @@ public class SyncMtwmShopRatingInfoJobHandler extends IJobHandler {
                 ifMtwmShopRatingData.setAvgTasteScore(dataJson.getString("avgTasteScore"));
                 ifMtwmShopRatingData.setDeliverySatisfaction(dataJson.getString("deliverySatisfaction"));
                 ifMtwmShopRatingData.setCreatedTime(new Date());
-                ifMtwmShopRatingData.setAppPoiCode(shopId);
+                ifMtwmShopRatingData.setAppPoiCode(ifMtwmshopEntity.getShopTrdptyId());
+                ifMtwmShopRatingData.setShopId(ifMtwmshopEntity.getShopId());
                 ifMtwmShopRatingData.setStatus("1");
                 ifMtwmShopRatingData.setCreatedBy(CommonConstant.DEFAULT_OPT_USER);
                 ifMtwmShopRatingData.setDeletedFlag(CommonConstant.STATUS_UN_DEL);
