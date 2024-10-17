@@ -38,6 +38,8 @@ public enum GfResultCode implements IGfResultCode, Serializable {
 
     SYSTEM_DISASTER_RECOVERY_TRIGGER("B0200","系统容灾功能被触发"),
 
+    BUSINESS_COMMON_EXCEPTION("BIZ0001","业务通用异常"),
+
     FLOW_LIMITING("B0210","系统限流"),
 
     DEGRADATION("B0220","系统功能降级");
