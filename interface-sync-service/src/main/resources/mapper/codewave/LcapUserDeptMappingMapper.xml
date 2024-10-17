@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gf.biz.codewave.mapper.LcapUserDeptMappingMapper">
+
+    <resultMap id="userDeptMap" type="com.gf.biz.codewave.dto.LcapUserDeptMappingDto">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="user_account" jdbcType="VARCHAR" property="userAccount"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="if_user_id" jdbcType="BIGINT" property="ifUserId"/>
+        <result column="dept_id" jdbcType="BIGINT" property="deptId"/>
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
+        <result column="dept_code" jdbcType="VARCHAR" property="deptCode"/>
+        <result column="dept_classify" jdbcType="CHAR" property="deptClassify"/>
+    </resultMap>
+
+    <select id="selectByIfUserId" parameterType="map" resultMap="userDeptMap">
+        select a.id as user_id,a.user_name as user_account,a.display_name as user_name,a.if_id as if_user_id,
+            c.name as dept_name,c.dept_code,c.id as dept_id,c.dept_classify
+        from lcap_user_4a79f3 a
+            left join lcap_user_dept_mapping_4a79f3 b on a.user_id = b.user_id
+            left join lcap_department_4a79f3 c on b.dept_id = c.dept_id
+        where a.if_id = #{ifUserId,jdbcType=BIGINT}
+    </select>
+    
+
+</mapper>

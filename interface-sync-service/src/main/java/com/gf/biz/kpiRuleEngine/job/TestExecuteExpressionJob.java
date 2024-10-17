@@ -115,7 +115,7 @@ public class TestExecuteExpressionJob extends IJobHandler {
 
     public static void main(String[] args) {
 
-        String expressionStr = "{actualValue}/{plannedValue}";
+       /* String expressionStr = "{actualValue}/{plannedValue}";
         String expressionRegex = "\\{[^\\}]+\\}";
 
         //2.创建模式对象
@@ -132,8 +132,13 @@ public class TestExecuteExpressionJob extends IJobHandler {
             //处理因子
             String factorName = orifactorName.replace("{","").replace("}","");
             //expressionParams.put(factorName,);
-        }
+        }*/
 
+
+        String amountRegex = "^([1-9]\\d{0,9}|0)([.]?|(\\.\\d{1,3})?)$";
+        Pattern pattern = Pattern.compile(amountRegex);
+        Matcher matcher = pattern.matcher("12999");
+        System.out.println(matcher.matches());
 
     }
 }

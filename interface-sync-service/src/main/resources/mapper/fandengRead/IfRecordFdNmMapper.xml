@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gf.biz.fangdengRead.mapper.IfRecordFdNmMapper">
+
+    <select id="selectNmDataMapListByMonth" parameterType="map" resultType="map">
+        select a.user_account,count(1) as note_share_count from if_record_fd_nm a where a.deleted_flag='0' and a.user_account is not null
+            and a.year = #{year,jdbcType=BIGINT} and a.month=#{month,jdbcType=BIGINT}
+        and exists (select 1 from if_record_fd_cr b where b.deleted_flag='0' and b.user_account is not null
+        and b.year = #{year,jdbcType=BIGINT} and b.month=#{month,jdbcType=BIGINT}
+                and a.book_name = b.book_name
+            and a.user_account = b.user_account)
+        group by a.user_account
+
+    </select>
+</mapper>
