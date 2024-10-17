@@ -1,8 +1,8 @@
-package com.gf.biz.OperateTargetRunningAllPoints.mapper;
+package com.gf.biz.operateIndicatorScore.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.gf.biz.OperateTargetRunningAllPoints.entity.BdIndicatorDeptScore;
+import com.gf.biz.operateIndicatorScore.entity.BdIndicatorDeptScore;
 
 /**
  * <p>

@@ -1,10 +1,10 @@
-package com.gf.biz.OperateTargetRunningAllPoints.service.impl;
+package com.gf.biz.operateIndicatorScore.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.gf.biz.OperateTargetRunningAllPoints.entity.BdIndicatorDeptScore;
-import com.gf.biz.OperateTargetRunningAllPoints.mapper.BdIndicatorDeptScoreMapper;
-import com.gf.biz.OperateTargetRunningAllPoints.service.BdIndicatorDeptScoreService;
+import com.gf.biz.operateIndicatorScore.entity.BdIndicatorDeptScore;
+import com.gf.biz.operateIndicatorScore.mapper.BdIndicatorDeptScoreMapper;
+import com.gf.biz.operateIndicatorScore.service.BdIndicatorDeptScoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.gf.biz.OperateTargetRunningAllPoints.entity;
+package com.gf.biz.operateIndicatorScore.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

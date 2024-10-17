@@ -9,9 +9,9 @@ import com.gf.biz.ifsSync.job.shenfang.IfScoreMvJob;
 
 import com.gf.biz.meituanwmData.task.SyncMtwmShopRatingInfoJobHandler;
 import com.gf.biz.shenfangData.task.SyncIfScoreMvDataJobHandler;
-import com.gf.biz.OperateTargetRunningAllPoints.task.SyncSfTargetRunningJobHandler;
-import com.gf.biz.OperateTargetRunningAllPoints.task.SyncTcifsDataTargetRunningPointsJobHandler;
-import com.gf.biz.OperateTargetRunningAllPoints.task.SyncWmTargetRunningPointsJobHandler;
+import com.gf.biz.operateIndicatorScore.task.SyncSfTargetRunningJobHandler;
+import com.gf.biz.operateIndicatorScore.task.SyncTcifsDataTargetRunningPointsJobHandler;
+import com.gf.biz.operateIndicatorScore.task.SyncWmTargetRunningPointsJobHandler;
 import com.gf.biz.tiancaiIfsData.task.SyncTiancaiCeDataJobHandler;
 import com.gf.biz.tiancaiIfsData.task.SyncTiancaiCeGetPointsJobHander;
 import com.gf.biz.wmPerformanceAllPoints.task.SyncGetWMAllPointsJobHandle;

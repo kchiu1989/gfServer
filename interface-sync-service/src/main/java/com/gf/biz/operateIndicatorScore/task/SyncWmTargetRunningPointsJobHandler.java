@@ -1,11 +1,11 @@
-package com.gf.biz.OperateTargetRunningAllPoints.task;
+package com.gf.biz.operateIndicatorScore.task;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gf.biz.common.CommonConstant;
 import com.gf.biz.common.util.SpringBeanUtil;
 import com.gf.biz.elemeData.task.SyncElemeShopRatingInfoDtlJobHandler;
-import com.gf.biz.OperateTargetRunningAllPoints.entity.BdIndicatorDeptScore;
-import com.gf.biz.OperateTargetRunningAllPoints.mapper.BdIndicatorDeptScoreMapper;
+import com.gf.biz.operateIndicatorScore.entity.BdIndicatorDeptScore;
+import com.gf.biz.operateIndicatorScore.mapper.BdIndicatorDeptScoreMapper;
 import com.gf.biz.tiancaiIfsData.entity.LcapDepartment4a79f3;
 import com.gf.biz.tiancaiIfsData.mapper.LcapDepartment4a79f3Mapper;
 import com.gf.biz.wmPerformanceAllPoints.entity.BfTakeoutAssessSurvey;

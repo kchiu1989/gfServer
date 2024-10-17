@@ -1,8 +1,8 @@
-package com.gf.biz.OperateTargetRunningAllPoints.service;
+package com.gf.biz.operateIndicatorScore.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.gf.biz.OperateTargetRunningAllPoints.entity.BdIndicatorDeptScore;
+import com.gf.biz.operateIndicatorScore.entity.BdIndicatorDeptScore;
 
 /**
  * <p>
