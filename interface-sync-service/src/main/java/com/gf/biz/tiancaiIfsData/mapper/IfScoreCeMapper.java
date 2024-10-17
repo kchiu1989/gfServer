@@ -1,6 +1,7 @@
 package com.gf.biz.tiancaiIfsData.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
 import com.gf.biz.tiancaiIfsData.entity.IfScoreCe;
 import com.gf.biz.tiancaiIfsData.po.IfScoreEntity;
 import org.apache.ibatis.annotations.Param;

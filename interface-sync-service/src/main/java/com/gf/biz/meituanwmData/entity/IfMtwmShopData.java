@@ -16,7 +16,7 @@ import lombok.Data;
  * @author Gf
  * @since 2024-10-11 10:06:36
  */
-@Data
+
 @TableName("if_mtwm_shop_data")
     public class IfMtwmShopData implements Serializable {
 
@@ -73,5 +73,75 @@ import lombok.Data;
     @TableField("shop_name")
         private String shopName;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Date getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(Date updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public String getDeletedFlag() {
+        return deletedFlag;
+    }
+
+    public void setDeletedFlag(String deletedFlag) {
+        this.deletedFlag = deletedFlag;
+    }
+
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getShopTrdptyId() {
+        return shopTrdptyId;
+    }
+
+    public void setShopTrdptyId(String shopTrdptyId) {
+        this.shopTrdptyId = shopTrdptyId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
 }

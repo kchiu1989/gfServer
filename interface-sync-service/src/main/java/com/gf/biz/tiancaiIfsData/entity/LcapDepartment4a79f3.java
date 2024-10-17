@@ -17,7 +17,7 @@ import java.util.Date;
  * @author Gf
  * @since 2024-09-24 14:02:13
  */
-@Data
+
 @TableName("lcap_department_4a79f3")
     public class LcapDepartment4a79f3 implements Serializable {
 
@@ -104,5 +104,115 @@ import java.util.Date;
     @TableField("region_name")
         private String regionName;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Date getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(Date updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(String deptId) {
+        this.deptId = deptId;
+    }
+
+    public String getParentDeptId() {
+        return parentDeptId;
+    }
+
+    public void setParentDeptId(String parentDeptId) {
+        this.parentDeptId = parentDeptId;
+    }
+
+    public Long getIfId() {
+        return ifId;
+    }
+
+    public void setIfId(Long ifId) {
+        this.ifId = ifId;
+    }
+
+    public Long getIfParentId() {
+        return ifParentId;
+    }
+
+    public void setIfParentId(Long ifParentId) {
+        this.ifParentId = ifParentId;
+    }
+
+    public String getDeptClassify() {
+        return deptClassify;
+    }
+
+    public void setDeptClassify(String deptClassify) {
+        this.deptClassify = deptClassify;
+    }
+
+    public String getDeptCode() {
+        return deptCode;
+    }
+
+    public void setDeptCode(String deptCode) {
+        this.deptCode = deptCode;
+    }
+
+    public String getBrandCenterName() {
+        return brandCenterName;
+    }
+
+    public void setBrandCenterName(String brandCenterName) {
+        this.brandCenterName = brandCenterName;
+    }
+
+    public String getRegionName() {
+        return regionName;
+    }
+
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
+    }
 }

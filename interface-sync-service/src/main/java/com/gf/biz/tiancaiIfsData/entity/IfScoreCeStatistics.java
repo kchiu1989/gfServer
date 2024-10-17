@@ -102,31 +102,31 @@ public class IfScoreCeStatistics implements Serializable {
      * 评价项1平均分
      */
     @TableField("item_score1")
-    private String itemScore1;
+    private BigDecimal itemScore1;
 
     /**
      * 评价项2平均分
      */
     @TableField("item_score2")
-    private String itemScore2;
+    private BigDecimal itemScore2;
 
     /**
      * 评价项3平均分
      */
     @TableField("item_score3")
-    private String itemScore3;
+    private BigDecimal itemScore3;
 
     /**
      * 评价项4平均分
      */
     @TableField("item_score4")
-    private String itemScore4;
+    private BigDecimal itemScore4;
 
     /**
      * 评价项5平均分
      */
     @TableField("item_score5")
-    private String itemScore5;
+    private BigDecimal itemScore5;
 
     /**
      * 门店编码
@@ -136,163 +136,163 @@ public class IfScoreCeStatistics implements Serializable {
     @TableField("get_point")
     private BigDecimal getPoint;
 
-    public BigDecimal getGetPoint() {
-        return getPoint;
-    }
-
-    public void setGetPoint(BigDecimal getPoint) {
-        this.getPoint = getPoint;
-    }
-
     public Integer getId() {
         return id;
-    }
-
-    public Date getCreatedTime() {
-        return createdTime;
-    }
-
-    public Date getUpdatedTime() {
-        return updatedTime;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public String getDeletedFlag() {
-        return deletedFlag;
-    }
-
-    public String getUnitId() {
-        return unitId;
-    }
-
-    public Long getDeptId() {
-        return deptId;
-    }
-
-    public String getUnitName() {
-        return unitName;
-    }
-
-    public String getDeptName() {
-        return deptName;
-    }
-
-    public Integer getYear() {
-        return year;
-    }
-
-    public Integer getMonth() {
-        return month;
-    }
-
-    public Integer getCeCnt() {
-        return ceCnt;
-    }
-
-    public String getItemScore1() {
-        return itemScore1;
-    }
-
-    public String getItemScore2() {
-        return itemScore2;
-    }
-
-    public String getItemScore3() {
-        return itemScore3;
-    }
-
-    public String getItemScore4() {
-        return itemScore4;
-    }
-
-    public String getItemScore5() {
-        return itemScore5;
-    }
-
-    public String getDeptCode() {
-        return deptCode;
     }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
     public void setCreatedTime(Date createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public Date getUpdatedTime() {
+        return updatedTime;
     }
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
 
+    public String getDeletedFlag() {
+        return deletedFlag;
+    }
+
     public void setDeletedFlag(String deletedFlag) {
         this.deletedFlag = deletedFlag;
+    }
+
+    public String getUnitId() {
+        return unitId;
     }
 
     public void setUnitId(String unitId) {
         this.unitId = unitId;
     }
 
+    public Long getDeptId() {
+        return deptId;
+    }
+
     public void setDeptId(Long deptId) {
         this.deptId = deptId;
+    }
+
+    public String getUnitName() {
+        return unitName;
     }
 
     public void setUnitName(String unitName) {
         this.unitName = unitName;
     }
 
+    public String getDeptName() {
+        return deptName;
+    }
+
     public void setDeptName(String deptName) {
         this.deptName = deptName;
+    }
+
+    public Integer getYear() {
+        return year;
     }
 
     public void setYear(Integer year) {
         this.year = year;
     }
 
+    public Integer getMonth() {
+        return month;
+    }
+
     public void setMonth(Integer month) {
         this.month = month;
+    }
+
+    public Integer getCeCnt() {
+        return ceCnt;
     }
 
     public void setCeCnt(Integer ceCnt) {
         this.ceCnt = ceCnt;
     }
 
-    public void setItemScore1(String itemScore1) {
+    public BigDecimal getItemScore1() {
+        return itemScore1;
+    }
+
+    public void setItemScore1(BigDecimal itemScore1) {
         this.itemScore1 = itemScore1;
     }
 
-    public void setItemScore2(String itemScore2) {
+    public BigDecimal getItemScore2() {
+        return itemScore2;
+    }
+
+    public void setItemScore2(BigDecimal itemScore2) {
         this.itemScore2 = itemScore2;
     }
 
-    public void setItemScore3(String itemScore3) {
+    public BigDecimal getItemScore3() {
+        return itemScore3;
+    }
+
+    public void setItemScore3(BigDecimal itemScore3) {
         this.itemScore3 = itemScore3;
     }
 
-    public void setItemScore4(String itemScore4) {
+    public BigDecimal getItemScore4() {
+        return itemScore4;
+    }
+
+    public void setItemScore4(BigDecimal itemScore4) {
         this.itemScore4 = itemScore4;
     }
 
-    public void setItemScore5(String itemScore5) {
+    public BigDecimal getItemScore5() {
+        return itemScore5;
+    }
+
+    public void setItemScore5(BigDecimal itemScore5) {
         this.itemScore5 = itemScore5;
+    }
+
+    public String getDeptCode() {
+        return deptCode;
     }
 
     public void setDeptCode(String deptCode) {
         this.deptCode = deptCode;
+    }
+
+    public BigDecimal getGetPoint() {
+        return getPoint;
+    }
+
+    public void setGetPoint(BigDecimal getPoint) {
+        this.getPoint = getPoint;
     }
 }

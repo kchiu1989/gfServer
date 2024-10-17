@@ -1,10 +1,13 @@
 package com.gf.biz.ifsSync.job.shenfang;
 
+import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.gf.biz.common.util.HttpClientUtil;
 import com.xxl.job.core.handler.IJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.logging.logback.LogbackLoggingSystem;
 import org.springframework.util.DigestUtils;
 
 import java.util.*;
@@ -51,7 +54,13 @@ public class IfScoreMvJob extends IJobHandler {
         formMap.put("companyId",String.valueOf(params.getInteger("companyId")));
         formMap.put("timestamp",String.valueOf(params.getLongValue("timestamp")));
         formMap.put("sign",sign);
-        HttpClientUtil.doPostFormData("https://b.haitan.shop/djzchina-ops-b-api/reportApi/listOnlineReport",null,null,formMap);
+        String result =HttpClientUtil.doPostFormData("https://b.haitan.shop/djzchina-ops-b-api/reportApi/listOnlineReport",null,null,formMap);
+        logger.info("result:{}",result);
+        cn.hutool.json.JSONObject resultJson = JSONUtil.parseObj(result);
+        logger.info("resultJson:{}",resultJson);
+        logger.info("resultJsonResult:{}",resultJson.get("result"));
+        cn.hutool.json.JSONArray resultList = resultJson.getJSONArray("result");
+        logger.info("resultList:{}",resultList);
         //0506391f4241d1b2b3fdc5ea0269598e
     }
 

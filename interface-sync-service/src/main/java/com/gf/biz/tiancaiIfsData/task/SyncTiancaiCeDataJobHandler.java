@@ -21,6 +21,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import static cn.hutool.core.bean.BeanUtil.copyProperties;
@@ -49,6 +50,9 @@ public class SyncTiancaiCeDataJobHandler extends IJobHandler {
 
 
     }
+    /*
+    * 同步天财评论数据
+     */
     public void syncCreateCommentData(){
         String lastId=InitString;
         //systype	是	string	商户标识
@@ -149,6 +153,9 @@ public class SyncTiancaiCeDataJobHandler extends IJobHandler {
         log.info("pageNo:{}", pageNo);
         log.info("同步评论数据结束");
     }
+    /*
+    * 筛选员工数据
+     */
     public void syncSiftEmployeeData(){
         LecaiUserInfo lecaiUserInfo = null;
         LecaiUserInfoMapper lecaiUserInfoMapper = SpringBeanUtil.getBean(LecaiUserInfoMapper.class);//Mapper注入
@@ -291,7 +298,7 @@ public class SyncTiancaiCeDataJobHandler extends IJobHandler {
                 ifScoreCeStatistics.setCreatedTime(new Date());
                 ifScoreCeStatistics.setDeletedFlag(CommonConstant.STATUS_UN_DEL);
                 ifScoreCeStatistics.setCreatedBy(CommonConstant.DEFAULT_OPT_USER);
-                BigDecimal getPoint = BigDecimal.valueOf((Float.valueOf(ifScoreEntity.getStar())+Float.valueOf(ifScoreEntity1.getStar())+Float.valueOf(ifScoreEntity2.getStar())+Float.valueOf(ifScoreEntity3.getStar())+Float.valueOf(ifScoreEntity4.getStar()))/5);
+                BigDecimal getPoint = ifScoreEntity.getStar().add(ifScoreEntity1.getStar()).add(ifScoreEntity2.getStar()).add(ifScoreEntity3.getStar()).add(ifScoreEntity4.getStar()).divide(BigDecimal.valueOf(5),3, RoundingMode.HALF_UP);
                 if(Integer.valueOf(ifScoreEntity.getCeCnt())<30){
                     getPoint=BigDecimal.valueOf(0);
                 }

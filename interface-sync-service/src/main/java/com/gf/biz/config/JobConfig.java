@@ -6,8 +6,13 @@ import com.gf.biz.elemeData.task.SyncMerchantAccountInfoDtlJobHandler;
 import com.gf.biz.ifsSync.job.shenfang.IfScoreMvJob;
 
 import com.gf.biz.meituanwmData.task.SyncMtwmShopRatingInfoJobHandler;
+import com.gf.biz.shenfangData.task.SyncIfScoreMvDataJobHandler;
+import com.gf.biz.OperateTargetRunningAllPoints.task.SyncSfTargetRunningJobHandler;
+import com.gf.biz.OperateTargetRunningAllPoints.task.SyncTcifsDataTargetRunningPointsJobHandler;
+import com.gf.biz.OperateTargetRunningAllPoints.task.SyncWmTargetRunningPointsJobHandler;
 import com.gf.biz.tiancaiIfsData.task.SyncTiancaiCeDataJobHandler;
 import com.gf.biz.tiancaiIfsData.task.SyncTiancaiCeGetPointsJobHander;
+import com.gf.biz.wmPerformanceAllPoints.task.SyncGetWMAllPointsJobHandle;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.slf4j.Logger;
@@ -77,8 +82,15 @@ public class JobConfig {
         XxlJobExecutor.registJobHandler("syncTiancaiCeGetPointsJobHander", new SyncTiancaiCeGetPointsJobHander());
         XxlJobExecutor.registJobHandler("syncMerchantAccountInfoDtlJobHandler", new SyncMerchantAccountInfoDtlJobHandler());
         XxlJobExecutor.registJobHandler("syncElemeShopRatingInfoDtlJobHandler", new SyncElemeShopRatingInfoDtlJobHandler());
-
         XxlJobExecutor.registJobHandler("syncMtwmShopRatingInfoJobHandler", new SyncMtwmShopRatingInfoJobHandler());
+        XxlJobExecutor.registJobHandler("syncGetWMAllPointsJobHandle", new SyncGetWMAllPointsJobHandle());
+
+        XxlJobExecutor.registJobHandler("syncIfScoreMvDataJobHandler", new SyncIfScoreMvDataJobHandler());
+        XxlJobExecutor.registJobHandler("syncWmTargetRunningPointsJobHandler", new SyncWmTargetRunningPointsJobHandler());
+
+        XxlJobExecutor.registJobHandler("syncSfTargetRunningJobHandler", new SyncSfTargetRunningJobHandler());
+
+        XxlJobExecutor.registJobHandler("syncTcifsDataTargetRunningPointsJobHandler", new SyncTcifsDataTargetRunningPointsJobHandler());
 
 
 

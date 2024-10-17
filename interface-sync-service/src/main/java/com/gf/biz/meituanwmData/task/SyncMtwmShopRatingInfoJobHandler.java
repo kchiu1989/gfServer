@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.DigestUtils;
 
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -27,15 +28,15 @@ public class SyncMtwmShopRatingInfoJobHandler extends IJobHandler {
     private static final String appSecret="ae0e087857354177105fa5da6d3769db";
     private static final String jobUrl="https://waimaiopen.meituan.com/api/v1/comment/score";
 
-    public static void main(String[] args){
-        SyncMtwmShopRatingInfoJobHandler shhh = new SyncMtwmShopRatingInfoJobHandler();
-        try{
-            shhh.execute();
-        }catch(Exception e){
-            logger.error("shhh.execute error",e);
-        }
-
-    }
+//    public static void main(String[] args){
+//        SyncMtwmShopRatingInfoJobHandler shhh = new SyncMtwmShopRatingInfoJobHandler();
+//        try{
+//            shhh.execute();
+//        }catch(Exception e){
+//            logger.error("shhh.execute error",e);
+//        }
+//
+//    }
 
 
     @Override
@@ -77,6 +78,9 @@ public class SyncMtwmShopRatingInfoJobHandler extends IJobHandler {
                 ifMtwmShopRatingData.setStatus("1");
                 ifMtwmShopRatingData.setCreatedBy(CommonConstant.DEFAULT_OPT_USER);
                 ifMtwmShopRatingData.setDeletedFlag(CommonConstant.STATUS_UN_DEL);
+                ifMtwmShopRatingData.setYear(String.valueOf(LocalDate.now().getYear()));
+                ifMtwmShopRatingData.setMonth(String.valueOf(LocalDate.now().getMonthValue()));
+                ifMtwmShopRatingData.setDay(String.valueOf(LocalDate.now().getDayOfMonth()));
                 ifMtwmShopRatingDataMapper.insert(ifMtwmShopRatingData);
             }
         }

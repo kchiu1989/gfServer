@@ -21,6 +21,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import static cn.hutool.core.bean.BeanUtil.copyProperties;
@@ -100,7 +101,7 @@ public class SyncTiancaiCeGetPointsJobHander extends IJobHandler {
                 ifScoreCeStatistics.setCreatedTime(new Date());
                 ifScoreCeStatistics.setDeletedFlag(CommonConstant.STATUS_UN_DEL);
                 ifScoreCeStatistics.setCreatedBy(CommonConstant.DEFAULT_OPT_USER);
-                BigDecimal getPoint = BigDecimal.valueOf((Float.valueOf(ifScoreEntity.getStar())+Float.valueOf(ifScoreEntity1.getStar())+Float.valueOf(ifScoreEntity2.getStar())+Float.valueOf(ifScoreEntity3.getStar())+Float.valueOf(ifScoreEntity4.getStar()))/5);
+                BigDecimal getPoint = ifScoreEntity.getStar().add(ifScoreEntity1.getStar()).add(ifScoreEntity2.getStar()).add(ifScoreEntity3.getStar()).add(ifScoreEntity4.getStar()).divide(BigDecimal.valueOf(5),3, RoundingMode.HALF_UP);
                 if(Integer.valueOf(ifScoreEntity.getCeCnt())<30){
                     getPoint=BigDecimal.valueOf(0);
                 }
@@ -123,7 +124,8 @@ public class SyncTiancaiCeGetPointsJobHander extends IJobHandler {
                 log.info("新增数据id:"+ifScoreCeStatistics.getId());
                 if(!ifScoreCeStatistics.getDeptCode().equals("10086")&&!ifScoreCeStatistics.getDeptCode().equals("10010")){
                     copyProperties(ifScoreCeStatistics,bfScoreCeStatistics,"id");
-                    bfScoreCeStatistics.setStatus(1);
+                    bfScoreCeStatistics.setStatus(0);
+
                     bfScoreCeStatistics.setIfId(ifScoreCeStatistics.getId());
                     bfScoreCeStatisticsMapper.insert(bfScoreCeStatistics);
                 }

@@ -1,9 +1,11 @@
 package com.gf.biz.tiancaiIfsData.po;
 
+import java.math.BigDecimal;
+
 public class IfScoreEntity {
     private String mcId;
     private String mcName;
-    private String star;
+    private BigDecimal star;
     private String gcName;
     private String ceCnt;
 
@@ -25,7 +27,7 @@ public class IfScoreEntity {
         return mcName;
     }
 
-    public String getStar() {
+    public BigDecimal getStar() {
         return star;
     }
 
@@ -33,7 +35,7 @@ public class IfScoreEntity {
         this.mcName = mcName;
     }
 
-    public void setStar(String star) {
+    public void setStar(BigDecimal star) {
         this.star = star;
     }
 

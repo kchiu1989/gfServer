@@ -18,7 +18,6 @@ import java.util.Date;
  * @since 2024-09-11 16:24:32
  */
 
-@Data
 @TableName("if_score_ce")
 public class IfScoreCe implements Serializable {
 
@@ -206,6 +205,251 @@ public class IfScoreCe implements Serializable {
     @TableField("time")
     private String time;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public String getValidFlag() {
+        return validFlag;
+    }
+
+    public void setValidFlag(String validFlag) {
+        this.validFlag = validFlag;
+    }
+
+    public Date getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(Date updatedTime) {
+        this.updatedTime = updatedTime;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public String getDeletedFlag() {
+        return deletedFlag;
+    }
+
+    public void setDeletedFlag(String deletedFlag) {
+        this.deletedFlag = deletedFlag;
+    }
+
+    public String getGcId() {
+        return gcId;
+    }
+
+    public void setGcId(String gcId) {
+        this.gcId = gcId;
+    }
+
+    public String getMcId() {
+        return mcId;
+    }
+
+    public void setMcId(String mcId) {
+        this.mcId = mcId;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getMcName() {
+        return mcName;
+    }
+
+    public void setMcName(String mcName) {
+        this.mcName = mcName;
+    }
+
+    public String getGcName() {
+        return gcName;
+    }
+
+    public void setGcName(String gcName) {
+        this.gcName = gcName;
+    }
+
+    public String getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
+    public String getIfKey() {
+        return ifKey;
+    }
+
+    public void setIfKey(String ifKey) {
+        this.ifKey = ifKey;
+    }
+
+    public String getSendNickName() {
+        return sendNickName;
+    }
+
+    public void setSendNickName(String sendNickName) {
+        this.sendNickName = sendNickName;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getIsMultiSelect() {
+        return isMultiSelect;
+    }
+
+    public void setIsMultiSelect(String isMultiSelect) {
+        this.isMultiSelect = isMultiSelect;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getBusinessNo() {
+        return businessNo;
+    }
+
+    public void setBusinessNo(String businessNo) {
+        this.businessNo = businessNo;
+    }
+
+    public String getSelectType() {
+        return selectType;
+    }
+
+    public void setSelectType(String selectType) {
+        this.selectType = selectType;
+    }
+
+    public String getIfId() {
+        return ifId;
+    }
+
+    public void setIfId(String ifId) {
+        this.ifId = ifId;
+    }
+
+    public String getStar() {
+        return star;
+    }
+
+    public void setStar(String star) {
+        this.star = star;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public String getTips() {
+        return tips;
+    }
+
+    public void setTips(String tips) {
+        this.tips = tips;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 }

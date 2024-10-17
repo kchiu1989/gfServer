@@ -18,6 +18,7 @@ import com.xxl.job.core.handler.IJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static com.gf.biz.elemeData.task.SyncMerchantAccountInfoDtlJobHandler.getTokenInfo;
@@ -177,6 +178,9 @@ public class SyncElemeShopRatingInfoDtlJobHandler extends IJobHandler {
                     ifElmeShoppingRatingInfo.setCreatedTime(new Date());
                     ifElmeShoppingRatingInfo.setCreatedBy(CommonConstant.DEFAULT_OPT_USER);
                     ifElmeShoppingRatingInfo.setDeletedFlag(CommonConstant.STATUS_UN_DEL);
+                    ifElmeShoppingRatingInfo.setYear(String.valueOf(LocalDate.now().getYear()));
+                    ifElmeShoppingRatingInfo.setMonth(String.valueOf(LocalDate.now().getMonthValue()));
+                    ifElmeShoppingRatingInfo.setDay(String.valueOf(LocalDate.now().getDayOfMonth()));
                     ifElmeShoppingRatingInfoMapper.insert(ifElmeShoppingRatingInfo);
 
                 }catch(Exception e){
