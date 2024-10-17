@@ -3,6 +3,8 @@ package com.gf.biz.config;
 
 import com.gf.biz.elemeData.task.SyncElemeShopRatingInfoDtlJobHandler;
 import com.gf.biz.elemeData.task.SyncMerchantAccountInfoDtlJobHandler;
+import com.gf.biz.fangdengRead.task.CalculateFandengReadDeptScoreJobHandler;
+import com.gf.biz.fangdengRead.task.CalculateFandengReadPersonalRltJobHandler;
 import com.gf.biz.ifsSync.job.shenfang.IfScoreMvJob;
 
 import com.gf.biz.meituanwmData.task.SyncMtwmShopRatingInfoJobHandler;
@@ -92,6 +94,8 @@ public class JobConfig {
 
         XxlJobExecutor.registJobHandler("syncTcifsDataTargetRunningPointsJobHandler", new SyncTcifsDataTargetRunningPointsJobHandler());
 
+        XxlJobExecutor.registJobHandler("calculateFandengReadPersonalRltJobHandler", new CalculateFandengReadPersonalRltJobHandler());
+        XxlJobExecutor.registJobHandler("calculateFandengReadDeptScoreJobHandler", new CalculateFandengReadDeptScoreJobHandler());
 
 
     }
