@@ -50,7 +50,7 @@ import lombok.Data;
          * 更新者
          */
     @TableField("updated_by")
-        private Date updatedBy;
+        private String updatedBy;
 
         /**
          * 0正常1删除
@@ -146,7 +146,7 @@ import lombok.Data;
          * 出餐时长得分
          */
     @TableField("meituan_takeout_delivery_time_points")
-        private Integer meituanTakeoutDeliveryTimePoints;
+        private String meituanTakeoutDeliveryTimePoints;
 
         /**
          * 1确认0未确认
@@ -159,6 +159,16 @@ import lombok.Data;
     private Long ifId;
     @TableField("business_date")
     private Date businessDate;
+    @TableField("year")
+    private Integer year;
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
 
     public Date getBusinessDate() {
         return businessDate;
@@ -200,11 +210,11 @@ import lombok.Data;
         this.createdBy = createdBy;
     }
 
-    public Date getUpdatedBy() {
+    public String getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(Date updatedBy) {
+    public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
 
@@ -328,11 +338,11 @@ import lombok.Data;
         this.meituanTakeoutDeliveryTime = meituanTakeoutDeliveryTime;
     }
 
-    public Integer getMeituanTakeoutDeliveryTimePoints() {
+    public String getMeituanTakeoutDeliveryTimePoints() {
         return meituanTakeoutDeliveryTimePoints;
     }
 
-    public void setMeituanTakeoutDeliveryTimePoints(Integer meituanTakeoutDeliveryTimePoints) {
+    public void setMeituanTakeoutDeliveryTimePoints(String meituanTakeoutDeliveryTimePoints) {
         this.meituanTakeoutDeliveryTimePoints = meituanTakeoutDeliveryTimePoints;
     }
 

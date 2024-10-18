@@ -92,6 +92,16 @@ import java.util.Date;
          */
     @TableField("dept_id")
         private Integer deptId;
+    @TableField("year")
+    private Integer year;
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
 
     public Long getId() {
         return id;
@@ -253,11 +263,11 @@ import java.util.Date;
         this.meituanTakeoutDeliveryTime = meituanTakeoutDeliveryTime;
     }
 
-    public Integer getMeituanTakeoutDeliveryTimePoints() {
+    public String getMeituanTakeoutDeliveryTimePoints() {
         return meituanTakeoutDeliveryTimePoints;
     }
 
-    public void setMeituanTakeoutDeliveryTimePoints(Integer meituanTakeoutDeliveryTimePoints) {
+    public void setMeituanTakeoutDeliveryTimePoints(String meituanTakeoutDeliveryTimePoints) {
         this.meituanTakeoutDeliveryTimePoints = meituanTakeoutDeliveryTimePoints;
     }
 
@@ -315,7 +325,7 @@ import java.util.Date;
          * 出餐时长得分
          */
     @TableField("meituan_takeout_delivery_time_points")
-        private Integer meituanTakeoutDeliveryTimePoints;
+        private String meituanTakeoutDeliveryTimePoints;
 
 
 }

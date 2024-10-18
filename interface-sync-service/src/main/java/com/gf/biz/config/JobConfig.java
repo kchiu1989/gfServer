@@ -9,9 +9,9 @@ import com.gf.biz.ifsSync.job.shenfang.IfScoreMvJob;
 
 import com.gf.biz.meituanwmData.task.SyncMtwmShopRatingInfoJobHandler;
 import com.gf.biz.shenfangData.task.SyncIfScoreMvDataJobHandler;
-import com.gf.biz.operateIndicatorScore.task.SyncSfTargetRunningJobHandler;
-import com.gf.biz.operateIndicatorScore.task.SyncTcifsDataTargetRunningPointsJobHandler;
-import com.gf.biz.operateIndicatorScore.task.SyncWmTargetRunningPointsJobHandler;
+import com.gf.biz.operateIndicatorScore.task.CalculateSfScoreJobHandler;
+import com.gf.biz.operateIndicatorScore.task.CalculateTcScoreJobHandler;
+import com.gf.biz.operateIndicatorScore.task.CalculateWmScoreJobHandler;
 import com.gf.biz.tiancaiIfsData.task.SyncTiancaiCeDataJobHandler;
 import com.gf.biz.tiancaiIfsData.task.SyncTiancaiCeGetPointsJobHander;
 import com.gf.biz.wmPerformanceAllPoints.task.SyncGetWMAllPointsJobHandle;
@@ -88,11 +88,11 @@ public class JobConfig {
         XxlJobExecutor.registJobHandler("syncGetWMAllPointsJobHandle", new SyncGetWMAllPointsJobHandle());
 
         XxlJobExecutor.registJobHandler("syncIfScoreMvDataJobHandler", new SyncIfScoreMvDataJobHandler());
-        XxlJobExecutor.registJobHandler("syncWmTargetRunningPointsJobHandler", new SyncWmTargetRunningPointsJobHandler());
+        XxlJobExecutor.registJobHandler("calculateWmScoreJobHandler", new CalculateWmScoreJobHandler());
 
-        XxlJobExecutor.registJobHandler("syncSfTargetRunningJobHandler", new SyncSfTargetRunningJobHandler());
+        XxlJobExecutor.registJobHandler("calculateSfScoreJobHandler", new CalculateSfScoreJobHandler());
 
-        XxlJobExecutor.registJobHandler("syncTcifsDataTargetRunningPointsJobHandler", new SyncTcifsDataTargetRunningPointsJobHandler());
+        XxlJobExecutor.registJobHandler("calculateTcScoreJobHandler", new CalculateTcScoreJobHandler());
 
         XxlJobExecutor.registJobHandler("calculateFandengReadPersonalRltJobHandler", new CalculateFandengReadPersonalRltJobHandler());
         XxlJobExecutor.registJobHandler("calculateFandengReadDeptScoreJobHandler", new CalculateFandengReadDeptScoreJobHandler());
