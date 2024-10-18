@@ -411,6 +411,16 @@ public class TimeUtil {
 
     }
 
+    /**
+     * 获取指定季度的月份,从小到大
+     * @param quarter
+     * @return
+     */
+    public static int[] getSeasonMonths(int quarter) {
+        int startMonth = (quarter - 1) * 3 + 1;
+        return new int[]{startMonth,startMonth+1,startMonth+2};
+    }
+
 
     /**
      * 返回某个日期下几天的日期
