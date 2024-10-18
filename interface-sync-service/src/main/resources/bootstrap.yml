@@ -12,15 +12,12 @@ spring:
       master:
         url: jdbc:mysql://localhost:3306/lecaiceshi?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
         username: root
-        password: root
+        password:
         driver-class-name: com.mysql.cj.jdbc.Driver
       biz_1:
         url: jdbc:mysql://39.91.167.239:3310/sysmain?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
         username: root
-        password: Woailvshi2024.
-
-
-
+        password:
         driver-class-name: com.mysql.cj.jdbc.Driver
     #type: com.alibaba.druid.pool.DruidDataSource
     #initialSize: 5
