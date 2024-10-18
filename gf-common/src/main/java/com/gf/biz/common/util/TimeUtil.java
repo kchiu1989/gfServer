@@ -397,6 +397,20 @@ public class TimeUtil {
         return cal.getTime();
     }
 
+    /**
+     * 获取当前时间所属季度
+     *
+     * @param date
+     * @return
+     */
+    public static int getCurrentSeason(Date date) {
+        final int[] SEASON = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4};
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return  SEASON[cal.get(Calendar.MONTH)];
+
+    }
+
 
     /**
      * 返回某个日期下几天的日期
