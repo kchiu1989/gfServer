@@ -1,7 +1,5 @@
-package com.gf.biz.operateIndicatorScore.entity;
+package com.gf.biz.operateIndicatorScore.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.gf.biz.common.entity.BaseBizEntity;
 
 import java.io.Serializable;
@@ -10,92 +8,103 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Gf
  * @since 2024-10-16 16:53:16
  */
 
-@TableName("bd_indicator_dept_score")
-    public class BdIndicatorDeptScore extends BaseBizEntity implements Serializable {
+public class BdIndicatorDeptScoreDto extends BaseBizEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private Long id;
 
+    /**
+     * 创建时间
+     */
+    private Date createdTime;
 
-        /**
-         * 绩效年
-         */
-    @TableField("year")
-        private Integer year;
+    /**
+     * 更新时间
+     */
+    private Date updatedTime;
 
-        /**
-         * 绩效月/季度
-         */
-    @TableField("month_quarter")
-        private Integer monthQuarter;
+    /**
+     * 创建者
+     */
+    private String createdBy;
 
-        /**
-         * 直属部门名称
-         */
-    @TableField("dept_name")
-        private String deptName;
+    /**
+     * 更新者
+     */
+    private String updatedBy;
 
-        /**
-         * 直属部门编码
-         */
-    @TableField("dept_code")
-        private String deptCode;
+    /**
+     * '0'正常 '1'删除
+     */
+    private String deletedFlag;
 
-        /**
-         * 部门id
-         */
-    @TableField("dept_id")
-        private Long deptId;
+    /**
+     * 绩效年
+     */
+    private Integer year;
 
-        /**
-         * 0运营部门1职能部门
-         */
-    @TableField("dept_classify_flag")
-        private String deptClassifyFlag;
+    /**
+     * 绩效月/季度
+     */
+    private Integer monthQuarter;
 
-        /**
-         * 未加权得分
-         */
-    @TableField("final_score")
-        private BigDecimal finalScore;
+    /**
+     * 直属部门名称
+     */
+    private String deptName;
 
-        /**
-         * 中间得分
-         */
-    @TableField("transition_score")
-        private BigDecimal transitionScore;
+    /**
+     * 直属部门编码
+     */
+    private String deptCode;
 
-        /**
-         * 0月度1季度
-         */
-    @TableField("dimension_flag")
-        private String dimensionFlag;
+    /**
+     * 部门id
+     */
+    private Long deptId;
 
-        /**
-         * 绩效指标名称
-         */
-    @TableField("indicator_name")
-        private String indicatorName;
+    /**
+     * 0运营部门1职能部门
+     */
+    private String deptClassifyFlag;
 
-        /**
-         * 绩效指标代码
-         */
-    @TableField("indicator_code")
-        private String indicatorCode;
+    /**
+     * 未加权得分
+     */
+    private BigDecimal finalScore;
 
-        /**
-         * 关联的季度(针对职能)
-         */
-    @TableField("relate_id")
-        private Long relateId;
-    @TableField("remark")
+    /**
+     * 中间得分
+     */
+    private BigDecimal transitionScore;
+
+    /**
+     * 0月度1季度
+     */
+    private String dimensionFlag;
+
+    /**
+     * 绩效指标名称
+     */
+    private String indicatorName;
+
+    /**
+     * 绩效指标代码
+     */
+    private String indicatorCode;
+
+    /**
+     * 关联的季度(针对职能)
+     */
+    private Long relateId;
     private String remark;
 
     public String getRemark() {
@@ -250,4 +259,24 @@ import java.util.Date;
         this.relateId = relateId;
     }
 
+
+    public BdIndicatorDeptScoreDto(Integer year, Integer monthQuarter, String deptName, String deptCode, Long deptId,
+                                String deptClassifyFlag, BigDecimal finalScore, BigDecimal transitionScore,
+                                String dimensionFlag, String indicatorName, String indicatorCode, String remark) {
+        this.year = year;
+        this.monthQuarter = monthQuarter;
+        this.deptName = deptName;
+        this.deptCode = deptCode;
+        this.deptId = deptId;
+        this.deptClassifyFlag = deptClassifyFlag;
+        this.finalScore = finalScore;
+        this.transitionScore = transitionScore;
+        this.dimensionFlag = dimensionFlag;
+        this.indicatorName = indicatorName;
+        this.indicatorCode = indicatorCode;
+        this.remark = remark;
+    }
+
+    public BdIndicatorDeptScoreDto() {
+    }
 }
