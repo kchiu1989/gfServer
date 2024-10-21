@@ -33,8 +33,8 @@ import java.util.List;
  * 120%<M≦130% 得50分；
  * 130%< M 得0分
  */
-public class CalculateTotalAdmExpenseIndicatorScore extends IJobHandler {
-    private static final Logger logger = LoggerFactory.getLogger(CalculateTotalAdmExpenseIndicatorScore.class);
+public class CalculateTotalAdmExpenseIndicatorScoreJobHandler extends IJobHandler {
+    private static final Logger logger = LoggerFactory.getLogger(CalculateTotalAdmExpenseIndicatorScoreJobHandler.class);
     private static final String PI_CODE="PI0005";
     private static final String PI_NAME="管理费用合计";
     private static final BigDecimal[] rateArray = new BigDecimal[]{new BigDecimal("1"),
