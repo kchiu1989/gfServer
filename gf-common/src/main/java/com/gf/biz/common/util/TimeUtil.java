@@ -215,6 +215,17 @@ public class TimeUtil {
         return Integer.valueOf(gc.get(1));
     }
 
+    /**
+     * 获取指定时间年
+     *
+     * @return
+     */
+    public static Integer getYear(Date date) {
+        GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
+        gc.setTime(date);
+        return Integer.valueOf(gc.get(1));
+    }
+
 
     /**
      * 获取本月是哪一月
@@ -223,6 +234,17 @@ public class TimeUtil {
      */
     public static int getNowMonth() {
         Date date = new Date();
+        GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
+        gc.setTime(date);
+        return gc.get(2) + 1;
+    }
+
+    /**
+     * 获取指定时间月
+     *
+     * @return
+     */
+    public static int getMonth(Date date) {
         GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
         gc.setTime(date);
         return gc.get(2) + 1;
@@ -411,12 +433,12 @@ public class TimeUtil {
     }
 
     /**
-     * 获取当前时间所属季度
+     * 获取指定时间所属季度
      *
      * @param date
      * @return
      */
-    public static int getCurrentSeason(Date date) {
+    public static int getSeason(Date date) {
         final int[] SEASON = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4};
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
