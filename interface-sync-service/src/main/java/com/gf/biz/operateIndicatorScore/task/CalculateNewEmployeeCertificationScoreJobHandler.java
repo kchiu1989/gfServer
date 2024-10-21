@@ -2,15 +2,14 @@ package com.gf.biz.operateIndicatorScore.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.gf.biz.bizCommon.BizCommonConstant;
 import com.gf.biz.codewaveBizForm.mapper.BfCertificateAccessSurveyMapper;
 import com.gf.biz.codewaveBizForm.po.BfCertificateAccessSurvey;
 import com.gf.biz.common.CommonConstant;
 import com.gf.biz.common.util.SpringBeanUtil;
 import com.gf.biz.common.util.TimeUtil;
-import com.gf.biz.operateIndicatorScore.entity.BdIndicatorDeptScore;
-import com.gf.biz.operateIndicatorScore.mapper.BdIndicatorDeptScoreMapper;
+import com.gf.biz.operateIndicatorScore.dto.BdIndicatorDeptScoreDto;
+import com.gf.biz.operateIndicatorScore.service.BdIndicatorDeptScoreService;
 import com.gf.biz.tiancaiIfsData.entity.LcapDepartment4a79f3;
 import com.gf.biz.tiancaiIfsData.mapper.LcapDepartment4a79f3Mapper;
 import com.xxl.job.core.context.XxlJobHelper;
@@ -21,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,8 +44,8 @@ public class CalculateNewEmployeeCertificationScoreJobHandler extends IJobHandle
 
     private static final String PI_CODE="PI0004";
     private static final String PI_NAME="新员工一证获取率";
-    private static final BigDecimal[] rateArray = new BigDecimal[]{new BigDecimal("90"),
-            new BigDecimal("80"),new BigDecimal("70"),new BigDecimal("60")};
+    private static final BigDecimal[] rateArray = new BigDecimal[]{new BigDecimal("0.9"),
+            new BigDecimal("0.8"),new BigDecimal("0.7"),new BigDecimal("0.6")};
     private static final BigDecimal[] middleScoreArray = new BigDecimal[]{new BigDecimal("100"),
             new BigDecimal("90"),new BigDecimal("80"),new BigDecimal("70"),new BigDecimal("50")};
     private static final BigDecimal dimensionWeight = new BigDecimal("0.06");
@@ -163,47 +161,11 @@ public class CalculateNewEmployeeCertificationScoreJobHandler extends IJobHandle
             remark = BizCommonConstant.PI_SCORE_EXCEPTION_REASON_1;
         }
 
-        BdIndicatorDeptScoreMapper bdIndicatorDeptScoreMapper = SpringBeanUtil.getBean(BdIndicatorDeptScoreMapper.class);
-        QueryWrapper<BdIndicatorDeptScore> queryScoreWrapper = new QueryWrapper<>();
-        queryScoreWrapper.eq("dept_id", dept.getDeptId());
-        queryScoreWrapper.eq("year", currentYear);
-        queryScoreWrapper.eq("month_quarter", quarter);
-        queryScoreWrapper.eq("dimension_flag", BizCommonConstant.PI_SCORE_DIMENSION_FLAG_QUARTER);
-        queryScoreWrapper.eq("indicator_code", PI_CODE);
-        //queryScoreWrapper.eq("indicator_name", dept.getDeptCode());
-        List<BdIndicatorDeptScore> dbList = bdIndicatorDeptScoreMapper.selectList(queryScoreWrapper);
-        try {
-            if (dbList != null && dbList.size() > 0) {
-                UpdateWrapper<BdIndicatorDeptScore> toUpdScoreWrapper = new UpdateWrapper<>();
-                toUpdScoreWrapper.set("final_score", finalScore);
-                toUpdScoreWrapper.set("transition_score",middleScore);
-                toUpdScoreWrapper.set("remark",remark);
-                toUpdScoreWrapper.set("update_time", new Date());
-                toUpdScoreWrapper.eq("id",dbList.get(0).getId());
+        BdIndicatorDeptScoreDto toOpt = new BdIndicatorDeptScoreDto(currentYear,quarter,dept.getName(),dept.getDeptCode(),
+                dept.getId(),dept.getDeptClassify(),finalScore,middleScore,
+                BizCommonConstant.PI_SCORE_DIMENSION_FLAG_QUARTER, PI_NAME, PI_CODE, remark);
 
-
-                bdIndicatorDeptScoreMapper.update(null,toUpdScoreWrapper);
-            } else {
-                BdIndicatorDeptScore toAdd = new BdIndicatorDeptScore();
-                toAdd.setDimensionFlag(BizCommonConstant.PI_SCORE_DIMENSION_FLAG_QUARTER);
-                toAdd.setDeletedFlag(CommonConstant.COLUMN_DEL_FLAG);
-                toAdd.setIndicatorCode(PI_CODE);
-                toAdd.setIndicatorName(PI_NAME);
-                toAdd.setCreatedTime(new Date());
-                toAdd.setYear(currentYear);
-                toAdd.setMonthQuarter(quarter);
-                toAdd.setDeptCode(dept.getDeptCode());
-                toAdd.setDeptId(dept.getId());
-                toAdd.setDeptName(dept.getName());
-                toAdd.setDeptClassifyFlag(dept.getDeptClassify());
-                toAdd.setRemark(remark);
-                toAdd.setFinalScore(finalScore);
-                toAdd.setTransitionScore(middleScore);
-
-                bdIndicatorDeptScoreMapper.insert(toAdd);
-            }
-        }catch(Exception e){
-            logger.error("处理跑分数据异常",e);
-        }
+        BdIndicatorDeptScoreService bdIndicatorDeptScoreService = SpringBeanUtil.getBean(BdIndicatorDeptScoreService.class);
+        bdIndicatorDeptScoreService.createOrAddBdIndicatorDeptScore(toOpt);
     }
 }
