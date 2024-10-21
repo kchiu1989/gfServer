@@ -398,6 +398,19 @@ public class TimeUtil {
     }
 
     /**
+     * 获取某时间所属季度的第一个月
+     * @param date
+     * @return
+     */
+    public static int getFirstSeasonMonth(Date date) {
+        final int[] SEASON = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4};
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int sean = SEASON[cal.get(Calendar.MONTH)];
+        return sean * 3 - 2;
+    }
+
+    /**
      * 获取当前时间所属季度
      *
      * @param date
