@@ -416,9 +416,9 @@ public class TimeUtil {
      * @param quarter
      * @return
      */
-    public static int[] getSeasonMonths(int quarter) {
+    public static Integer[] getSeasonMonths(int quarter) {
         int startMonth = (quarter - 1) * 3 + 1;
-        return new int[]{startMonth,startMonth+1,startMonth+2};
+        return new Integer[]{startMonth,startMonth+1,startMonth+2};
     }
 
 
