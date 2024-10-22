@@ -46,6 +46,7 @@ public class BdIndicatorDeptScoreServiceImpl extends ServiceImpl<BdIndicatorDept
         queryScoreWrapper.eq("month_quarter", bdIndicatorDeptScoreDto.getMonthQuarter());
         queryScoreWrapper.eq("dimension_flag", bdIndicatorDeptScoreDto.getDimensionFlag());
         queryScoreWrapper.eq("indicator_code", bdIndicatorDeptScoreDto.getIndicatorCode());
+        queryScoreWrapper.eq(CommonConstant.COLUMN_DEL_FLAG, CommonConstant.STATUS_UN_DEL);
         //queryScoreWrapper.eq("indicator_name", dept.getDeptCode());
         List<BdIndicatorDeptScore> dbList = bdIndicatorDeptScoreMapper.selectList(queryScoreWrapper);
         try {
