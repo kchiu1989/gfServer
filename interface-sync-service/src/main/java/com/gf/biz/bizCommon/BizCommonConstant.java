@@ -28,4 +28,7 @@ public interface BizCommonConstant {
     String PI_SCORE_DIMENSION_FLAG_MONTH="0";//月度指标
     String PI_SCORE_DIMENSION_FLAG_QUARTER="1";//季度指标
 
+    String DEPT_CLASSIFY_OPT="0";
+    String DEPT_CLASSIFY_FUNC="1";
+
 }
