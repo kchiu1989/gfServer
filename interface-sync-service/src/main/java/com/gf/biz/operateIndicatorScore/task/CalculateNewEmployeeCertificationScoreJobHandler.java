@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,86 +54,107 @@ public class CalculateNewEmployeeCertificationScoreJobHandler extends IJobHandle
 
     @Override
     public void execute() throws Exception {
+        Date currentDate = new Date();
+
         //定时任务默认当前月跑上个月的数据
-        Integer currentYear = TimeUtil.getNowYear();
-        Integer currentMonth = TimeUtil.getNowMonth();
-        if (currentMonth == 1) {
-            currentYear--;
-            currentMonth = 12;
-        } else {
-            currentMonth--;
-        }
+        Integer currentYear = TimeUtil.getYear(currentDate);
+        Integer currentQuarter = TimeUtil.getSeason(currentDate);
+        Integer currentMonth = TimeUtil.getMonth(currentDate);
+
+        Integer jobYear = null;
+        Integer jobQuarter = null;
+
+
 
         String jobParam = XxlJobHelper.getJobParam();
-        String jobDeptCode = null;
-        String jobDeptClassify = null;
 
 
         if (StringUtils.isNotBlank(jobParam)) {
+
+
             JSONObject xxlJobJsonObj = JSONObject.parseObject(jobParam);
-            if (xxlJobJsonObj.containsKey("year") && xxlJobJsonObj.containsKey("month")) {
-                currentYear = Integer.parseInt(xxlJobJsonObj.getString("year"));
-                currentMonth = Integer.parseInt(xxlJobJsonObj.getString("month"));
+            if (xxlJobJsonObj.containsKey("year") && xxlJobJsonObj.containsKey("quarter")) {
+                jobYear = Integer.parseInt(xxlJobJsonObj.getString("year"));
+                jobQuarter = Integer.parseInt(xxlJobJsonObj.getString("quarter"));
+
+                logger.info("系统使用了正确的动态传参，将执行动态传参逻辑");
+                String jobDeptCode = null;
+                if (xxlJobJsonObj.containsKey("deptCode")) {
+                    jobDeptCode = xxlJobJsonObj.getString("deptCode");
+                }
+
+                logger.info("年:{},季度:{},部门编码:{}", jobYear, jobQuarter, jobDeptCode);
+
+
+                if (jobDeptCode != null) {
+                    logger.info("执行特定部门绩效跑分...,部门:{}", jobDeptCode);
+                }
+
+                LcapDepartment4a79f3Mapper lcapDepartment4a79f3Mapper = SpringBeanUtil.getBean(LcapDepartment4a79f3Mapper.class);
+                QueryWrapper<LcapDepartment4a79f3> queryWrapper = new QueryWrapper<>();
+                //queryWrapper.eq("dept_classify", jobDeptClassify);
+                if (StringUtils.isNotBlank(jobDeptCode)) {
+                    queryWrapper.eq("dept_code", jobDeptCode);
+                }
+
+                queryWrapper.eq("dept_classify", BizCommonConstant.DEPT_CLASSIFY_OPT);
+                queryWrapper.isNotNull("dept_code");
+                List<LcapDepartment4a79f3> deptList = lcapDepartment4a79f3Mapper.selectList(queryWrapper);
+                if (deptList != null && deptList.size() > 0) {
+                    for (LcapDepartment4a79f3 dept : deptList) {
+                        this.calculateScore(dept, jobYear, jobQuarter);
+                    }
+                }
+
+            }else{
+                logger.error("任务参数缺失");
             }
 
-            logger.info("使用动态传参");
 
-            if (xxlJobJsonObj.containsKey("deptCode") && xxlJobJsonObj.containsKey("deptClassify")) {
-                jobDeptCode = xxlJobJsonObj.getString("deptCode");
-                //jobDeptClassify = xxlJobJsonObj.getString("deptClassify");
+        } else {
+            logger.info("执行所有运营部门绩效跑分...");
+            int quarterFirstMonth = TimeUtil.getFirstSeasonMonth(currentDate);
+            if(currentMonth!=quarterFirstMonth){
+                logger.info("当前月:{}，不为季度第一个月:{},不执行任务", currentMonth, quarterFirstMonth);
+                return;
             }
-        }
 
-        logger.info("年:{},月:{},部门编码:{}", currentYear, currentMonth, jobDeptCode);
-
-        LcapDepartment4a79f3Mapper lcapDepartment4a79f3Mapper = SpringBeanUtil.getBean(LcapDepartment4a79f3Mapper.class);
-        if (jobDeptCode != null) {
-            logger.info("特定部门跑分");
-            //先跑运营部门
+            logger.info("年:{},季度:{}", jobYear, jobQuarter);
+            if (currentQuarter == 1) {
+                jobYear = --currentYear;
+                jobQuarter = 4;
+            } else {
+                jobQuarter = --currentQuarter;
+            }
 
             QueryWrapper<LcapDepartment4a79f3> queryWrapper = new QueryWrapper<>();
             //queryWrapper.eq("dept_classify", jobDeptClassify);
-            queryWrapper.eq("dept_code", jobDeptCode);
-            queryWrapper.eq("dept_classify", "0");
+            queryWrapper.eq("dept_classify",BizCommonConstant.DEPT_CLASSIFY_OPT);
             queryWrapper.isNotNull("dept_code");
+            LcapDepartment4a79f3Mapper lcapDepartment4a79f3Mapper = SpringBeanUtil.getBean(LcapDepartment4a79f3Mapper.class);
             List<LcapDepartment4a79f3> deptList = lcapDepartment4a79f3Mapper.selectList(queryWrapper);
             if (deptList != null && deptList.size() > 0) {
                 for (LcapDepartment4a79f3 dept : deptList) {
-                    this.calculateScore(dept, currentYear, currentMonth);
+                    this.calculateScore(dept, jobYear, jobQuarter);
                 }
             }
 
-            return;
-        }
-
-        //LcapDepartment4a79f3Mapper lcapDepartment4a79f3Mapper = SpringBeanUtil.getBean(LcapDepartment4a79f3Mapper.class);
-        QueryWrapper<LcapDepartment4a79f3> queryWrapper = new QueryWrapper<>();
-        //queryWrapper.eq("dept_classify", jobDeptClassify);
-        queryWrapper.eq("dept_classify", "0");
-        queryWrapper.isNotNull("dept_code");
-        List<LcapDepartment4a79f3> deptList = lcapDepartment4a79f3Mapper.selectList(queryWrapper);
-        if (deptList != null && deptList.size() > 0) {
-            for (LcapDepartment4a79f3 dept : deptList) {
-                this.calculateScore(dept, currentYear, currentMonth);
-            }
         }
     }
 
     //跑季度
-    private void calculateScore(LcapDepartment4a79f3 dept, Integer currentYear, Integer currentMonth) {
+    private void calculateScore(LcapDepartment4a79f3 dept, Integer currentYear, Integer jobQuarter) {
         //查询一证获取率业务表单
         //根据月计算季度
-
-        int quarter = (currentMonth - 1) / 3 + 1;
 
         BfCertificateAccessSurveyMapper bfCertificateAccessSurveyMapper = SpringBeanUtil.getBean(BfCertificateAccessSurveyMapper.class);
         QueryWrapper<BfCertificateAccessSurvey> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("dept_code", dept.getDeptCode());
-        queryWrapper.eq("dept_classify", "0");
+        queryWrapper.eq("dept_classify", BizCommonConstant.DEPT_CLASSIFY_OPT);
         queryWrapper.eq("year",currentYear);
-        queryWrapper.eq("quarter",quarter);
+        queryWrapper.eq("quarter",jobQuarter);
         queryWrapper.eq(CommonConstant.COLUMN_DEL_FLAG,CommonConstant.STATUS_UN_DEL);
-        queryWrapper.eq("status_flag","9");
+        queryWrapper.eq("status","9");
 
         BfCertificateAccessSurvey dbData = bfCertificateAccessSurveyMapper.selectOne(queryWrapper);
         String remark = null;
@@ -161,7 +183,7 @@ public class CalculateNewEmployeeCertificationScoreJobHandler extends IJobHandle
             remark = BizCommonConstant.PI_SCORE_EXCEPTION_REASON_1;
         }
 
-        BdIndicatorDeptScoreDto toOpt = new BdIndicatorDeptScoreDto(currentYear,quarter,dept.getName(),dept.getDeptCode(),
+        BdIndicatorDeptScoreDto toOpt = new BdIndicatorDeptScoreDto(currentYear,jobQuarter,dept.getName(),dept.getDeptCode(),
                 dept.getId(),dept.getDeptClassify(),finalScore,middleScore,
                 BizCommonConstant.PI_SCORE_DIMENSION_FLAG_QUARTER, PI_NAME, PI_CODE, remark);
 
