@@ -96,6 +96,7 @@ public class BfRecordFdStatisticServiceImpl extends ServiceImpl<BfRecordFdStatis
             toAddBfRecord.setDeletedFlag(CommonConstant.STATUS_UN_DEL);
             toAddBfRecord.setCreatedTime(new Date());
             toAddBfRecord.setCreatedBy(CommonConstant.DEFAULT_OPT_USER);
+            toAddBfRecord.setStatus("1");
             toAddBfRecord.setIfId(toAddIfData.getId());
             bfRecordFdStatisticMapper.insert(toAddBfRecord);
             return GfResult.success("数据新增处理完毕");
