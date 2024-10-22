@@ -1,10 +1,10 @@
-package com.gf.biz.funcDeptIndicatorScore.task;
+package com.gf.biz.operateIndicatorScore.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gf.biz.bizCommon.BizCommonConstant;
-import com.gf.biz.codewaveBizForm.mapper.BfBudgetPlanMonthlySummaryMapper;
-import com.gf.biz.codewaveBizForm.po.BfBudgetPlanMonthlySummary;
+import com.gf.biz.codewaveBizForm.mapper.BfFoodSafetyInspectMapper;
+import com.gf.biz.codewaveBizForm.po.BfFoodSafetyInspect;
 import com.gf.biz.common.CommonConstant;
 import com.gf.biz.common.util.SpringBeanUtil;
 import com.gf.biz.common.util.TimeUtil;
@@ -19,27 +19,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 /**
- *
- * 职能部门月度计划达成率绩效算分
- *
- * 职能：除核心指标以外的其他月度计划达成率（月度计划条数最低5条，否则此指标直接为0）
- * 直接取业务表的月度计划达成率
- * 取季度平均
- * <p>
- * 运营：除核心指标以外的其他月度计划达成率（月度计划条数最低5条，否则此指标直接为0）
- * 直接取业务表的月度计划达成率
- * 直接获取月度平均
+ * 业务发生为按照季度
+ * 运营部门 食安检查指标 绩效算分
+ * (1)实际得分成绩≥75分且无红线问题，按实际得分*权重计入“食安检查指标”得分；
+ * (2)实际得分成绩＜75分，食安检查指标得分直接为0分。
+ * 直接取食安二次打分表的最终得分（已加权）
  */
-public class CalcFuncMonthlyPlanAchvRateIndicatorScoreJobHandler extends IJobHandler {
-    private static final Logger logger = LoggerFactory.getLogger(CalcFuncMonthlyPlanAchvRateIndicatorScoreJobHandler.class);
-    private static final String PI_CODE = "PI0007";
-    private static final String PI_NAME = "月度计划达成率";
+public class CalcFoodSafetyInspectionScoreJobHandler extends IJobHandler {
+    private static final Logger logger = LoggerFactory.getLogger(CalcFoodSafetyInspectionScoreJobHandler.class);
+    private static final String PI_CODE = "PI0012";
+    private static final String PI_NAME = "食安检查";
 
 
     @Override
@@ -54,7 +47,6 @@ public class CalcFuncMonthlyPlanAchvRateIndicatorScoreJobHandler extends IJobHan
 
         Integer jobYear = null;
         Integer jobQuarter = null;
-
 
 
         String jobParam = XxlJobHelper.getJobParam();
@@ -88,7 +80,7 @@ public class CalcFuncMonthlyPlanAchvRateIndicatorScoreJobHandler extends IJobHan
                     queryWrapper.eq("dept_code", jobDeptCode);
                 }
 
-                queryWrapper.eq("dept_classify", "1");
+                queryWrapper.eq("dept_classify", BizCommonConstant.DEPT_CLASSIFY_OPT);
                 queryWrapper.isNotNull("dept_code");
                 List<LcapDepartment4a79f3> deptList = lcapDepartment4a79f3Mapper.selectList(queryWrapper);
                 if (deptList != null && deptList.size() > 0) {
@@ -97,15 +89,15 @@ public class CalcFuncMonthlyPlanAchvRateIndicatorScoreJobHandler extends IJobHan
                     }
                 }
 
-            }else{
+            } else {
                 logger.error("任务参数缺失");
             }
 
 
         } else {
-            logger.info("执行所有职能部门绩效跑分...");
+            logger.info("执行所有运营部门绩效跑分...");
             int quarterFirstMonth = TimeUtil.getFirstSeasonMonth(currentDate);
-            if(currentMonth!=quarterFirstMonth){
+            if (currentMonth != quarterFirstMonth) {
                 logger.info("当前月:{}，不为季度第一个月:{},不执行任务", currentMonth, quarterFirstMonth);
                 return;
             }
@@ -120,7 +112,7 @@ public class CalcFuncMonthlyPlanAchvRateIndicatorScoreJobHandler extends IJobHan
 
             QueryWrapper<LcapDepartment4a79f3> queryWrapper = new QueryWrapper<>();
             //queryWrapper.eq("dept_classify", jobDeptClassify);
-            queryWrapper.eq("dept_classify", "1");
+            queryWrapper.eq("dept_classify", BizCommonConstant.DEPT_CLASSIFY_OPT);
             queryWrapper.isNotNull("dept_code");
             LcapDepartment4a79f3Mapper lcapDepartment4a79f3Mapper = SpringBeanUtil.getBean(LcapDepartment4a79f3Mapper.class);
             List<LcapDepartment4a79f3> deptList = lcapDepartment4a79f3Mapper.selectList(queryWrapper);
@@ -129,20 +121,23 @@ public class CalcFuncMonthlyPlanAchvRateIndicatorScoreJobHandler extends IJobHan
                     this.calculateScore(dept, jobYear, jobQuarter);
                 }
             }
+
         }
     }
 
     private void calculateScore(LcapDepartment4a79f3 dept, Integer jobYear, Integer jobQuarter) {
-        Integer[] months = TimeUtil.getSeasonMonths(jobQuarter);
-        BfBudgetPlanMonthlySummaryMapper bfBudgetPlanMonthlySummaryMapper = SpringBeanUtil.getBean(BfBudgetPlanMonthlySummaryMapper.class);
-        QueryWrapper<BfBudgetPlanMonthlySummary> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("target_dept_code", dept.getDeptCode());
-        queryWrapper.eq("target_dept_category", "1");
+
+        BfFoodSafetyInspectMapper bfFoodSafetyInspectMapper = SpringBeanUtil.getBean(BfFoodSafetyInspectMapper.class);
+        QueryWrapper<BfFoodSafetyInspect> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("year", jobYear);
+        queryWrapper.eq("quarter", jobQuarter);
         queryWrapper.eq(CommonConstant.COLUMN_DEL_FLAG, CommonConstant.STATUS_UN_DEL);
-        queryWrapper.eq("enable_flag","9");
-        queryWrapper.in("month", Arrays.asList(months));
-        List<BfBudgetPlanMonthlySummary> monthBudgetList = bfBudgetPlanMonthlySummaryMapper.selectList(queryWrapper);
+        queryWrapper.eq("status", "4");
+        queryWrapper.eq("depart_id",dept.getId());
+
+        queryWrapper.eq("enable_flag", "9");
+
+        List<BfFoodSafetyInspect> monthBudgetList = bfFoodSafetyInspectMapper.selectList(queryWrapper);
 
 
         BigDecimal weightedScore = null;
@@ -150,16 +145,12 @@ public class CalcFuncMonthlyPlanAchvRateIndicatorScoreJobHandler extends IJobHan
 
 
         if (monthBudgetList != null && monthBudgetList.size() > 0) {
-            weightedScore = BigDecimal.ZERO;
-            for(BfBudgetPlanMonthlySummary toCalcSum:monthBudgetList){
-                weightedScore = weightedScore.add(monthBudgetList.get(0).getAchievementRate()==null?BigDecimal.ZERO
-                        :monthBudgetList.get(0).getAchievementRate());
-            }
 
-            weightedScore = weightedScore.divide(new BigDecimal(String.valueOf(monthBudgetList.size())), 3, RoundingMode.HALF_UP);
+            weightedScore = monthBudgetList.get(0).getFinalScore();
+
 
         } else {
-            logger.error("未查询到该季度的月度计划数据...");
+            logger.error("未查询到该季度的食安数据...");
             remark = BizCommonConstant.PI_SCORE_EXCEPTION_REASON_1;
         }
 

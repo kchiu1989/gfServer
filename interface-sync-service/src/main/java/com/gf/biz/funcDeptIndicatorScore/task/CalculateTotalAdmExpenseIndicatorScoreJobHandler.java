@@ -192,7 +192,7 @@ public class CalculateTotalAdmExpenseIndicatorScoreJobHandler extends IJobHandle
 
 
         }else{
-            logger.error("未查询到该季度的预算数据...");
+            logger.error("未查询到该季度的管理费用数据...");
             remark = BizCommonConstant.PI_SCORE_EXCEPTION_REASON_1;
         }
 

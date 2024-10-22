@@ -9,7 +9,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
-@Data
 public class Material {
 
     @TableId(type = IdType.ASSIGN_ID)

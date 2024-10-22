@@ -4,9 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * <p>
@@ -16,7 +16,6 @@ import lombok.Data;
  * @author Gf
  * @since 2024-10-10 16:15:20
  */
-@Data
 @TableName("if_elme_shopping_rating_info")
     public class IfElmeShoppingRatingInfo implements Serializable {
 

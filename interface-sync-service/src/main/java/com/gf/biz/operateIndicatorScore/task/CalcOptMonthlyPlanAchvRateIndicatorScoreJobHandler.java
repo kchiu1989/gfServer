@@ -148,7 +148,7 @@ public class CalcOptMonthlyPlanAchvRateIndicatorScoreJobHandler extends IJobHand
 
 
         } else {
-            logger.error("未查询到该季度的预算数据...");
+            logger.error("未查询到该月度的月度计划数据...");
             remark = BizCommonConstant.PI_SCORE_EXCEPTION_REASON_1;
         }
 
