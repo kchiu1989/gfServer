@@ -3,8 +3,8 @@ package com.gf.biz.funcDeptIndicatorScore.task;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gf.biz.bizCommon.BizCommonConstant;
-import com.gf.biz.codewaveBizForm.mapper.BfBudgetPlanMonthlySummaryMapper;
-import com.gf.biz.codewaveBizForm.po.BfBudgetPlanMonthlySummary;
+import com.gf.biz.codewaveBizForm.mapper.BfWorkCollaborateMapper;
+import com.gf.biz.codewaveBizForm.po.BfWorkCollaborate;
 import com.gf.biz.common.CommonConstant;
 import com.gf.biz.common.util.SpringBeanUtil;
 import com.gf.biz.common.util.TimeUtil;
@@ -128,7 +128,7 @@ public class CalcWorkCollaborateQuantityScoreJobHandler extends IJobHandler {
 
             QueryWrapper<LcapDepartment4a79f3> queryWrapper = new QueryWrapper<>();
             //queryWrapper.eq("dept_classify", jobDeptClassify);
-            queryWrapper.eq("dept_classify", "1");
+            queryWrapper.eq("dept_classify", BizCommonConstant.DEPT_CLASSIFY_FUNC);
             queryWrapper.isNotNull("dept_code");
             LcapDepartment4a79f3Mapper lcapDepartment4a79f3Mapper = SpringBeanUtil.getBean(LcapDepartment4a79f3Mapper.class);
             List<LcapDepartment4a79f3> deptList = lcapDepartment4a79f3Mapper.selectList(queryWrapper);
@@ -142,14 +142,15 @@ public class CalcWorkCollaborateQuantityScoreJobHandler extends IJobHandler {
 
     private void calculateScore(LcapDepartment4a79f3 dept, Integer jobYear, Integer jobQuarter) {
         Integer[] months = TimeUtil.getSeasonMonths(jobQuarter);
-        BfBudgetPlanMonthlySummaryMapper bfBudgetPlanMonthlySummaryMapper = SpringBeanUtil.getBean(BfBudgetPlanMonthlySummaryMapper.class);
-        QueryWrapper<BfBudgetPlanMonthlySummary> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("target_dept_code", dept.getDeptCode());
-        queryWrapper.eq("target_dept_category", "1");
+        BfWorkCollaborateMapper bfWorkCollaborateMapper = SpringBeanUtil.getBean(BfWorkCollaborateMapper.class);
+        QueryWrapper<BfWorkCollaborate> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("co_dept_code", dept.getDeptCode());
+        queryWrapper.eq("co_dept_type_code", BizCommonConstant.DEPT_CLASSIFY_FUNC);
         queryWrapper.eq("year", jobYear);
         queryWrapper.eq(CommonConstant.COLUMN_DEL_FLAG, CommonConstant.STATUS_UN_DEL);
+        queryWrapper.eq("status", "9");
         queryWrapper.in("month", Arrays.asList(months));
-        List<BfBudgetPlanMonthlySummary> monthBudgetList = bfBudgetPlanMonthlySummaryMapper.selectList(queryWrapper);
+        List<BfWorkCollaborate> bfList = bfWorkCollaborateMapper.selectList(queryWrapper);
 
 
         BigDecimal weightedScore = null;
@@ -158,8 +159,8 @@ public class CalcWorkCollaborateQuantityScoreJobHandler extends IJobHandler {
         BigDecimal averageQuaterWcNumber = BigDecimal.ZERO;
 
 
-        if (monthBudgetList != null && monthBudgetList.size() > 0) {
-            averageQuaterWcNumber = new BigDecimal(String.valueOf(monthBudgetList.size())).divide(BigDecimal.valueOf(3),
+        if (bfList != null && bfList.size() > 0) {
+            averageQuaterWcNumber = new BigDecimal(String.valueOf(bfList.size())).divide(BigDecimal.valueOf(3),
                     3, RoundingMode.HALF_UP);
         }
 

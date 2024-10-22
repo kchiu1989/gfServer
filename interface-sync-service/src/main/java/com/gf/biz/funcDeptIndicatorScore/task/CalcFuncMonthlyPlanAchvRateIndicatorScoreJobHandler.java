@@ -140,6 +140,7 @@ public class CalcFuncMonthlyPlanAchvRateIndicatorScoreJobHandler extends IJobHan
         queryWrapper.eq("target_dept_category", "1");
         queryWrapper.eq("year", jobYear);
         queryWrapper.eq(CommonConstant.COLUMN_DEL_FLAG, CommonConstant.STATUS_UN_DEL);
+        queryWrapper.eq("enable_flag","9");
         queryWrapper.in("month", Arrays.asList(months));
         List<BfBudgetPlanMonthlySummary> monthBudgetList = bfBudgetPlanMonthlySummaryMapper.selectList(queryWrapper);
 
