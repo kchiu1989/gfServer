@@ -63,7 +63,7 @@ public class BdIndicatorDeptScoreServiceImpl extends ServiceImpl<BdIndicatorDept
             } else {
                 BdIndicatorDeptScore toAdd = new BdIndicatorDeptScore();
                 BeanUtils.copyProperties(bdIndicatorDeptScoreDto, toAdd);
-                toAdd.setDeletedFlag(CommonConstant.COLUMN_DEL_FLAG);
+                toAdd.setDeletedFlag(CommonConstant.STATUS_UN_DEL);
                 toAdd.setCreatedTime(new Date());
                 bdIndicatorDeptScoreMapper.insert(toAdd);
             }
