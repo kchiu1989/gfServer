@@ -157,7 +157,7 @@ public class CalculateTcScoreJobHandler extends IJobHandler {
             bdIndicatorDeptScore.setYear(2024);//预留年份字段
             bdIndicatorDeptScore.setMonthQuarter(1);//预留月份字段
             bdIndicatorDeptScore.setRelateId(1L);//预留季度字段
-            bdIndicatorDeptScore.setDimensionFlag("1");//预留维度字段
+            bdIndicatorDeptScore.setDimensionFlag("0");//预留维度字段
             bdIndicatorDeptScore.setIndicatorCode("PI0001");//预留指标字段
             bdIndicatorDeptScore.setIndicatorName("顾客反馈");//预留指标名称字段
             bdIndicatorDeptScore.setCreatedBy(CommonConstant.DEFAULT_OPT_USER);

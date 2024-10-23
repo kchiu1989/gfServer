@@ -55,7 +55,7 @@ public class BdIndicatorDeptScoreServiceImpl extends ServiceImpl<BdIndicatorDept
                 toUpdScoreWrapper.set("final_score", bdIndicatorDeptScoreDto.getFinalScore());
                 toUpdScoreWrapper.set("transition_score", bdIndicatorDeptScoreDto.getTransitionScore());
                 toUpdScoreWrapper.set("remark", bdIndicatorDeptScoreDto.getRemark());
-                toUpdScoreWrapper.set("update_time", new Date());
+                toUpdScoreWrapper.set("updated_time", new Date());
                 toUpdScoreWrapper.eq("id", dbList.get(0).getId());
 
 

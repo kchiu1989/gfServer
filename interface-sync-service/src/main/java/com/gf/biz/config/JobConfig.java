@@ -5,9 +5,13 @@ import com.gf.biz.elemeData.task.SyncElemeShopRatingInfoDtlJobHandler;
 import com.gf.biz.elemeData.task.SyncMerchantAccountInfoDtlJobHandler;
 import com.gf.biz.fangdengRead.task.CalculateFandengReadDeptScoreJobHandler;
 import com.gf.biz.fangdengRead.task.CalculateFandengReadPersonalRltJobHandler;
+import com.gf.biz.funcDeptIndicatorScore.task.CalcEmpEvaluateScoreJobHandler;
+import com.gf.biz.funcDeptIndicatorScore.task.CalcOfficeCheckScoreJobHandler;
+import com.gf.biz.funcDeptIndicatorScore.task.CalculateDeptEvaluateScoreJobHandler;
 import com.gf.biz.ifsSync.job.shenfang.IfScoreMvJob;
 
 import com.gf.biz.meituanwmData.task.SyncMtwmShopRatingInfoJobHandler;
+import com.gf.biz.operateIndicatorScore.task.CaleMtdzPlatdormJobHandler;
 import com.gf.biz.shenfangData.task.SyncIfScoreMvDataJobHandler;
 import com.gf.biz.operateIndicatorScore.task.CalculateSfScoreJobHandler;
 import com.gf.biz.operateIndicatorScore.task.CalculateTcScoreJobHandler;
@@ -96,6 +100,12 @@ public class JobConfig {
 
         XxlJobExecutor.registJobHandler("calculateFandengReadPersonalRltJobHandler", new CalculateFandengReadPersonalRltJobHandler());
         XxlJobExecutor.registJobHandler("calculateFandengReadDeptScoreJobHandler", new CalculateFandengReadDeptScoreJobHandler());
+
+        XxlJobExecutor.registJobHandler("calcOfficeCheckScoreJobHandler", new CalcOfficeCheckScoreJobHandler());
+        XxlJobExecutor.registJobHandler("calcEmpEvaluateScoreJobHandler", new CalcEmpEvaluateScoreJobHandler());
+        XxlJobExecutor.registJobHandler("caleMtdzPlatdormJobHandler", new CaleMtdzPlatdormJobHandler());
+
+        XxlJobExecutor.registJobHandler("calculateDeptEvaluateScoreJobHandler", new CalculateDeptEvaluateScoreJobHandler());
 
 
     }
