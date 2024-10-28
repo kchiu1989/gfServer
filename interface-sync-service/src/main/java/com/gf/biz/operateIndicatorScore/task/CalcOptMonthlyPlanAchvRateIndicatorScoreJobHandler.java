@@ -109,7 +109,7 @@ public class CalcOptMonthlyPlanAchvRateIndicatorScoreJobHandler extends IJobHand
                 jobMonth = --currentMonth;
             }
 
-            logger.info("年:{},季度:{}", jobYear, jobMonth);
+            logger.info("年:{},月度:{}", jobYear, jobMonth);
 
             QueryWrapper<LcapDepartment4a79f3> queryWrapper = new QueryWrapper<>();
             //queryWrapper.eq("dept_classify", jobDeptClassify);

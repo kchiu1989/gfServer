@@ -1,7 +1,5 @@
-package com.gf.biz.totalDeptIndicatorScore.po;
+package com.gf.biz.totalDeptIndicatorScore.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.gf.biz.common.entity.BaseBizEntity;
 
 import java.io.Serializable;
@@ -16,8 +14,7 @@ import java.math.BigDecimal;
  * @since 2024-10-28 11:41:04
  */
 
-@TableName("bf_indicator_dept_total_score")
-public class BfIndicatorDeptTotalScore extends BaseBizEntity implements Serializable {
+public class BfIndicatorDeptTotalScoreDto extends BaseBizEntity implements Serializable,Comparable<BfIndicatorDeptTotalScoreDto> {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,107 +22,87 @@ public class BfIndicatorDeptTotalScore extends BaseBizEntity implements Serializ
     /**
      * 绩效年
      */
-    @TableField("year")
     private Integer year;
 
     /**
      * 绩效月/季度
      */
-    @TableField("month_quarter")
     private Integer monthQuarter;
 
     /**
      * 直属部门名称
      */
-    @TableField("dept_name")
     private String deptName;
 
     /**
      * 直属部门编码
      */
-    @TableField("dept_code")
     private String deptCode;
 
     /**
      * 部门id
      */
-    @TableField("dept_id")
     private Long deptId;
 
     /**
      * 0运营部门1职能部门
      */
-    @TableField("dept_classify_flag")
     private String deptClassifyFlag;
 
     /**
      * 最终得分
      */
-    @TableField("final_score")
     private BigDecimal finalScore;
 
     /**
      * 过程得分
      */
-    @TableField("transition_score")
     private BigDecimal transitionScore;
 
     /**
      * 0月度1季度
      */
-    @TableField("dimension_flag")
     private String dimensionFlag;
 
     /**
      * 关联的季度(针对职能)
      */
-    @TableField("relate_id")
     private Long relateId;
 
     /**
      * 干预后得分
      */
-    @TableField("intervene_score")
     private BigDecimal interveneScore;
 
     /**
      * 等级
      */
-    @TableField("final_rank")
     private String finalRank;
 
     /**
      * 干预后等级
      */
-    @TableField("intervene_rank")
     private BigDecimal interveneRank;
 
     /**
      * 扣分总数
      */
-    @TableField("transition_deduct_score")
     private BigDecimal transitionDeductScore;
 
     /**
      * 降级总数
      */
-    @TableField("transition_rank_number")
     private Integer transitionRankNumber;
 
-    /**
-     * 食安降级总数
-     */
-    @TableField("transition_food_rank_number")
+
     private Integer transitionFoodRankNumber;
+
+    private String remark;
 
     /**
      * 过程排名
      */
-    @TableField("transition_rank")
     private Integer transitionRank;
-
-    @TableField("remark")
-    private String remark;
 
     public Integer getYear() {
         return year;
@@ -269,5 +246,29 @@ public class BfIndicatorDeptTotalScore extends BaseBizEntity implements Serializ
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public BfIndicatorDeptTotalScoreDto(Integer year, Integer monthQuarter, String deptName, String deptCode, Long deptId,
+                                        String deptClassifyFlag, BigDecimal transitionScore, String dimensionFlag,
+                                        BigDecimal transitionDeductScore, Integer transitionRankNumber,
+                                        Integer transitionFoodRankNumber, String remark) {
+        this.year = year;
+        this.monthQuarter = monthQuarter;
+        this.deptName = deptName;
+        this.deptCode = deptCode;
+        this.deptId = deptId;
+        this.deptClassifyFlag = deptClassifyFlag;
+        this.transitionScore = transitionScore;
+        this.dimensionFlag = dimensionFlag;
+        this.transitionDeductScore = transitionDeductScore;
+        this.finalScore = transitionScore.subtract(transitionDeductScore);
+        this.transitionRankNumber = transitionRankNumber;
+        this.transitionFoodRankNumber = transitionFoodRankNumber;
+        this.remark = remark;
+    }
+
+    @Override
+    public int compareTo(BfIndicatorDeptTotalScoreDto o) {
+        return this.finalScore.compareTo(o.getFinalScore());
     }
 }

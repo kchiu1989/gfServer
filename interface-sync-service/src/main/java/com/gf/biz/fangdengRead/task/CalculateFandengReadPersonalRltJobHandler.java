@@ -76,7 +76,8 @@ public class CalculateFandengReadPersonalRltJobHandler extends IJobHandler {
         queryWrapper.eq("month", currentMonth);
         queryWrapper.eq("deleted_flag", "0");
         queryWrapper.isNotNull("user_account");
-        queryWrapper.groupBy(Arrays.asList("user_account"));
+        queryWrapper.in("user_account",Arrays.asList("user_account"));
+        queryWrapper.groupBy("user_account");
 
         IfRecordFdCrMapper ifRecordFdCrMapper = SpringBeanUtil.getBean(IfRecordFdCrMapper.class);
         List<Map<String, Object>> gpMapList = ifRecordFdCrMapper.selectMaps(queryWrapper);

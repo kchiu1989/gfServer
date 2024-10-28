@@ -2,4 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gf.biz.operateIndicatorScore.mapper.BdIndicatorDeptScoreMapper">
 
+    <resultMap id="baseRltMap" type="com.gf.biz.operateIndicatorScore.dto.BdIndicatorDeptScoreDto">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="updated_by" jdbcType="VARCHAR" property="updatedBy"/>
+        <result column="deleted_flag" jdbcType="CHAR" property="deletedFlag"/>
+        <result column="year" jdbcType="INTEGER" property="year"/>
+        <result column="month_quarter" jdbcType="INTEGER" property="monthQuarter"/>
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
+        <result column="dept_code" jdbcType="VARCHAR" property="deptCode"/>
+        <result column="dept_classify_flag" jdbcType="CHAR" property="deptClassifyFlag"/>
+        <result column="final_score" jdbcType="DECIMAL" property="finalScore"/>
+        <result column="dimension_flag" jdbcType="CHAR" property="dimensionFlag"/>
+        <result column="indicator_name" jdbcType="VARCHAR" property="indicatorName"/>
+        <result column="indicator_code" jdbcType="VARCHAR" property="indicatorCode"/>
+        <result column="relate_id" jdbcType="BIGINT" property="relateId"/>
+
+    </resultMap>
+
+    <select id="getOptDeptSumInitialScore" parameterType="map" resultMap="baseRltMap">
+        select dept_code,year,month_quarter,max(dept_name) as dept_name,max(dept_id) as dept_id,
+            sum(IFNULL(final_score,0)) as final_score from bd_indicator_dept_score
+        where year = #{jobYear,jdbcType=INTEGER} and month_quarter = #{jobMonth,jdbcType=INTEGER}
+        and dimension_flag = '0' and dept_code = #{deptCode,jdbcType=VARCHAR}
+        and indicator_code in
+        <foreach collection="piList" index="index" item = "item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        group by dept_code,year,month_quarter
+    </select>
+
 </mapper>
