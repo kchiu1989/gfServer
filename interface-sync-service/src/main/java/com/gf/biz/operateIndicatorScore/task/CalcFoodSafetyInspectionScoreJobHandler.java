@@ -28,6 +28,9 @@ import java.util.List;
  * (1)实际得分成绩≥75分且无红线问题，按实际得分*权重计入“食安检查指标”得分；
  * (2)实际得分成绩＜75分，食安检查指标得分直接为0分。
  * 直接取食安二次打分表的最终得分（已加权）
+ *
+ * 绩效得分计入每个季度的最后一个月
+ *
  */
 public class CalcFoodSafetyInspectionScoreJobHandler extends IJobHandler {
     private static final Logger logger = LoggerFactory.getLogger(CalcFoodSafetyInspectionScoreJobHandler.class);
@@ -154,9 +157,11 @@ public class CalcFoodSafetyInspectionScoreJobHandler extends IJobHandler {
             remark = BizCommonConstant.PI_SCORE_EXCEPTION_REASON_1;
         }
 
-        BdIndicatorDeptScoreDto toOpt = new BdIndicatorDeptScoreDto(jobYear, jobQuarter, dept.getName(), dept.getDeptCode(),
+        int jobQuarterLastMonth = TimeUtil.getSeasonMonths(jobQuarter)[2];
+
+        BdIndicatorDeptScoreDto toOpt = new BdIndicatorDeptScoreDto(jobYear, jobQuarterLastMonth, dept.getName(), dept.getDeptCode(),
                 dept.getId(), dept.getDeptClassify(), weightedScore, null,
-                BizCommonConstant.PI_SCORE_DIMENSION_FLAG_QUARTER, PI_NAME, PI_CODE, remark);
+                BizCommonConstant.DEPT_CLASSIFY_OPT, PI_NAME, PI_CODE, remark);
 
         BdIndicatorDeptScoreService bdIndicatorDeptScoreService = SpringBeanUtil.getBean(BdIndicatorDeptScoreService.class);
         bdIndicatorDeptScoreService.createOrAddBdIndicatorDeptScore(toOpt);
