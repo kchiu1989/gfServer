@@ -3,13 +3,13 @@ package com.gf.biz.operateIndicatorScore.task;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gf.biz.bizCommon.BizCommonConstant;
+import com.gf.biz.codewaveBizForm.mapper.BdMonthBudgetMapper;
+import com.gf.biz.codewaveBizForm.po.BdMonthBudget;
 import com.gf.biz.common.CommonConstant;
 import com.gf.biz.common.util.SpringBeanUtil;
 import com.gf.biz.common.util.TimeUtil;
 import com.gf.biz.elemeData.task.SyncElemeShopRatingInfoDtlJobHandler;
 import com.gf.biz.operateIndicatorScore.dto.BdIndicatorDeptScoreDto;
-import com.gf.biz.operateIndicatorScore.entity.BfMtdzPlatformData;
-import com.gf.biz.operateIndicatorScore.mapper.BfMtdzPlatformDataMapper;
 import com.gf.biz.operateIndicatorScore.service.BdIndicatorDeptScoreService;
 import com.gf.biz.tiancaiIfsData.entity.LcapDepartment4a79f3;
 import com.gf.biz.tiancaiIfsData.mapper.LcapDepartment4a79f3Mapper;
@@ -20,16 +20,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class CaleMtdzPlatdormJobHandler extends IJobHandler {
+public class CalcGrossProfitJobHandler extends IJobHandler {
     private static final Logger logger = LoggerFactory.getLogger(SyncElemeShopRatingInfoDtlJobHandler.class);
-    private static final String PI_CODE = "PI0013";
-    private static final String PI_NAME = "美团大众评分";
-    private static final BigDecimal dimensionWeight = new BigDecimal("0.12");
-    private static final BigDecimal firstLevelIndicatorWeight = new BigDecimal("0.49");
-    private static final String status = "2";//代表生效
-    public void execute() throws Exception {
+    private static final String PI_CODE = "PI0015";
+    private static final String PI_NAME = "毛利率";
+    private static final BigDecimal dimensionWeight = new BigDecimal("0.215");
+    private static final BigDecimal firstLevelIndicatorWeight = new BigDecimal("0.45");
+    private static final String status = "1";//代表生效
+    private static final String bdItemCode = "J30002";
+
+    public void execute() throws Exception{
         //定时任务默认当前月跑上个月的数据
         Integer currentYear = TimeUtil.getNowYear();
         Integer currentMonth = TimeUtil.getNowMonth();
@@ -71,7 +75,7 @@ public class CaleMtdzPlatdormJobHandler extends IJobHandler {
             List<LcapDepartment4a79f3> deptList = lcapDepartment4a79f3Mapper.selectList(queryWrapper);
             if (deptList != null && deptList.size() > 0) {
                 for (LcapDepartment4a79f3 dept : deptList) {
-                    this.getMtdzPlatformData(dept, currentYear, currentMonth);
+                    this.getGrossProfitScore(dept, currentYear, currentMonth);
                 }
             }
 
@@ -87,57 +91,71 @@ public class CaleMtdzPlatdormJobHandler extends IJobHandler {
         if (optDeptList != null && optDeptList.size() > 0) {
             for (LcapDepartment4a79f3 dbDept : optDeptList) {
                 logger.info("开始进行对部门:{},部门编码:{},的处理", dbDept.getName(), dbDept.getDeptCode());
-                this.getMtdzPlatformData(dbDept, currentYear, currentMonth);
+                this.getGrossProfitScore(dbDept, currentYear, currentMonth);
             }
         }
 
     }
-    public void getMtdzPlatformData(LcapDepartment4a79f3 currentDept,Integer year, Integer month) throws Exception{
-        BfMtdzPlatformDataMapper bfMtdzPlatformDataMapper = SpringBeanUtil.getBean(BfMtdzPlatformDataMapper.class);
-        QueryWrapper<BfMtdzPlatformData> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("dept_code",currentDept.getDeptCode());
-        queryWrapper.eq("business_year",year);
-        queryWrapper.eq("business_month",month);
+    public void getGrossProfitScore(LcapDepartment4a79f3 currentDept, Integer year, Integer month) throws Exception{
+        BdMonthBudgetMapper bfBusinessAllProceedsMapper = SpringBeanUtil.getBean(BdMonthBudgetMapper.class);
+        QueryWrapper<BdMonthBudget> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("dept_code", currentDept.getDeptCode());
+        queryWrapper.eq("year", year);
+        queryWrapper.eq("month", month);
         queryWrapper.eq("deleted_flag", CommonConstant.STATUS_UN_DEL);
-        queryWrapper.eq("status",status);
-        List<BfMtdzPlatformData> bfMtdzPlatformDataList = bfMtdzPlatformDataMapper.selectList(queryWrapper);
-        BigDecimal MTMiddleScore = BigDecimal.ZERO;
-        BigDecimal MTFinalScore = BigDecimal.ZERO;
-        BigDecimal DZMiddleScore = BigDecimal.ZERO;
-        BigDecimal DZFinalScore = BigDecimal.ZERO;
+        queryWrapper.eq("status", status);
+        queryWrapper.eq("bd_item_code", bdItemCode);
+        queryWrapper.eq("dept_classify_code","0");
+        List<BdMonthBudget> bfBusinessAllProceedsList = bfBusinessAllProceedsMapper.selectList(queryWrapper);
         BigDecimal finalScore = BigDecimal.ZERO;
         BigDecimal middleScore = BigDecimal.ZERO;
+        BigDecimal actualValue = BigDecimal.ZERO;
+        BigDecimal planValue = BigDecimal.ZERO;
         BigDecimal achieveRate = BigDecimal.ZERO;
         int count = 0;
         String remark = "";
-        if(bfMtdzPlatformDataList != null && bfMtdzPlatformDataList.size()>0) {
-            BfMtdzPlatformData bfMtdzPlatformData = bfMtdzPlatformDataList.get(0);
-            if (bfMtdzPlatformData.getMtAchieveScore().compareTo(new BigDecimal(5)) >= 0) {
-                MTMiddleScore = new BigDecimal(110);
-            } else if (bfMtdzPlatformData.getMtAchieveScore().compareTo(new BigDecimal(4.9)) >= 0) {
-                MTMiddleScore = new BigDecimal(105);
-            } else if (bfMtdzPlatformData.getMtAchieveScore().compareTo(new BigDecimal(4.8)) >= 0) {
-                MTMiddleScore = new BigDecimal(100);
-            } else if (bfMtdzPlatformData.getMtAchieveScore().compareTo(new BigDecimal(4.7)) >= 0) {
-                MTMiddleScore = new BigDecimal(90);
-            } else if (bfMtdzPlatformData.getMtAchieveScore().compareTo(new BigDecimal(4.6)) >= 0) {
-                MTMiddleScore = new BigDecimal(80);
-            } else if (bfMtdzPlatformData.getMtAchieveScore().compareTo(new BigDecimal(4.5)) >= 0) {
-                MTMiddleScore = new BigDecimal(70);
-            } else {
-                MTMiddleScore = new BigDecimal(60);
+        if (bfBusinessAllProceedsList != null && bfBusinessAllProceedsList.size() > 0) {
+            BdMonthBudget bfBusinessAllProceeds = bfBusinessAllProceedsList.get(0);
+            if(bfBusinessAllProceeds.getActualValue()!= null){
+                actualValue = actualValue.add(bfBusinessAllProceeds.getActualValue());
+            }else{
+                actualValue = actualValue.add(new BigDecimal(0));
             }
-            achieveRate = new BigDecimal(bfMtdzPlatformData.getDzPositiveReviewNumber()).divide(new BigDecimal(bfMtdzPlatformData.getDzTotalReviewNumber()), 2, BigDecimal.ROUND_HALF_UP);
-            DZMiddleScore = achieveRate.multiply(new BigDecimal(100)).divide(new BigDecimal(1),3, BigDecimal.ROUND_HALF_UP);
+            if(bfBusinessAllProceeds.getActualAdjustmentValue()!= null){
+                actualValue = actualValue.add(bfBusinessAllProceeds.getActualAdjustmentValue());
+            }else{
+                actualValue = actualValue.add(new BigDecimal(0));
+            }
+            if(bfBusinessAllProceeds.getPlanValue()!= null){
+                planValue = actualValue.add(bfBusinessAllProceeds.getPlanValue());
+            }else{
+                planValue = actualValue.add(new BigDecimal(0));
+            }
+            if(bfBusinessAllProceeds.getPlanAdjustmentValue()!= null){
+                planValue = actualValue.add(bfBusinessAllProceeds.getPlanAdjustmentValue());
+            }else{
+                planValue = actualValue.add(new BigDecimal(0));
+            }
+            if(planValue.compareTo(BigDecimal.ZERO)==0){
+                logger.error("计划值为0，无法计算");
+                remark = "计划值为0，无法计算";
+            }else{
+                achieveRate = actualValue.subtract(planValue);
+                if(achieveRate.compareTo(new BigDecimal(0))>=0){
+                    middleScore = new BigDecimal(100);
+                }else if ( achieveRate.compareTo(new BigDecimal(0))<0 && achieveRate.compareTo(new BigDecimal(-0.015))>=0) {
+                    middleScore = new BigDecimal(90);
+                } else if ( achieveRate.compareTo(new BigDecimal(-0.015))<0 && achieveRate.compareTo(new BigDecimal(-0.03))>=0 ) {
+                    middleScore = new BigDecimal(80);
+                }else{
+                    middleScore = new BigDecimal(50);
+                }
+                finalScore = middleScore.multiply(firstLevelIndicatorWeight).multiply(dimensionWeight);
+            }
 
-            MTFinalScore= MTMiddleScore.multiply(new BigDecimal(0.5));
-            DZFinalScore= DZMiddleScore.multiply(new BigDecimal(0.5));
-            middleScore =MTMiddleScore.add(DZMiddleScore);
-            finalScore = MTFinalScore.add(DZFinalScore).multiply(firstLevelIndicatorWeight).multiply(dimensionWeight);
-        }else{
+        } else{
             remark = BizCommonConstant.PI_SCORE_EXCEPTION_REASON_1;
         }
-
         BdIndicatorDeptScoreDto toOpt = new BdIndicatorDeptScoreDto(year, month, currentDept.getName(), currentDept.getDeptCode(),
                 currentDept.getId(), "0", finalScore, middleScore,
                 BizCommonConstant.PI_SCORE_DIMENSION_FLAG_QUARTER, PI_NAME, PI_CODE, remark);
