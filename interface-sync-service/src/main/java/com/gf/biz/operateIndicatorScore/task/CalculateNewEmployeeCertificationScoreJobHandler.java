@@ -40,6 +40,9 @@ import java.util.List;
  * ③M<60%            得50分
  *
  * IDP 维度权重 6% 一级指标权重 50%
+ *
+ * 计入每个季度的最后一个月
+ *
  */
 public class CalculateNewEmployeeCertificationScoreJobHandler extends IJobHandler {
     private static final Logger logger = LoggerFactory.getLogger(CalculateNewEmployeeCertificationScoreJobHandler.class);
@@ -184,9 +187,11 @@ public class CalculateNewEmployeeCertificationScoreJobHandler extends IJobHandle
             remark = BizCommonConstant.PI_SCORE_EXCEPTION_REASON_1;
         }
 
-        BdIndicatorDeptScoreDto toOpt = new BdIndicatorDeptScoreDto(currentYear,jobQuarter,dept.getName(),dept.getDeptCode(),
+        int jobQuarterLastMonth = TimeUtil.getSeasonMonths(jobQuarter)[2];
+
+        BdIndicatorDeptScoreDto toOpt = new BdIndicatorDeptScoreDto(currentYear,jobQuarterLastMonth,dept.getName(),dept.getDeptCode(),
                 dept.getId(),dept.getDeptClassify(),finalScore,middleScore,
-                BizCommonConstant.PI_SCORE_DIMENSION_FLAG_QUARTER, PI_NAME, PI_CODE, remark);
+                BizCommonConstant.PI_SCORE_DIMENSION_FLAG_MONTH, PI_NAME, PI_CODE, remark);
 
         BdIndicatorDeptScoreService bdIndicatorDeptScoreService = SpringBeanUtil.getBean(BdIndicatorDeptScoreService.class);
         bdIndicatorDeptScoreService.createOrAddBdIndicatorDeptScore(toOpt);
