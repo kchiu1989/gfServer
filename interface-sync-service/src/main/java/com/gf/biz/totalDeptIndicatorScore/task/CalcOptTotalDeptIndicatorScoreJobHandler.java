@@ -1,5 +1,6 @@
 package com.gf.biz.totalDeptIndicatorScore.task;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gf.biz.bizCommon.BizCommonConstant;
 import com.gf.biz.codewaveBizForm.mapper.BdDeptRankProportionMapper;
@@ -18,7 +19,9 @@ import com.gf.biz.tiancaiIfsData.mapper.LcapDepartment4a79f3Mapper;
 import com.gf.biz.totalDeptIndicatorScore.OptPerformanceIndocatorEnum;
 import com.gf.biz.totalDeptIndicatorScore.dto.BfIndicatorDeptTotalScoreDto;
 import com.gf.biz.totalDeptIndicatorScore.service.BfIndicatorDeptTotalScoreService;
+import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.IJobHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +58,7 @@ public class CalcOptTotalDeptIndicatorScoreJobHandler extends IJobHandler {
         Integer jobMonth = null;
 
 
-        /*String jobParam = XxlJobHelper.getJobParam();
+        String jobParam = XxlJobHelper.getJobParam();
 
 
         if (StringUtils.isNotBlank(jobParam)) {
@@ -67,40 +70,17 @@ public class CalcOptTotalDeptIndicatorScoreJobHandler extends IJobHandler {
                 jobMonth = Integer.parseInt(xxlJobJsonObj.getString("month"));
 
                 logger.info("系统使用了正确的动态传参，将执行动态传参逻辑");
-                String jobDeptCode = null;
-                if (xxlJobJsonObj.containsKey("deptCode")) {
-                    jobDeptCode = xxlJobJsonObj.getString("deptCode");
-                }
-
-                logger.info("年:{},月度:{},部门编码:{}", jobYear, jobMonth, jobDeptCode);
 
 
-                if (jobDeptCode != null) {
-                    logger.info("执行特定部门绩效跑分...,部门:{}", jobDeptCode);
-                }
-
-                LcapDepartment4a79f3Mapper lcapDepartment4a79f3Mapper = SpringBeanUtil.getBean(LcapDepartment4a79f3Mapper.class);
-                QueryWrapper<LcapDepartment4a79f3> queryWrapper = new QueryWrapper<>();
-                //queryWrapper.eq("dept_classify", jobDeptClassify);
-                if (StringUtils.isNotBlank(jobDeptCode)) {
-                    queryWrapper.eq("dept_code", jobDeptCode);
-                }
-
-                queryWrapper.eq("dept_classify", BizCommonConstant.DEPT_CLASSIFY_OPT);
-                queryWrapper.isNotNull("dept_code");
-                List<LcapDepartment4a79f3> deptList = lcapDepartment4a79f3Mapper.selectList(queryWrapper);
-                if (deptList != null && deptList.size() > 0) {
-                    for (LcapDepartment4a79f3 dept : deptList) {
-                        this.calculateScore(dept, jobYear, jobMonth);
-                    }
-                }
+                logger.info("年:{},月度:{}", jobYear, jobMonth);
 
             } else {
                 logger.error("任务参数缺失");
+                return;
             }
 
 
-        } else {*/
+        } else {
             logger.info("执行所有职能部门绩效跑分...");
 
 
@@ -113,86 +93,88 @@ public class CalcOptTotalDeptIndicatorScoreJobHandler extends IJobHandler {
 
             logger.info("年:{},月度:{}", jobYear, jobMonth);
 
-            QueryWrapper<LcapDepartment4a79f3> queryWrapper = new QueryWrapper<>();
-            //queryWrapper.eq("dept_classify", jobDeptClassify);
-            queryWrapper.eq("dept_classify", BizCommonConstant.DEPT_CLASSIFY_OPT);
-            queryWrapper.isNotNull("dept_code");
-            LcapDepartment4a79f3Mapper lcapDepartment4a79f3Mapper = SpringBeanUtil.getBean(LcapDepartment4a79f3Mapper.class);
-            List<LcapDepartment4a79f3> deptList = lcapDepartment4a79f3Mapper.selectList(queryWrapper);
-            if (deptList != null && deptList.size() > 0) {
-                List<BfIndicatorDeptTotalScoreDto> toCalcMetaDataList = new ArrayList<>();
-                for (LcapDepartment4a79f3 dept : deptList) {
-                    toCalcMetaDataList.add(this.getDeptMetaScoreData(dept, jobYear, jobMonth));
-                }
 
-                //进行算等级
-                BdDeptRankProportionMapper bdDeptRankProportionMapper = SpringBeanUtil.getBean(BdDeptRankProportionMapper.class);
-                QueryWrapper<BdDeptRankProportion> queryWrapper1 = new QueryWrapper<>();
-                queryWrapper1.eq(CommonConstant.COLUMN_DEL_FLAG,CommonConstant.STATUS_UN_DEL);
-                List<BdDeptRankProportion> bdDeptRankProportions = bdDeptRankProportionMapper.selectList(queryWrapper1);
-                Map<String,Integer> rankMap = new HashMap<>();
-                for(BdDeptRankProportion rankData:bdDeptRankProportions){
-                    Integer rankAPlus = Integer.valueOf(String.valueOf(new BigDecimal
-                            (deptList.size()).multiply(rankData.getProportionValue()).setScale(0, RoundingMode.CEILING)));
+        }
 
-                    rankMap.put(rankData.getGradeCode(),rankAPlus);
-                }
+        QueryWrapper<LcapDepartment4a79f3> queryWrapper = new QueryWrapper<>();
+        //queryWrapper.eq("dept_classify", jobDeptClassify);
+        queryWrapper.eq("dept_classify", BizCommonConstant.DEPT_CLASSIFY_OPT);
+        queryWrapper.isNotNull("dept_code");
+        LcapDepartment4a79f3Mapper lcapDepartment4a79f3Mapper = SpringBeanUtil.getBean(LcapDepartment4a79f3Mapper.class);
+        List<LcapDepartment4a79f3> deptList = lcapDepartment4a79f3Mapper.selectList(queryWrapper);
+        if (deptList != null && deptList.size() > 0) {
+            List<BfIndicatorDeptTotalScoreDto> toCalcMetaDataList = new ArrayList<>();
+            for (LcapDepartment4a79f3 dept : deptList) {
+                toCalcMetaDataList.add(this.getDeptMetaScoreData(dept, jobYear, jobMonth));
+            }
 
-                for(BfIndicatorDeptTotalScoreDto toDeal:toCalcMetaDataList){
-                    if(rankMap.containsKey("5")){
-                        toDeal.setTransitionRank(Integer.valueOf("5"));
-                        calcRankMap("5",rankMap);
-                    }else if(rankMap.containsKey("4")){
-                        toDeal.setTransitionRank(Integer.valueOf("4"));
-                        calcRankMap("4",rankMap);
-                    }else if(rankMap.containsKey("3")){
-                        toDeal.setTransitionRank(Integer.valueOf("3"));
-                        calcRankMap("3",rankMap);
+            //进行算等级
+            BdDeptRankProportionMapper bdDeptRankProportionMapper = SpringBeanUtil.getBean(BdDeptRankProportionMapper.class);
+            QueryWrapper<BdDeptRankProportion> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq(CommonConstant.COLUMN_DEL_FLAG,CommonConstant.STATUS_UN_DEL);
+            List<BdDeptRankProportion> bdDeptRankProportions = bdDeptRankProportionMapper.selectList(queryWrapper1);
+            Map<String,Integer> rankMap = new HashMap<>();
+            for(BdDeptRankProportion rankData:bdDeptRankProportions){
+                Integer rankAPlus = Integer.valueOf(String.valueOf(new BigDecimal
+                        (deptList.size()).multiply(rankData.getProportionValue()).setScale(0, RoundingMode.CEILING)));
 
-                    }else if(rankMap.containsKey("2")){
-                        toDeal.setTransitionRank(Integer.valueOf("2"));
-                        calcRankMap("2",rankMap);
-                    }else if(rankMap.containsKey("1")){//剩下的强制取D
-                        toDeal.setTransitionRank(Integer.valueOf("1"));
-                        //calcRankMap("5",rankMap);
-                    }
-                }
+                rankMap.put(rankData.getGradeCode(),rankAPlus);
+            }
 
+            for(BfIndicatorDeptTotalScoreDto toDeal:toCalcMetaDataList){
+                if(rankMap.containsKey("5")){
+                    toDeal.setTransitionRank(Integer.valueOf("5"));
+                    calcRankMap("5",rankMap);
+                }else if(rankMap.containsKey("4")){
+                    toDeal.setTransitionRank(Integer.valueOf("4"));
+                    calcRankMap("4",rankMap);
+                }else if(rankMap.containsKey("3")){
+                    toDeal.setTransitionRank(Integer.valueOf("3"));
+                    calcRankMap("3",rankMap);
 
-                BfIndicatorDeptTotalScoreService bfIndicatorDeptTotalScoreService = SpringBeanUtil.getBean(BfIndicatorDeptTotalScoreService.class);
-                //再对一般扣分和食安扣分进行等级计算
-                for(BfIndicatorDeptTotalScoreDto toDeal:toCalcMetaDataList){
-                    int totalRankNum = toDeal.getTransitionRankNumber()+toDeal.getTransitionFoodRankNumber();
-                    if(totalRankNum>4){//最多降四级
-                        totalRankNum=4;
-                    }
-
-                    int finalRank = toDeal.getTransitionRank()-totalRankNum;
-
-                    if(finalRank<=0){
-                        toDeal.setFinalRank("1");
-                    }else{
-                        toDeal.setFinalRank(String.valueOf(finalRank));
-                    }
-                    try{
-                        bfIndicatorDeptTotalScoreService.createOrAddBfIndicatorDeptTotalScore(toDeal);
-                    }catch(Exception e){
-                        logger.error("存储运营最终得分排名失败",e);
-                    }
-
+                }else if(rankMap.containsKey("2")){
+                    toDeal.setTransitionRank(Integer.valueOf("2"));
+                    calcRankMap("2",rankMap);
+                }else if(rankMap.containsKey("1")){//剩下的强制取D
+                    toDeal.setTransitionRank(Integer.valueOf("1"));
+                    //calcRankMap("5",rankMap);
                 }
             }
-        //}
+
+
+            BfIndicatorDeptTotalScoreService bfIndicatorDeptTotalScoreService = SpringBeanUtil.getBean(BfIndicatorDeptTotalScoreService.class);
+            //再对一般扣分和食安扣分进行等级计算
+            for(BfIndicatorDeptTotalScoreDto toDeal:toCalcMetaDataList){
+                int totalRankNum = toDeal.getTransitionRankNumber()+toDeal.getTransitionFoodRankNumber();
+                if(totalRankNum>4){//最多降四级
+                    totalRankNum=4;
+                }
+
+                int finalRank = toDeal.getTransitionRank()-totalRankNum;
+
+                if(finalRank<=0){
+                    toDeal.setFinalRank("1");
+                }else{
+                    toDeal.setFinalRank(String.valueOf(finalRank));
+                }
+                try{
+                    bfIndicatorDeptTotalScoreService.createOrAddBfIndicatorDeptTotalScore(toDeal);
+                }catch(Exception e){
+                    logger.error("存储运营最终得分排名失败",e);
+                }
+
+            }
+        }
     }
 
-    private void calcRankMap(String rank,Map<String,Integer> rankMap){
+    private void calcRankMap(String rank, Map<String, Integer> rankMap) {
 
         int cnt = rankMap.get(rank);
         cnt--;
-        if(cnt==0){
+        if (cnt == 0) {
             rankMap.remove(rank);
-        }else{
-            rankMap.put(rank,cnt);
+        } else {
+            rankMap.put(rank, cnt);
         }
     }
 
