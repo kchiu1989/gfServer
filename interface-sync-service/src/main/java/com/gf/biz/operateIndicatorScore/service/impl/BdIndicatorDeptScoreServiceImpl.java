@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gf.biz.common.CommonConstant;
 import com.gf.biz.common.GfResult;
-import com.gf.biz.common.util.SpringBeanUtil;
 import com.gf.biz.operateIndicatorScore.dto.BdIndicatorDeptScoreDto;
 import com.gf.biz.operateIndicatorScore.entity.BdIndicatorDeptScore;
 import com.gf.biz.operateIndicatorScore.mapper.BdIndicatorDeptScoreMapper;
@@ -34,12 +33,11 @@ public class BdIndicatorDeptScoreServiceImpl extends ServiceImpl<BdIndicatorDept
 
     private static final Logger logger = LoggerFactory.getLogger(BdIndicatorDeptScoreServiceImpl.class);
     @Autowired
-    private BdIndicatorDeptScoreMapper BdIndicatorDeptScoreMapper;
+    private BdIndicatorDeptScoreMapper bdIndicatorDeptScoreMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public GfResult<String> createOrAddBdIndicatorDeptScore(BdIndicatorDeptScoreDto bdIndicatorDeptScoreDto) {
-        BdIndicatorDeptScoreMapper bdIndicatorDeptScoreMapper = SpringBeanUtil.getBean(BdIndicatorDeptScoreMapper.class);
         QueryWrapper<BdIndicatorDeptScore> queryScoreWrapper = new QueryWrapper<>();
         queryScoreWrapper.eq("dept_id", bdIndicatorDeptScoreDto.getDeptId());
         queryScoreWrapper.eq("year", bdIndicatorDeptScoreDto.getYear());

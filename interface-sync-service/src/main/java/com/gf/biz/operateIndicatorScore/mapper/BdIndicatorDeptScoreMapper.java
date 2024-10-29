@@ -19,4 +19,7 @@ import java.util.List;
     public interface BdIndicatorDeptScoreMapper extends BaseMapper<BdIndicatorDeptScore> {
     List<BdIndicatorDeptScoreDto> getOptDeptSumInitialScore(@Param("deptCode") String deptCode, @Param("jobYear") Integer jobYear
             , @Param("jobMonth") Integer jobMonth, @Param("piList")  List<String> piList);
+
+    List<BdIndicatorDeptScoreDto> getFuncDeptSumInitialScore(@Param("deptCode") String deptCode, @Param("jobYear") Integer jobYear
+            , @Param("jobQuarter") Integer jobMonth, @Param("piList")  List<String> piList);
 }

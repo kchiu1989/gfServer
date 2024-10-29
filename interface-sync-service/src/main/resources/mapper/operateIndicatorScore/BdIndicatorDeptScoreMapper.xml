@@ -34,4 +34,16 @@
         group by dept_code,year,month_quarter
     </select>
 
+    <select id="getFuncDeptSumInitialScore" parameterType="map" resultMap="baseRltMap">
+        select dept_code,year,month_quarter,max(dept_name) as dept_name,max(dept_id) as dept_id,
+        sum(IFNULL(final_score,0)) as final_score from bd_indicator_dept_score
+        where year = #{jobYear,jdbcType=INTEGER} and month_quarter = #{jobQuarter,jdbcType=INTEGER}
+        and dimension_flag = '1' and dept_code = #{deptCode,jdbcType=VARCHAR}
+        and indicator_code in
+        <foreach collection="piList" index="index" item = "item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        group by dept_code,year,month_quarter
+    </select>
+
 </mapper>

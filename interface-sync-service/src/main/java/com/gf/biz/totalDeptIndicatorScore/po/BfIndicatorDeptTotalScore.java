@@ -127,6 +127,9 @@ public class BfIndicatorDeptTotalScore extends BaseBizEntity implements Serializ
     @TableField("remark")
     private String remark;
 
+    @TableField("status")
+    private String status;
+
     public Integer getYear() {
         return year;
     }
@@ -269,5 +272,13 @@ public class BfIndicatorDeptTotalScore extends BaseBizEntity implements Serializ
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

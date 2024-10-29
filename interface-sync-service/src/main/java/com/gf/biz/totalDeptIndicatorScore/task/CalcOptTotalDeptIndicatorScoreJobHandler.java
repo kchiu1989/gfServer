@@ -17,12 +17,10 @@ import com.gf.biz.tiancaiIfsData.entity.LcapDepartment4a79f3;
 import com.gf.biz.tiancaiIfsData.mapper.LcapDepartment4a79f3Mapper;
 import com.gf.biz.totalDeptIndicatorScore.OptPerformanceIndocatorEnum;
 import com.gf.biz.totalDeptIndicatorScore.dto.BfIndicatorDeptTotalScoreDto;
-import com.gf.biz.totalDeptIndicatorScore.mapper.BfIndicatorDeptTotalScoreMapper;
-import com.gf.biz.totalDeptIndicatorScore.po.BfIndicatorDeptTotalScore;
+import com.gf.biz.totalDeptIndicatorScore.service.BfIndicatorDeptTotalScoreService;
 import com.xxl.job.core.handler.IJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -161,7 +159,7 @@ public class CalcOptTotalDeptIndicatorScoreJobHandler extends IJobHandler {
                 }
 
 
-                BfIndicatorDeptTotalScoreMapper bfIndicatorDeptTotalScoreMapper = SpringBeanUtil.getBean(BfIndicatorDeptTotalScoreMapper.class);
+                BfIndicatorDeptTotalScoreService bfIndicatorDeptTotalScoreService = SpringBeanUtil.getBean(BfIndicatorDeptTotalScoreService.class);
                 //再对一般扣分和食安扣分进行等级计算
                 for(BfIndicatorDeptTotalScoreDto toDeal:toCalcMetaDataList){
                     int totalRankNum = toDeal.getTransitionRankNumber()+toDeal.getTransitionFoodRankNumber();
@@ -177,9 +175,7 @@ public class CalcOptTotalDeptIndicatorScoreJobHandler extends IJobHandler {
                         toDeal.setFinalRank(String.valueOf(finalRank));
                     }
                     try{
-                        BfIndicatorDeptTotalScore toAdd = new BfIndicatorDeptTotalScore();
-                        BeanUtils.copyProperties(toDeal,toAdd);
-                        bfIndicatorDeptTotalScoreMapper.insert(toAdd);
+                        bfIndicatorDeptTotalScoreService.createOrAddBfIndicatorDeptTotalScore(toDeal);
                     }catch(Exception e){
                         logger.error("存储运营最终得分排名失败",e);
                     }
