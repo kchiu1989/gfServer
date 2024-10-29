@@ -15,7 +15,7 @@ import com.gf.biz.operateIndicatorScore.dto.BdIndicatorDeptScoreDto;
 import com.gf.biz.operateIndicatorScore.mapper.BdIndicatorDeptScoreMapper;
 import com.gf.biz.tiancaiIfsData.entity.LcapDepartment4a79f3;
 import com.gf.biz.tiancaiIfsData.mapper.LcapDepartment4a79f3Mapper;
-import com.gf.biz.totalDeptIndicatorScore.PerformanceIndocatorEnum;
+import com.gf.biz.totalDeptIndicatorScore.OptPerformanceIndocatorEnum;
 import com.gf.biz.totalDeptIndicatorScore.dto.BfIndicatorDeptTotalScoreDto;
 import com.gf.biz.totalDeptIndicatorScore.mapper.BfIndicatorDeptTotalScoreMapper;
 import com.gf.biz.totalDeptIndicatorScore.po.BfIndicatorDeptTotalScore;
@@ -202,10 +202,7 @@ public class CalcOptTotalDeptIndicatorScoreJobHandler extends IJobHandler {
 
     private BfIndicatorDeptTotalScoreDto getDeptMetaScoreData(LcapDepartment4a79f3 dept, Integer jobYear, Integer jobMonth) {
         //先获取指标列表
-        List<String> piList = new ArrayList<>();
-        for (PerformanceIndocatorEnum piEnum : PerformanceIndocatorEnum.values()) {
-            piList.add(piEnum.getPiCode());
-        }
+        List<String> piList = OptPerformanceIndocatorEnum.getPiCodeList();
 
         BdIndicatorDeptScoreMapper bdIndicatorDeptScoreMapper = SpringBeanUtil.getBean(BdIndicatorDeptScoreMapper.class);
         List<BdIndicatorDeptScoreDto> deptInitialDatas = bdIndicatorDeptScoreMapper.getOptDeptSumInitialScore(dept.getDeptCode(), jobYear, jobMonth, piList);

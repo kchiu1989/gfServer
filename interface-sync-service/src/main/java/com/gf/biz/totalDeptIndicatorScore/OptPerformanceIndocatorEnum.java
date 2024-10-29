@@ -1,6 +1,9 @@
 package com.gf.biz.totalDeptIndicatorScore;
 
-public enum PerformanceIndocatorEnum {
+import java.util.ArrayList;
+import java.util.List;
+
+public enum OptPerformanceIndocatorEnum {
     PI0014("PI0014","主营业务总收入"),
     PI0015("PI0015","毛利率"),
     PI0016("PI0016","可控费用率"),
@@ -18,7 +21,7 @@ public enum PerformanceIndocatorEnum {
     private String piCode;
     private String piName;
 
-    PerformanceIndocatorEnum(String piCode, String piName) {
+    OptPerformanceIndocatorEnum(String piCode, String piName) {
         this.piCode = piCode;
         this.piName = piName;
     }
@@ -39,4 +42,11 @@ public enum PerformanceIndocatorEnum {
         this.piName = piName;
     }
 
+    public static List<String> getPiCodeList() {
+        List<String> piList = new ArrayList<>();
+        for (OptPerformanceIndocatorEnum piEnum : OptPerformanceIndocatorEnum.values()) {
+            piList.add(piEnum.getPiCode());
+        }
+        return piList;
+    }
 }
