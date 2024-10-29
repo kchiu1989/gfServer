@@ -14,5 +14,5 @@ import com.gf.biz.totalDeptIndicatorScore.po.BfIndicatorDeptTotalScore;
  * @since 2024-10-28 11:41:04
  */
 public interface BfIndicatorDeptTotalScoreService extends IService<BfIndicatorDeptTotalScore> {
-    GfResult<String> createOrAddBfIndicatorDeptTotalScore(BfIndicatorDeptTotalScoreDto bfIndicatorDeptTotalScoreDto);
+    GfResult<String> createOrUpdateBfIndicatorDeptTotalScore(BfIndicatorDeptTotalScoreDto bfIndicatorDeptTotalScoreDto);
 }

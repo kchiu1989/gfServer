@@ -13,8 +13,9 @@ import com.gf.biz.operateIndicatorScore.mapper.BdIndicatorDeptScoreMapper;
 import com.gf.biz.tiancaiIfsData.entity.LcapDepartment4a79f3;
 import com.gf.biz.tiancaiIfsData.mapper.LcapDepartment4a79f3Mapper;
 import com.gf.biz.totalDeptIndicatorScore.OptPerformanceIndocatorEnum;
+import com.gf.biz.totalDeptIndicatorScore.dto.BfIndicatorDeptTotalDto;
 import com.gf.biz.totalDeptIndicatorScore.dto.BfIndicatorDeptTotalScoreDto;
-import com.gf.biz.totalDeptIndicatorScore.service.BfIndicatorDeptTotalScoreService;
+import com.gf.biz.totalDeptIndicatorScore.service.BfIndicatorDeptTotalService;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.IJobHandler;
 import org.apache.commons.lang3.StringUtils;
@@ -104,17 +105,22 @@ public class CalcFuncTotalDeptIndicatorScoreJobHandler extends IJobHandler {
                 toCalcMetaDataList.add(this.getDeptMetaScoreData(dept, jobYear, jobQuarter));
             }
 
-            BfIndicatorDeptTotalScoreService bfIndicatorDeptTotalScoreService = SpringBeanUtil.getBean(BfIndicatorDeptTotalScoreService.class);
-            //再对一般扣分和食安扣分进行等级计算
-            for (BfIndicatorDeptTotalScoreDto toDeal : toCalcMetaDataList) {
+            BfIndicatorDeptTotalDto toDeal = new BfIndicatorDeptTotalDto();
+            toDeal.setYear(jobYear);
+            toDeal.setMonthQuarter(jobQuarter);
+            toDeal.setDeptClassifyFlag(BizCommonConstant.DEPT_CLASSIFY_FUNC);
+            toDeal.setDimensionFlag("1");
+            toDeal.setDeletedFlag(CommonConstant.STATUS_UN_DEL);
+            toDeal.setItemList(toCalcMetaDataList);
 
-                try{
-                    bfIndicatorDeptTotalScoreService.createOrAddBfIndicatorDeptTotalScore(toDeal);
-                }catch(Exception e){
-                    logger.error("存储职能最终得分排名失败",e);
-                }
-
+            BfIndicatorDeptTotalService bfIndicatorDeptTotalService = SpringBeanUtil.getBean(BfIndicatorDeptTotalService.class);
+            try{
+                bfIndicatorDeptTotalService.createOrUpdateData(toDeal);
+            }catch (Exception e){
+                logger.error("存储职能总分数据异常",e);
             }
+
+
         }
 
     }

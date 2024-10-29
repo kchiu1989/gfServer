@@ -35,7 +35,7 @@ public class BfIndicatorDeptTotalScoreServiceImpl extends ServiceImpl<BfIndicato
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public GfResult<String> createOrAddBfIndicatorDeptTotalScore(BfIndicatorDeptTotalScoreDto bfIndicatorDeptTotalScoreDto) {
+    public GfResult<String> createOrUpdateBfIndicatorDeptTotalScore(BfIndicatorDeptTotalScoreDto bfIndicatorDeptTotalScoreDto) {
         QueryWrapper<BfIndicatorDeptTotalScore> queryScoreWrapper = new QueryWrapper<>();
         queryScoreWrapper.eq("dept_id", bfIndicatorDeptTotalScoreDto.getDeptId());
         queryScoreWrapper.eq("year", bfIndicatorDeptTotalScoreDto.getYear());
