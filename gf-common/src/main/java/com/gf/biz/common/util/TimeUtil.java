@@ -419,6 +419,21 @@ public class TimeUtil {
         return cal.getTime();
     }
 
+    public static int getQuarterByMonth(int month){
+        if (month >= 1 && month <= 3) {
+            return 1;
+        } else if (month >= 4 && month <= 6) {
+            return 2;
+        } else if (month >= 7 && month <= 9) {
+            return 3;
+        } else if (month >= 10 && month <= 12) {
+            return 4;
+        } else {
+            return -1;
+        }
+
+    }
+
     /**
      * 获取某时间所属季度的第一个月
      * @param date
