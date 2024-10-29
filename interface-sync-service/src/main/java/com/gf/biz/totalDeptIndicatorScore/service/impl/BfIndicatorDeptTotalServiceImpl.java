@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gf.biz.common.CommonConstant;
 import com.gf.biz.common.GfResult;
+import com.gf.biz.common.util.TimeUtil;
 import com.gf.biz.totalDeptIndicatorScore.dto.BfIndicatorDeptTotalDto;
 import com.gf.biz.totalDeptIndicatorScore.dto.BfIndicatorDeptTotalScoreDto;
 import com.gf.biz.totalDeptIndicatorScore.mapper.BfIndicatorDeptTotalMapper;
@@ -72,6 +73,14 @@ public class BfIndicatorDeptTotalServiceImpl extends ServiceImpl<BfIndicatorDept
             BeanUtils.copyProperties(bfIndicatorDeptTotalDto, toAdd);
             toAdd.setDeletedFlag(CommonConstant.STATUS_UN_DEL);
             toAdd.setCreatedTime(new Date());
+
+            if("1".equals(toAdd.getDimensionFlag())) {
+                toAdd.setBusinessDate(TimeUtil.getFirstQuarterDate(toAdd.getMonthQuarter(),toAdd.getYear()));
+            }else if("0".equals(toAdd.getDimensionFlag())) {
+                toAdd.setBusinessDate(TimeUtil.getBeginDayOfMonth(toAdd.getMonthQuarter(),toAdd.getYear()));
+
+            }
+
             //toAdd.setStatus("1");
             bfIndicatorDeptTotalMapper.insert(toAdd);
             masterId =toAdd.getId();

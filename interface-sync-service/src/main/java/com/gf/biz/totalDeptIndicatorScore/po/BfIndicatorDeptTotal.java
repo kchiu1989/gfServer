@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.gf.biz.common.entity.BaseBizEntity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -39,6 +40,9 @@ public class BfIndicatorDeptTotal extends BaseBizEntity implements Serializable 
     @TableField("dimension_flag")
     private String dimensionFlag;
 
+    @TableField("business_date")
+    private Date businessDate;
+
     public Integer getYear() {
         return year;
     }
@@ -69,5 +73,13 @@ public class BfIndicatorDeptTotal extends BaseBizEntity implements Serializable 
 
     public void setDimensionFlag(String dimensionFlag) {
         this.dimensionFlag = dimensionFlag;
+    }
+
+    public Date getBusinessDate() {
+        return businessDate;
+    }
+
+    public void setBusinessDate(Date businessDate) {
+        this.businessDate = businessDate;
     }
 }
