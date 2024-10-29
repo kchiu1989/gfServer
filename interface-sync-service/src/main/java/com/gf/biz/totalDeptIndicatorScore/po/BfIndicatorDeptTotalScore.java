@@ -82,6 +82,10 @@ public class BfIndicatorDeptTotalScore extends BaseBizEntity implements Serializ
     @TableField("relate_id")
     private Long relateId;
 
+
+    @TableField("master_id")
+    private Long masterId;
+
     /**
      * 干预后得分
      */
@@ -280,5 +284,13 @@ public class BfIndicatorDeptTotalScore extends BaseBizEntity implements Serializ
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getMasterId() {
+        return masterId;
+    }
+
+    public void setMasterId(Long masterId) {
+        this.masterId = masterId;
     }
 }

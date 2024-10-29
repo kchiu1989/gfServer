@@ -31,6 +31,8 @@ public class BfIndicatorDeptTotalDto extends BaseBizEntity implements Serializab
      */
     private String deptClassifyFlag;
 
+    private Long masterId;
+
     /**
      * 0月度1季度
      */
@@ -76,5 +78,13 @@ public class BfIndicatorDeptTotalDto extends BaseBizEntity implements Serializab
 
     public void setDimensionFlag(String dimensionFlag) {
         this.dimensionFlag = dimensionFlag;
+    }
+
+    public Long getMasterId() {
+        return masterId;
+    }
+
+    public void setMasterId(Long masterId) {
+        this.masterId = masterId;
     }
 }
