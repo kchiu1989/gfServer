@@ -262,6 +262,17 @@ public class TimeUtil {
         return getDayStartTime(calendar.getTime());
     }
 
+    /**
+     * 获取本月的开始时间
+     *
+     * @return
+     */
+    public static Date getBeginDayOfMonth(int month,int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month-1, 1);
+        return getDayStartTime(calendar.getTime());
+    }
+
 
     /**
      * 获取本月的结束时间
@@ -403,6 +414,22 @@ public class TimeUtil {
         return beginDate;
     }
 
+    /**
+     * 根据季度获取季度第一天
+     * @param quarter
+     * @return
+     */
+    public static Date getFirstQuarterDate(int quarter,int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, quarter * 3);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);//0点
+        calendar.set(Calendar.MINUTE, 0);//0分
+        calendar.set(Calendar.SECOND, 0);//0秒
+        calendar.set(Calendar.MILLISECOND, 0);//0毫秒
+        return calendar.getTime();
+    }
 
     /**
      * 获取某月该季度的第一个月
