@@ -101,7 +101,7 @@ public class BfIndicatorDeptTotalServiceImpl extends ServiceImpl<BfIndicatorDept
                 List<BfIndicatorDeptTotalScore> dbList = bfIndicatorDeptTotalScoreMapper.selectList(queryScoreWrapper);
 
                 if (dbList != null && dbList.size() > 0) {
-                    //if(!"2".equals(dbList.get(0).getStatus()) {
+
                     UpdateWrapper<BfIndicatorDeptTotalScore> toUpdScoreWrapper = new UpdateWrapper<>();
                     toUpdScoreWrapper.set("final_score", bfIndicatorDeptTotalScoreDto.getFinalScore());
                     toUpdScoreWrapper.set("final_rank", bfIndicatorDeptTotalScoreDto.getFinalRank());
@@ -112,6 +112,11 @@ public class BfIndicatorDeptTotalServiceImpl extends ServiceImpl<BfIndicatorDept
                     toUpdScoreWrapper.set("transition_food_rank_number", bfIndicatorDeptTotalScoreDto.getTransitionFoodRankNumber());
                     toUpdScoreWrapper.set("remark", bfIndicatorDeptTotalScoreDto.getRemark());
                     toUpdScoreWrapper.set("updated_time", new Date());
+
+                    if("0".equals(bfIndicatorDeptTotalDto.getDeptClassifyFlag()) && "1".equals(dbList.get(0).getStatus())){
+                        toUpdScoreWrapper.set("intervene_rank", bfIndicatorDeptTotalScoreDto.getFinalRank());
+                    }
+
                     toUpdScoreWrapper.eq("id", dbList.get(0).getId());
 
 

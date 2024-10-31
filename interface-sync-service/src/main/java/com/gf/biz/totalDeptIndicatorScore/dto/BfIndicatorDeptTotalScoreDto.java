@@ -82,7 +82,7 @@ public class BfIndicatorDeptTotalScoreDto extends BaseBizEntity implements Seria
     /**
      * 干预后等级
      */
-    private BigDecimal interveneRank;
+    private String interveneRank;
 
     /**
      * 扣分总数
@@ -200,11 +200,11 @@ public class BfIndicatorDeptTotalScoreDto extends BaseBizEntity implements Seria
         this.finalRank = finalRank;
     }
 
-    public BigDecimal getInterveneRank() {
+    public String getInterveneRank() {
         return interveneRank;
     }
 
-    public void setInterveneRank(BigDecimal interveneRank) {
+    public void setInterveneRank(String interveneRank) {
         this.interveneRank = interveneRank;
     }
 
