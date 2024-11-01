@@ -207,19 +207,15 @@ public class SyncGetWMAllPointsJobHandle extends IJobHandler {
                 }
                 //ifTakeoutAssessSurvey.setMeituanTakeoutDeliveryTime(String.valueOf(bfTakeoutDeliveryTimeSumTime/bfTakeoutDeliveryTimeList.size()));
                 ifTakeoutAssessSurvey.setMeituanTakeoutDeliveryTime(String.valueOf(bfTakeoutDeliveryTimeSumTime.divide(new BigDecimal(bfTakeoutDeliveryTimeList.size()))));
-                if (bfTakeoutDeliveryTimeSumTime.divide(new BigDecimal(bfTakeoutDeliveryTimeList.size())).compareTo(BigDecimal.valueOf(17)) <= 0) {
+                if (bfTakeoutDeliveryTimeSumTime.divide(new BigDecimal(bfTakeoutDeliveryTimeList.size())).compareTo(BigDecimal.valueOf(15)) <= 0) {
                     ifTakeoutAssessSurvey.setMeituanTakeoutDeliveryTimePoints("100");
 
-                } else if (bfTakeoutDeliveryTimeSumTime.divide(new BigDecimal(bfTakeoutDeliveryTimeList.size())).compareTo(BigDecimal.valueOf(18)) <= 0) {
+                } else if (bfTakeoutDeliveryTimeSumTime.divide(new BigDecimal(bfTakeoutDeliveryTimeList.size())).compareTo(BigDecimal.valueOf(16)) <= 0) {
                     ifTakeoutAssessSurvey.setMeituanTakeoutDeliveryTimePoints("90");
-                } else if (bfTakeoutDeliveryTimeSumTime.divide(new BigDecimal(bfTakeoutDeliveryTimeList.size())).compareTo(BigDecimal.valueOf(19)) <= 0) {
+                } else if (bfTakeoutDeliveryTimeSumTime.divide(new BigDecimal(bfTakeoutDeliveryTimeList.size())).compareTo(BigDecimal.valueOf(17)) <= 0) {
                     ifTakeoutAssessSurvey.setMeituanTakeoutDeliveryTimePoints("80");
-                } else if (bfTakeoutDeliveryTimeSumTime.divide(new BigDecimal(bfTakeoutDeliveryTimeList.size())).compareTo(BigDecimal.valueOf(20)) <= 0) {
+                } else  {
                     ifTakeoutAssessSurvey.setMeituanTakeoutDeliveryTimePoints("70");
-                } else if (bfTakeoutDeliveryTimeSumTime.divide(new BigDecimal(bfTakeoutDeliveryTimeList.size())).compareTo(BigDecimal.valueOf(22)) <= 0) {
-                    ifTakeoutAssessSurvey.setMeituanTakeoutDeliveryTimePoints("60");
-                } else if (bfTakeoutDeliveryTimeSumTime.divide(new BigDecimal(bfTakeoutDeliveryTimeList.size())).compareTo(BigDecimal.valueOf(10086)) <= 0) {
-                    ifTakeoutAssessSurvey.setMeituanTakeoutDeliveryTimePoints("50");
                 }
             } else {
                 ifTakeoutAssessSurvey.setMeituanTakeoutDeliveryTimePoints(null);
