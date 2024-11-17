@@ -13,23 +13,23 @@ import java.util.List;
 public class MyBatisPlusGenerator {
     public static void main(String[] args) {
         //test为自定义的文件生成路径，根据业务进行变更
-        String path = "test";
+        String path = "totalDeptIndicatorScore";
         //父包名，test为最终生成的包位置，替换成自己的即可
-        String parentPackage = "com.github.modules." + path;
+        String parentPackage = "com.gf.biz." + path;
         //mapper.xml生成位置，test变更为自己的即可
         String mapperXmlPath = "/src/main/resources/mapper/" + path;
         //作者名字
         String author = "Gf";
 
         //数据库连接信息
-        String url = "jdbc:mysql://127.0.0.1:3306/lvshimain?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai";
+        String url = "jdbc:mysql://39.91.167.239:3310/lvshimain?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai";
         String username = "root";
         String password = "Woailvshi2024.";
 
         //表名集合
         List<String> tables = new ArrayList<>();
         //,user_info_ext,user_department,md_group,md_unit,md_department
-        tables.add("kpi_rule_calc_thr_detail_info");
+        tables.add("bf_indicator_dept_total");
 
         FastAutoGenerator.create(url, username, password)
                 //全局配置

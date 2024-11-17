@@ -11,17 +11,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.gf</groupId>
-    <artifactId>lvshi-project</artifactId>
+    <artifactId>gf-server</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
 
-    <name>lvshi project</name>
-    <description>lvshi project</description>
+    <name>gf project</name>
+    <description>gf project</description>
 
     <modules>
         <module>gf-common</module>
-        <module>interface-sync-service</module>
-        <module>system-service</module>
+        <!--<module>interface-sync-service</module>-->
+        <!--<module>system-service</module>-->
+        <module>auth-client</module>
+        <module>auth-server</module>
+
+
     </modules>
 
     <properties>

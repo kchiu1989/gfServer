@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.gf</groupId>
-        <artifactId>lvshi-project</artifactId>
+        <artifactId>gf-server</artifactId>
         <version>1.0.0</version>
     </parent>
 

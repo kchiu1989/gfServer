@@ -1,0 +1,28 @@
+
+oauth2-server-url: http://localhost:9501
+
+server:
+  servlet:
+    session:
+      cookie:
+        name: AUTH-CLIENT-SESSIONID #防止Cookie冲突，冲突会导致登录验证不通过
+
+security:
+  oauth2: #与oauth2-server对应的配置
+    client:
+      client-id: admin
+      client-secret: admin123456
+      user-authorization-uri: ${oauth2-server-url}/oauth/authorize  #请求认证的地址
+      access-token-uri: ${oauth2-server-url}/oauth/token  #请求令牌的地址
+    resource:
+      jwt:
+        key-uri: ${oauth2-server-url}/oauth/token_key #解析jwt令牌所需要密钥的地址,服务启动时会调用 授权服务该接口获取jwt key，所以务必保证授权服务正常
+spring:
+  cloud:
+    nacos:
+      config:
+        enabled: false
+        refresh-enabled: false
+      discovery:
+        enabled: false
+        instance-enabled: false
