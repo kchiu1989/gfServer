@@ -75,7 +75,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .accessTokenValiditySeconds(3600)
                 .refreshTokenValiditySeconds(3600*24*7)
 //                .redirectUris("http://www.baidu.com")
-                .redirectUris("http://localhost:9501/login") //单点登录时配置
+                .redirectUris("http://localhost:9401/login") //单点登录时配置
                 .autoApprove(false); //自动授权配置
                // .scopes("all")
                 //.authorizedGrantTypes("authorization_code", "password", "refresh_token");

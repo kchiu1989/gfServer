@@ -1,6 +1,5 @@
 package com.gf.cloud.config;
 
-import com.gf.biz.common.util.SpringBeanUtil;
 import com.gf.cloud.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * SpringSecurity配置
@@ -36,10 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean("userService")
     @Override
     public UserDetailsService userDetailsServiceBean() throws Exception {
-        UserDetailsService userService = new UserService();
-        ((UserService)userService).setPasswordEncoder(SpringBeanUtil.getBean(PasswordEncoder.class));
-        ((UserService)userService).initData();
-        return userService;
+        return new UserService();
     }
 
     /**
